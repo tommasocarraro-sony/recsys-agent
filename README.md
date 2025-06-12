@@ -9,9 +9,10 @@ You must have an OpenAI subscription as this application needs an OpenAI API key
 
 First of all, clone this repository.
 
-Then, run the following command:
+Then, run the following commands in the root directory of the project:
 
-`conda create --name <env> --file requirements.txt`
+1. `conda create --name <env>`
+2. `pip install -r requirements.txt`
 
 Create a `.env` file and put it inside the root directory of the project. Add an OpenAI API key to the .env file, for example, `OPENAI_API_KEY=<your_key>`.
 
