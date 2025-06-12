@@ -11,8 +11,9 @@ First of all, clone this repository.
 
 Then, run the following commands in the root directory of the project:
 
-1. `conda create --name <env>`
-2. `pip install -r requirements.txt`
+1. `conda create --name <env> python=3.12`
+2. `conda activate <env>`
+3. `pip install -r requirements.txt`
 
 Create a `.env` file and put it inside the root directory of the project. Add an OpenAI API key to the .env file, for example, `OPENAI_API_KEY=<your_key>`.
 
