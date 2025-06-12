@@ -1,10 +1,18 @@
 # LLM-based Recommendation System Agents
 
+## Prerequisites
+
+You should have Python, Docker, and Conda installed.
+
 ## Installation instructions
 
-First of all, be sure to have conda and docker installed. Then, run the following command:
+First of all, clone this repository.
+
+Then, run the following command:
 
 `conda create --name <env> --file requirements.txt`
+
+Create a `.env` file and put it inside the root directory of the project. Add an OpenAI API key to the .env file, for example, `OPENAI_API_KEY=<your_key>`.
 
 ## Execution instructions
 
