@@ -48,7 +48,7 @@ def create_ml100k_db():
                     storyline TEXT)''')
 
     # load data
-    with open('./data/recsys/ml-100k/final_ml-100k.csv', 'r', encoding='utf-8') as f:
+    with open('./data/ml-100k/final_ml-100k.csv', 'r', encoding='utf-8') as f:
         first_line = True
         for line in f:
             if first_line:
@@ -115,7 +115,7 @@ def create_ml100k_db():
     # create user table
     cursor.execute('''CREATE TABLE IF NOT EXISTS users (user_id INTEGER PRIMARY KEY, age_category TEXT, gender TEXT)''')
 
-    with open('./data/recsys/ml-100k/ml-100k.user', 'r') as f:
+    with open('./data/ml-100k/ml-100k.user', 'r') as f:
         first_line = True
         for line in f:
             if first_line:
@@ -132,7 +132,7 @@ def create_ml100k_db():
 
 def read_ml100k_ratings():
     user_interactions = []
-    with open('./data/recsys/ml-100k/ml-100k.inter', 'r') as f:
+    with open('./data/ml-100k/ml-100k.inter', 'r') as f:
         first_line = True
         for line in f:
             if first_line:
@@ -207,7 +207,7 @@ def create_vector_store():
     """
     # Load your movie dataset
     movies = pd.read_csv(
-        "./data/recsys/ml-100k/final_ml-100k.csv",
+        "./data/ml-100k/final_ml-100k.csv",
         sep="\t",
         encoding="latin-1"
     )

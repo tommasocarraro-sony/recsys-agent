@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-You should have Python, Docker, and Conda installed.
+You should have Docker and Conda installed.
 You must have an OpenAI subscription as this application needs an OpenAI API key.
 
 ## Installation instructions
@@ -19,8 +19,18 @@ Create a `.env` file and put it inside the root directory of the project. Add an
 
 ## Execution instructions
 
-First of all, you need to start docker.
+First of all, you need to perform the training of the recommendation system on the MovieLens-100k dataset. This is done by using the RecBole framework. This step should take a few minutes as the recommender is a basic Matrix Factorization model. 
 
-Then, you can run the application using:
+To train the recommendation model, just run the following command:
+
+`python recsys_training.py`
+
+During the first executions, you will encounter some RecBole problems related to Numpy. Fix the issues by following what is printed. You should change some types in RecBole and put a `weights_only=False` in a `torch.load` command. Just follow what is printed.
+
+After fixing all the problems, your training should end correctly.
+
+Then, you must start Docker.
+
+Finally, you can run the application using:
 
 `python app_main.py`

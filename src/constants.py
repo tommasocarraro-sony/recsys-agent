@@ -6,7 +6,6 @@ JSON_GENERATION_ERROR = {
 
 DATABASE_NAME = "movielens-100k"
 COLLECTION_NAME = "movielens-storyline"
-RECSYS_MODEL_PATH='./data/recsys/ml-100k/model.pth'
 
 SYSTEM_MESSAGE = [
     {"role": "system", "content": """You are a helpful assistant that answers user questions using tools when necessary.

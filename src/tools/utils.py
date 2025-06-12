@@ -11,13 +11,13 @@ from src.utils import get_time
 def create_lists_for_fuzzy_matching():
     # create the lists of actors, directors, producers, and genres for fuzzy matching
     global actors_list, producers_list, directors_list, genres_list, countries_list
-    actors_list = extract_unique_names("./data/recsys/ml-100k/final_ml-100k.csv", "actors_list")
-    producers_list = extract_unique_names("./data/recsys/ml-100k/final_ml-100k.csv",
+    actors_list = extract_unique_names("./data/ml-100k/final_ml-100k.csv", "actors_list")
+    producers_list = extract_unique_names("./data/ml-100k/final_ml-100k.csv",
                                           "producers_list")
-    directors_list = extract_unique_names("./data/recsys/ml-100k/final_ml-100k.csv",
+    directors_list = extract_unique_names("./data/ml-100k/final_ml-100k.csv",
                                           "directors_list")
-    genres_list = extract_unique_names("./data/recsys/ml-100k/final_ml-100k.csv", "genres_list")
-    countries_list = extract_unique_names("./data/recsys/ml-100k/final_ml-100k.csv", "country")
+    genres_list = extract_unique_names("./data/ml-100k/final_ml-100k.csv", "genres_list")
+    countries_list = extract_unique_names("./data/ml-100k/final_ml-100k.csv", "country")
 
 
 def execute_sql_query(sql_query):
