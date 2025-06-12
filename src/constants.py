@@ -6,6 +6,7 @@ JSON_GENERATION_ERROR = {
 
 DATABASE_NAME = "movielens-100k"
 COLLECTION_NAME = "movielens-storyline"
+RECSYS_MODEL_PATH='./data/recsys/ml-100k/model.pth'
 
 SYSTEM_MESSAGE = [
     {"role": "system", "content": """You are a helpful assistant that answers user questions using tools when necessary.
@@ -42,5 +43,6 @@ SYSTEM_MESSAGE = [
 5. When the user requests recommendations, he/she always has to indicate the user ID for which the recommendations have to be generated. If the user does not indicate the user ID, ask him/her to indicate it before proceeding with the tool call
 6. If you need to use the item filter tool and it does not return any results, please explain the user that there are no items satisfying the given conditions. If this is the case, you must stop the tool calling pipeline for the current request and avoid calling additional tools.
 7. Whenever you provide a list of item metadata, remember to use labels (e.g., genres, description, etc.) to list it.
+8. When providing explanations after the user asked for them post to usage of the recommendation tool, **do not** explain the tool call protocol. Just explain why the items have been recommended.
 """}
 ]

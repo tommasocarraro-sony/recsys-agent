@@ -1,4 +1,4 @@
-import os
+from src.constants import RECSYS_MODEL_PATH
 import json
 import torch
 from src.tools.utils import get_time, convert_to_list
@@ -50,7 +50,7 @@ def get_top_k_recommendations_tool(input: TopKRecommendationInput) -> str:
         return json.dumps(JSON_GENERATION_ERROR)
 
     if 'config' not in globals():
-        create_recbole_environment(os.getenv("RECSYS_MODEL_PATH"))
+        create_recbole_environment(RECSYS_MODEL_PATH)
 
     uid_series = dataset.token2id(dataset.uid_field, [str(user)])
 

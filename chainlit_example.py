@@ -1,4 +1,6 @@
 from typing import Annotated
+
+from langchain_core.messages.utils import count_tokens_approximately, trim_messages
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
@@ -55,7 +57,17 @@ llm_with_tools = llm.bind_tools(tools)
 
 # the chatbot is one of the nodes of the graph, usually where the process starts
 def chatbot(state: State):
-    return {"messages": [llm_with_tools.invoke(state["messages"])]}
+    messages = trim_messages(
+        state["messages"],
+        strategy="last",
+        token_counter=count_tokens_approximately,
+        max_tokens=20000,
+        start_on="human",
+        end_on=("human", "tool"),
+        include_system=True,
+    )
+    response = llm_with_tools.invoke(messages)
+    return {"messages": [response]}
 
 # this is the tool node
 class BasicToolNode:
@@ -167,4 +179,3 @@ async def stream_graph_updates(message: cl.Message):
 
 
 # todo add database for sessions
-# todo add chainlit
