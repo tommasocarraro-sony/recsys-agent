@@ -17,6 +17,8 @@ Create a `.env` file and put it inside the root directory of the project. Add an
 
 ## Execution instructions
 
-After you followed the installation instructions, you can run the application using:
+First of all, you need to start docker.
+
+Then, you can run the application using:
 
 `python app_main.py`
