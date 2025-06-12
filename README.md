@@ -3,6 +3,7 @@
 ## Prerequisites
 
 You should have Python, Docker, and Conda installed.
+You must have an OpenAI subscription as this application needs an OpenAI API key.
 
 ## Installation instructions
 
