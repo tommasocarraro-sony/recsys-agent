@@ -1,4 +1,5 @@
 recbole
+numpy<2
 kmeans-pytorch
 langchain
 langchain-openai

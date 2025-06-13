@@ -21,7 +21,7 @@ Create a `.env` file and put it inside the root directory of the project. Add an
 
 First of all, you need to perform the training of the recommendation system on the MovieLens-100k dataset. This is done by using the RecBole framework. This step should take a few minutes as the recommender is a basic Matrix Factorization model. 
 
-To train the recommendation model, just run the following command:
+To train the recommendation model, just run the following command from the folder `./data/ml-100k/`:
 
 `python recsys_training.py`
 
@@ -34,3 +34,5 @@ Then, you must start Docker.
 Finally, you can run the application using:
 
 `python app_main.py`
+
+TODO check if it is needed to change RecBole code 
