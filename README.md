@@ -25,13 +25,9 @@ To train the recommendation model, just run the following command from the folde
 
 `python recsys_training.py`
 
-During the first executions, you will encounter some RecBole problems related to Numpy. Fix the issues by following what is printed. You should change some types in RecBole and put a `weights_only=False` in a `torch.load` command. Just follow what is printed.
+After the successful training of the model, you must start Docker.
 
-After fixing all the problems, your training should end correctly.
-
-Then, you must start Docker.
-
-Finally, you can run the application using:
+Finally, you can run the application by running the following command from the root folder of the project:
 
 `python app_main.py`
 
