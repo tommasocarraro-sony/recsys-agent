@@ -30,5 +30,3 @@ After the successful training of the model, you must start Docker.
 Finally, you can run the application by running the following command from the root folder of the project:
 
 `python app_main.py`
-
-TODO check if it is needed to change RecBole code 
