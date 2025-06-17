@@ -132,8 +132,44 @@ These are the available tools to date:
 5. `get_popular_items`: it generates a list of popular items by computing the .75 quantile of the rating distribution. If some item IDs are given, it only returns items that are popular in the given item set.
 6. `get_user_metadata`: it takes as input a user ID and desired metadata user features and returns the requested features.
 7. `get_item_metadata`: it takes as input an item ID and desired metadata item features and returns the requested features.
-8. `get_interacted_items`: it takes as input a user ID and returns the IDs of the items the user interacted with in the past. It returns only the most 20 recent ones if the user interacted with more than 20 items in the dataset.
+8. `get_interacted_items`: it takes as input a user ID and returns the IDs of the items the user interacted with in the past. It returns only the most recent 20 ones if the user interacted with more than 20 items in the dataset.
 
+## Do you want to implement your custom tools?
+
+Creating additional tools and binding them to the LLM assistant is straightforward. You just need to create a new Python file containing the logic of the tool and put is inside the folder `./src/tools`.
+
+To define the tool, you can take inspiration from the tools already available in this project. You just have to remember to define the Pydantic schema of the tool input, use the LangChain @tool decorator when defining the tool function, and return a string containing the JSON reply of the tool. 
+
+We provide here a code snippet with an initial skeleton:
+
+`import json
+from pydantic import BaseModel, Field
+from langchain_core.tools import tool
+from typing import List, Union
+
+class InputSchema(BaseModel):
+    """Schema for the input of the defined tool."""
+    integer_input: int = Field(..., description="Integer input.")
+
+
+@tool
+def my_custom_tool(input: InputSchema) -> str:
+    """
+    Tool description. Note this description is read by the LLM to understand what the tool does. Hence, you should write a meaningful description. 
+    """
+    int_inp = input.integer_input
+
+    # Define the tool logic here. You might want to use the input and manipulate it.
+
+    # This is the final response that is sent back to the LLM. 'message' is a string containing the actual response.
+    return json.dumps({
+        "status": "success",
+        "message": message
+    })`
+
+After you have defined the tool logic, you just need to bind the tool to the LLM agent. To do that, go into `./chainlit_example.py`, import your tool, and add it to the `tools` list.
+
+After this, you should be able to start the application and see that the LLM is using your custom tool when needed.
 
 ## Prerequisites
 
