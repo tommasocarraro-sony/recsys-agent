@@ -142,7 +142,9 @@ To define the tool, you can take inspiration from the tools already available in
 
 We provide here a code snippet with an initial skeleton:
 
-`import json
+```
+
+import json
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
 from typing import List, Union
@@ -154,9 +156,8 @@ class InputSchema(BaseModel):
 
 @tool
 def my_custom_tool(input: InputSchema) -> str:
-    """
-    Tool description. Note this description is read by the LLM to understand what the tool does. Hence, you should write a meaningful description. 
-    """
+    """Tool description. Note this description is read by the LLM to understand what the tool does. Hence, you should write a meaningful description."""
+    
     int_inp = input.integer_input
 
     # Define the tool logic here. You might want to use the input and manipulate it.
@@ -165,7 +166,9 @@ def my_custom_tool(input: InputSchema) -> str:
     return json.dumps({
         "status": "success",
         "message": message
-    })`
+    })
+
+```
 
 After you have defined the tool logic, you just need to bind the tool to the LLM agent. To do that, go into `./chainlit_example.py`, import your tool, and add it to the `tools` list.
 
