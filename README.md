@@ -78,7 +78,7 @@ For this project, we used the notable MovieLens-100k dataset enlarged with movie
 7. Country
 8. Duration	
 9. IMDb rating
-10. Number of reviews in IMDb
+10. Number of reviews on IMDb
 11. Description
 12. Storyline
 
@@ -125,14 +125,14 @@ The assistant can autonomously decide which tools to call and in which order.
 
 These are the available tools to date:
 
-1. get_top_k_recommendations: it takes as input a user ID and a number (i.e., k) of desired recommended items, and it generates a ranking over these items using the pre-trained recommender system. It can optionally take item IDs as input, for example, when the recommended items must satisfy some user's given conditions.
-2. item_filter: it takes as input some user's conditions and returns a list of IDs of items that satisfy the given conditions. Alternatively, it can generate the path to a txt file containing these IDs. This is done for efficient use of streamed tokens.
-3. vector_store_search: it takes as input a query and performs a search in the vector database. The vector database contains embedded item descriptions/storylines.
-4. get_like_percentage: it takes as input a list of item IDs and computes the percentage of users that like those items in the recommendation dataset.
-5. get_popular_items: it generates a list of popular items by computing the .75 quantile of the rating distribution. If some item IDs are given, it only returns items that are popular in the given item set.
-6. get_user_metadata: it takes as input a user ID and desired metadata user features and returns the requested features.
-7. get_item_metadata: it takes as input an item ID and desired metadata item features and returns the requested features.
-8. get_interacted_items: it takes as input a user ID and returns the IDs of the items the user interacted with in the past. It returns only the most 20 recent ones if the user interacted with more than 20 items in the dataset.
+1. `get_top_k_recommendations`: it takes as input a user ID and a number (i.e., k) of desired recommended items, and it generates a ranking over these items using the pre-trained recommender system. It can optionally take item IDs as input, for example, when the recommended items must satisfy some user's given conditions.
+2. `item_filter`: it takes as input some user's conditions and returns a list of IDs of items that satisfy the given conditions. Alternatively, it can generate the path to a txt file containing these IDs. This is done for efficient use of streamed tokens.
+3. `vector_store_search`: it takes as input a query and performs a search in the vector database. The vector database contains embedded item descriptions/storylines.
+4. `get_like_percentage`: it takes as input a list of item IDs and computes the percentage of users that like those items in the recommendation dataset.
+5. `get_popular_items`: it generates a list of popular items by computing the .75 quantile of the rating distribution. If some item IDs are given, it only returns items that are popular in the given item set.
+6. `get_user_metadata`: it takes as input a user ID and desired metadata user features and returns the requested features.
+7. `get_item_metadata`: it takes as input an item ID and desired metadata item features and returns the requested features.
+8. `get_interacted_items`: it takes as input a user ID and returns the IDs of the items the user interacted with in the past. It returns only the most 20 recent ones if the user interacted with more than 20 items in the dataset.
 
 
 ## Prerequisites
@@ -165,3 +165,49 @@ After the successful training of the model, you must start Docker.
 Finally, you can run the application by running the following command from the root folder of the project:
 
 `python app_main.py`
+
+## Issues with RecBole while training or using your model with our agent?
+
+While running the training of the recommendation model or the recommendation model inference while using our agent, sometimes, you might get some issues with RecBole in the files `trainer.py` or `quick_start.py`. The issue is related to a missing `weights_only=False` parameter while calling `torch.load()`. This is an issue of RecBole. The fix is provided as follows:
+
+`checkpoint = torch.load(checkpoint_file, map_location=self.device)` ---> `checkpoint = torch.load(checkpoint_file, map_location=self.device, weights_only=False)`
+
+Note that if you face the issue during training, you should fix the issue, then remove the folders RecBole created (i.e., `./data/ml-100k/log`, `./data/ml-100k/log_tensorboard`, and `./data/ml-100k/saved`), and finally re-run the training.
+
+Instead, if you face the issue while using our agent (i.e., inference time), you should terminate the execution of the application, fix the issue, and re-run the application from scratch.
+
+## Issues with Chainlit port?
+
+Sometimes, Chainlit might tell you that the port `8000` at `localhost` is already used. In that case, instead of running the application by the command `python app_main.py`, you can try running it with the following command:
+
+`chainlit run chainlit_example.py --port <your_desired_port>`
+
+This should fix the issue.
+
+## Do you want a different recommendation model or dataset?
+
+Our project currently uses the RecBole framework to train and run the underlying recommendation model. 
+
+As stated previously, our agent relies on a simple Matrix Factorization model trained on the MovieLens-100k dataset using the Bayesian Personalized Ranking criterion. This is enough for the nature of this demo, which simply aims to show a novel and promising way to make a Large Language Model interact with a recommendation system engine.
+
+However, if you need a different recommendation model or dataset, you can easily change them by going to the file at this path: `./data/ml-100k/recsys_training.py`.
+
+Look for the line:
+
+`run_recbole(model='BPR', dataset='ml-100k', config_file_list=['./bprmf-100k.yaml'])`
+
+As you can see, the model is BPR (Bayesian Personalized Ranking) and the dataset is ml-100k (MovieLens-100k). Then, you can see we are pointing to a configuration file. This file just contains the validation metric we are using (i.e., NDCG@5). 
+
+It can additionally contain the hyper-parameters of the selected model, plus other important parameters, such as pre-processing techniques for the dataset. 
+
+We suggest you to follow the quick start guide of the RecBole framework to understand this config file and how the framework works: https://recbole.io/docs/get_started/started/general.html.
+
+We also share the list of available models in RecBole from where you can select your desired model: https://recbole.io/docs/user_guide/model_intro.html.
+
+Is your model not in this list? You can simply decide to contribute to the RecBole framework and propose the implementation of your model with a Pull Request on their project. 
+
+Is your model proprietary, and can you not make it public? Then, you can change the `get_top_k_recommendations` tool logic so it uses your model instead of relying on the RecBole framework. The tool implementation is available at this path: `./src/tools/get_top_k_recommendations.py`.
+
+If you have already run the training of our default model and you want to test our agent with a different model, we suggest you to delete the folders created by RecBole before starting the new training. The folders are created inside `./data/ml-100k` and are `./data/ml-100k/log`, `./data/ml-100k/log_tensorboard`, and `./data/ml-100k/saved`. Removing these folders will make sure that the training will be successful and the model will be correctly used by our agent.
+
+Regarding the dataset, please be aware that our tools (especially `get_item_metadata` and `item_filter`) assume the previously itemized item features to be present in the dataset to work. If your dataset does not contain these features, you will have to change the logic of these tools to match your dataset. 
