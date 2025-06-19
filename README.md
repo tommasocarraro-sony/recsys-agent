@@ -155,18 +155,25 @@ class InputSchema(BaseModel):
     integer_input: int = Field(..., description="Integer input.")
 
 
-@tool
-def my_custom_tool(input: InputSchema) -> str:
+@tool(args_schema=InputSchema)
+def my_custom_tool(integer_input: int) -> str:
     """Tool description. Note this description is read by the LLM to understand what the tool does. Hence, you should write a meaningful description."""
     
-    int_inp = input.integer_input
+    # check if the input has been passed correctly to the tool
+    if integer_input is None:
+        return json.dumps({
+            "status": "failure",
+            "message": "Error while processing the input to the tool."
+        })
 
     # Define the tool logic here. You might want to use the input and manipulate it.
 
     # This is the final response that is sent back to the LLM. 'message' is a string containing the actual response.
+    # 'data' is a data structure containing any data related to the response (e.g., a list of item IDs)
     return json.dumps({
         "status": "success",
-        "message": message
+        "message": message,
+        "data": data
     })
 
 ```
