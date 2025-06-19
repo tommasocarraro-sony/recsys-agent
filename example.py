@@ -57,7 +57,7 @@ if args.self_host:
     llm = ChatOllama(
         model="qwen3:8b",
         temperature=0,
-        # base_url="http://localhost:11434"
+        base_url="http://localhost:11434"
     )
 else:
     api_key = os.getenv("OPENAI_API_KEY")

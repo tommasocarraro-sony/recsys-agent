@@ -25,10 +25,6 @@ from src.constants import SYSTEM_MESSAGE
 import chainlit as cl
 load_dotenv()
 
-parser = argparse.ArgumentParser()
-parser.add_argument("--self_host", action="store_true", help="Use locally hosted model via Ollama")
-args = parser.parse_args()
-
 memory = MemorySaver()
 
 # create database
@@ -54,11 +50,11 @@ graph_builder = StateGraph(State)
 
 llm = None
 
-if args.self_host:
+if os.getenv("SELF_HOST") == "true":
     llm = ChatOllama(
         model="qwen3:8b",
         temperature=0,
-        # base_url="http://localhost:11434"
+        base_url="http://localhost:11434"
     )
 else:
     api_key = os.getenv("OPENAI_API_KEY")
@@ -189,6 +185,3 @@ async def stream_graph_updates(message: cl.Message):
     await msg.send()
     # Save updated message list
     cl.user_session.set("messages", messages)
-
-
-# todo add database for sessions

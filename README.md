@@ -219,6 +219,28 @@ OpenAI provider option: `python app_main.py`
 
 Ollama self-hosting option: `python app_main.py --self_host`
 
+## Do you need to self-host on a GPU that is on a remote cluster?
+
+Make sure that Ollama is installed on the cluster. Then, launch this command on your cluster (assuming you want to use the Qwen3-8B model):
+
+`ollama pull qwen3:8b`
+
+Then, run the model on the cluster by launching:
+
+`ollama run qwen3:8b`
+
+Once the model is running, create a tunnel from your local laptop to your remote cluster where Ollama is running. You can do this by opening the terminal and launching the command:
+
+`ssh -L 11434:localhost:11434 user@host_address`
+
+Be sure you do not have Ollama working in your local laptop. If it is working, stop it.
+
+Everything is now set up. It is enough you launch the command:
+
+`python app_main.py --self_host`
+
+If tunneling is set up correctly and your model is running with Ollama in your remote cluster, the application should successfully connect to that Ollama instance and you should be now able to interact with your LLM assistant.
+
 ## Issues with RecBole while training or using your model with our agent?
 
 While running the training of the recommendation model or the recommendation model inference while using our agent, sometimes, you might get some issues with RecBole in the files `trainer.py` or `quick_start.py`. The issue is related to a missing `weights_only=False` parameter while calling `torch.load()`. This is an issue of RecBole. The fix is provided as follows:
