@@ -15,16 +15,14 @@ class GetLikePercentageInput(BaseModel):
     )
 
 
-@tool
-def get_like_percentage_tool(input: GetLikePercentageInput) -> str:
+@tool(args_schema=GetLikePercentageInput)
+def get_like_percentage_tool(items: Union[List[int], str]) -> str:
     """
     Returns the percentage of users that like the given item IDs.
     """
     print(f"\n{get_time()} - get_like_percentage has been triggered!!!\n")
 
-    try:
-        items = input.items
-    except Exception:
+    if items is None:
         return json.dumps(JSON_GENERATION_ERROR)
 
     try:

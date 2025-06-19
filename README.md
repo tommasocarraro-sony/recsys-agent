@@ -179,8 +179,9 @@ If you are having issues creating your custom tools, we also invite you to follo
 
 ## Prerequisites
 
-- You should have Docker and Conda installed.
-- You must have an OpenAI API subscription.
+- You should have [Docker](https://www.docker.com/) and [Conda](https://www.anaconda.com/docs/getting-started/miniconda/main) installed.
+- If you want to use the OpenAI inference provider, you must have an OpenAI API subscription.
+- If you want to self-host your model, you should have [Ollama](https://ollama.com/) installed.
 
 ## Installation instructions
 
@@ -192,8 +193,6 @@ Then, run the following commands in the root directory of the project:
 2. `conda activate <env>`
 3. `pip install -r requirements.txt`
 
-Create a `.env` file and put it inside the root directory of the project. Add an OpenAI API key to the .env file, for example, `OPENAI_API_KEY=<your_key>`.
-
 ## Execution instructions
 
 First of all, you need to perform the training of the recommendation system on the MovieLens-100k dataset. This is done by using the RecBole framework. This step should take a few minutes as the recommender is a basic Matrix Factorization model trained using BPR. 
@@ -202,11 +201,23 @@ To train the recommendation model, just run the following command from the folde
 
 `python recsys_training.py`
 
+This command should create a `.env` file for you containing the path the weights of the pre-trained recommendation model.
+
 After the successful training of the model, you must start Docker.
+
+If you want to self-host your model, we suggest using [Qwen3-8B](https://ollama.com/library/qwen3:8b) (our code use this model by default). To use this model, you should first download it from Ollama.
+
+To do so, be sure you have Ollama installed and then launch this command in your terminal:
+
+`ollama pull qwen3:8b`
+
+Instead, if you prefer to use the OpenAI inference provider, you must add an OpenAI API key to the .env file, for example, `OPENAI_API_KEY=<your_key>`.
 
 Finally, you can run the application by running the following command from the root folder of the project:
 
-`python app_main.py`
+OpenAI provider option: `python app_main.py`
+
+Ollama self-hosting option: `python app_main.py --self_host`
 
 ## Issues with RecBole while training or using your model with our agent?
 

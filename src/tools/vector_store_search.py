@@ -22,17 +22,14 @@ class VectorStoreSearchParams(BaseModel):
     )
 
 
-@tool
-def vector_store_search_tool(input: VectorStoreSearchParams) -> str:
+@tool(args_schema=VectorStoreSearchParams)
+def vector_store_search_tool(query: str, items: Optional[Union[List[int], str]] = None) -> str:
     """
     Performs a vector store search and returns the 10 top matching item IDs.
     """
     print(f"\n{get_time()} - vector_store_search_tool has been triggered!!!\n")
 
-    try:
-        query = input.query
-        items = input.items
-    except Exception:
+    if query is None:
         return json.dumps(JSON_GENERATION_ERROR)
 
     try:
@@ -53,7 +50,7 @@ def vector_store_search_tool(input: VectorStoreSearchParams) -> str:
         print(f"\n{get_time()} - Performing vector store search with query: {query}.\n")
         # Build optional filters
         qdrant_filter = None
-        if items:
+        if items is not None and items:
             try:
                 items = convert_to_list(items)
             except Exception:

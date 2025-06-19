@@ -12,15 +12,14 @@ class GetInteractedItemsInput(BaseModel):
     user: int = Field(..., description="User ID.")
 
 
-@tool
-def get_interacted_items_tool(input: GetInteractedItemsInput) -> str:
+@tool(args_schema=GetInteractedItemsInput)
+def get_interacted_items_tool(user: int) -> str:
     """
     Retrieves the list of the twenty most recent items a user has previously interacted with.
     """
     print(f"\n{get_time()} - get_interacted_items_tool has been triggered!!!\n")
-    try:
-        user = input.user
-    except Exception:
+
+    if user is None:
         return json.dumps(JSON_GENERATION_ERROR)
 
     # Define SQL query to get interacted items for user

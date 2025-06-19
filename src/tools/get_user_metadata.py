@@ -1,5 +1,5 @@
 import json
-from typing import List
+from typing import List, Literal
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
 from src.tools.utils import execute_sql_query, define_sql_query
@@ -7,27 +7,29 @@ from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
 
 
+AllowedFeatures = Literal["age_category", "gender"]
+
 class GetUserMetadataInput(BaseModel):
     """Schema for retrieving user metadata."""
     user: int = Field(..., description="User ID.")
-    get: List[str] = Field(
+    get: List[AllowedFeatures] = Field(
         ...,
         description='List of user metadata features to be retrieved. Available features are: "age_category", "gender".'
     )
 
 
-@tool
-def get_user_metadata_tool(input: GetUserMetadataInput) -> str:
+@tool(args_schema=GetUserMetadataInput)
+def get_user_metadata_tool(user: int, get: List[AllowedFeatures]) -> str:
     """
     Returns the requested user metadata given the user ID.
     """
     print(f"\n{get_time()} - get_user_metadata_tool has been triggered!!!\n")
 
-    try:
-        user = input.user
-        specification = input.get
-    except Exception:
+    if user is None or get is None:
         return json.dumps(JSON_GENERATION_ERROR)
+
+    specification = get
+
     sql_query, _, _ = define_sql_query("users", {"user": user, "specification": specification})
     result = execute_sql_query(sql_query)
 

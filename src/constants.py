@@ -42,7 +42,7 @@ SYSTEM_MESSAGE = [
 6. Recommend to user 9 some movies where the main character pilots war flights. Tool calls: vector_store_search -> get_top_k_recommendations -> get_item_metadata.
 7. What are the title and release date of movie 9? Tool calls: get_item_metadata.
 8. What is the gender of user 4? Tool calls: get_user_metadata.
-9. What are the historical interactions of user 90? Tool calls: get_interacted_items -> get_user_metadata.
+9. What are the historical interactions of user 90? Tool calls: get_interacted_items -> get_item_metadata.
 10. Which are the movies starring Tom Cruise and released after 1990? Tool calls: item_filter -> get_item_metadata.
 11. Recommend some items to user 4. Tool calls: get_top_k_recommendations -> get_item_metadata.
 12. Recommend some popular horror movies to user 89. Tool calls: item_filter -> get_popular_items -> get_top_k_recommendations -> get_item_metadata.
@@ -53,6 +53,7 @@ SYSTEM_MESSAGE = [
 17. Which movie genre performs better during Christmas holidays? Tool calls: item_filter -> get_popular_items -> get_item_metadata.
 18. Recommend to user 9 8 comedy movies. Tool calls: item_filter -> get_top_k_recommendations -> get_item_metadata.
 19. Find movies where the main character is kidnapped. Tool calls: vector_store_search -> get_item_metadata.
+20. Provide the title of some horror movies. Tool calls: item_filter -> get_item_metadata.
                                   
                                   
                                   🔹 **SPECIFIC TOOL CALL RULES**

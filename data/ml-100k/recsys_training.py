@@ -3,23 +3,24 @@ from pathlib import Path
 
 def set_env_variable(key, value, env_file_path="../../.env"):
     env_path = Path(env_file_path)
+    env_path.parent.mkdir(parents=True, exist_ok=True)  # Ensure directory exists
+
     lines = []
     found = False
 
     if env_path.exists():
-        with open(env_path, "r") as file:
+        with env_path.open("r") as file:
             lines = file.readlines()
-
         for i, line in enumerate(lines):
-            if line.startswith(f"{key}="):
+            if line.strip().startswith(f"{key}="):  # strip in case of leading spaces
                 lines[i] = f"{key}={value}\n"
                 found = True
                 break
 
     if not found:
-        lines.append(f"\n{key}={value}\n")
+        lines.append(f"{key}={value}\n")
 
-    with open(env_path, "w") as file:
+    with env_path.open("w") as file:
         file.writelines(lines)
 
 run_recbole(model='BPR', dataset='ml-100k', config_file_list=['./bprmf-100k.yaml'])

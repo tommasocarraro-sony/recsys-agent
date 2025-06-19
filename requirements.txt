@@ -3,6 +3,7 @@ numpy<2
 kmeans-pytorch
 langchain
 langchain-openai
+langchain-ollama
 langgraph
 sentence_transformers
 qdrant_client

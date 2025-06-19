@@ -1,16 +1,16 @@
 from typing import Annotated
-
 from langchain_core.messages.utils import count_tokens_approximately, trim_messages
 from typing_extensions import TypedDict
 from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph.message import add_messages
 import os
+import argparse
 from langchain.chat_models import init_chat_model
 from dotenv import load_dotenv
 import json
 from langchain_core.messages import ToolMessage, AIMessageChunk
-
+from langchain_ollama.chat_models import ChatOllama
 from src.tools.get_top_k_recommendations import get_top_k_recommendations_tool
 from src.utils import create_ml100k_db, create_vector_store, ensure_qdrant_running
 from src.tools.item_filter import item_filter_tool
@@ -24,6 +24,10 @@ from src.tools.utils import create_lists_for_fuzzy_matching
 from src.constants import SYSTEM_MESSAGE
 import chainlit as cl
 load_dotenv()
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--self_host", action="store_true", help="Use locally hosted model via Ollama")
+args = parser.parse_args()
 
 memory = MemorySaver()
 
@@ -48,9 +52,18 @@ class State(TypedDict):
 # the graph defines the process the LLM has to use to answer the user queries
 graph_builder = StateGraph(State)
 
-api_key = os.getenv("OPENAI_API_KEY")
+llm = None
 
-llm = init_chat_model("openai:gpt-4.1", api_key=api_key)
+if args.self_host:
+    llm = ChatOllama(
+        model="qwen3:8b",
+        temperature=0,
+        # base_url="http://localhost:11434"
+    )
+else:
+    api_key = os.getenv("OPENAI_API_KEY")
+
+    llm = init_chat_model("openai:gpt-4.1", api_key=api_key)
 
 # we tell the LLM which tools it can call
 llm_with_tools = llm.bind_tools(tools)

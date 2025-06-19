@@ -31,8 +31,8 @@ def create_recbole_environment(model_path):
         model_file=model_path
     )
 
-@tool
-def get_top_k_recommendations_tool(input: TopKRecommendationInput) -> str:
+@tool(args_schema=TopKRecommendationInput)
+def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[Union[List[int], str]] = None) -> str:
     """
     Returns a list of the IDs of the top k recommended items for the given user.
     It computes recommendations over the entire item catalog unless a list of items or a path to a temporary file
@@ -40,11 +40,7 @@ def get_top_k_recommendations_tool(input: TopKRecommendationInput) -> str:
     """
     print(f"\n{get_time()} - get_top_k_recommendations has been triggered!!!\n")
 
-    try:
-        user = input.user
-        k = input.k
-        items = input.items
-    except Exception:
+    if user is None or k is None:
         return json.dumps(JSON_GENERATION_ERROR)
 
     if 'config' not in globals():

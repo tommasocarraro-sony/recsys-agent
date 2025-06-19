@@ -1,11 +1,16 @@
 import json
-from typing import List, Union, Dict
+from typing import List, Union, Dict, Literal
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
 from src.tools.utils import execute_sql_query, define_sql_query, convert_to_list
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
 
+
+AllowedFeatures = Literal[
+    "title", "description", "genres", "director", "producer", "duration",
+    "release_date", "release_month", "country", "actors", "imdb_rating", "storyline"
+]
 
 class GetItemMetadataInput(BaseModel):
     """Schema for retrieving item metadata."""
@@ -16,7 +21,7 @@ class GetItemMetadataInput(BaseModel):
             "or as a path to a JSON file containing the item IDs."
         )
     )
-    get: List[str] = Field(
+    get: List[AllowedFeatures] = Field(
         ...,
         description='List of item metadata features to retrieve. Available features: '
                     '"title", "description", "genres", "director", "producer", "duration", '
@@ -25,18 +30,17 @@ class GetItemMetadataInput(BaseModel):
     )
 
 
-@tool
-def get_item_metadata_tool(input: GetItemMetadataInput) -> str:
+@tool(args_schema=GetItemMetadataInput)
+def get_item_metadata_tool(items: Union[List[int], str], get: List[AllowedFeatures]) -> str:
     """
     Returns the requested item metadata given the item ID(s).
     """
     print(f"\n{get_time()} - get_item_metadata_tool has been triggered!!!\n")
 
-    try:
-        items = input.items
-        specification = input.get
-    except Exception:
+    if items is None or get is None:
         return json.dumps(JSON_GENERATION_ERROR)
+
+    specification = get
 
     try:
         items = convert_to_list(items)

@@ -9,10 +9,10 @@ from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
 
 
-# Pydantic schemas
+AllowedComparison = Literal["higher", "lower", "exact"]
 
 class ComparisonFilter(BaseModel):
-    request: Literal["higher", "lower", "exact"] = Field(
+    request: AllowedComparison = Field(
         ..., description='Type of comparison: "higher", "lower", or "exact".'
     )
     threshold: int = Field(
@@ -45,7 +45,7 @@ class ItemFilterInput(BaseModel):
 
 
 # LangChain-compatible tool
-@tool("item_filter", args_schema=ItemFilterInput)
+@tool(args_schema=ItemFilterInput)
 def item_filter_tool(filters: ItemFilterInput) -> str:
     """
     Returns the path to a temporary file containing the IDs of the items that satisfy the given conditions.
