@@ -1,21 +1,18 @@
 import json
 import torch
 from src.tools.utils import get_time, convert_to_list
-from src.tools.get_item_metadata import get_item_metadata_dict
-from src.tools.get_interacted_items import get_interacted_items_list
 from recbole.quick_start import load_data_and_model
 from recbole.utils.case_study import full_sort_scores, full_sort_topk
 from langchain_core.tools import tool
 from src.constants import JSON_GENERATION_ERROR
 from pydantic import BaseModel, Field
 from typing import List, Union, Optional
-from dotenv import load_dotenv
 import os
 
 
 class TopKRecommendationInput(BaseModel):
     user: int = Field(..., description="User ID.")
-    k: int = Field(..., description="Number of recommended items.")
+    k: int = Field(default=5, description="Number of recommended items.")
     items: Optional[Union[List[int], str]] = Field(
         default=None,
         description="Item IDs (list) or path to a JSON file containing the item IDs."
@@ -37,7 +34,7 @@ def create_recbole_environment(model_path):
 @tool
 def get_top_k_recommendations_tool(input: TopKRecommendationInput) -> str:
     """
-    Returns the top k recommended items for the given user.
+    Returns a list of the IDs of the top k recommended items for the given user.
     It computes recommendations over the entire item catalog unless a list of items or a path to a temporary file
     containing a list of item is given.
     """
@@ -69,30 +66,12 @@ def get_top_k_recommendations_tool(input: TopKRecommendationInput) -> str:
 
     print(f"\n{get_time()} - These are the recommended items: {recommended_items}")
 
-    recommended_metadata = get_item_metadata_dict(input={'items': recommended_items,
-                                                  'get': ["item_id", "title", "genres", "director", "producer", "actors", "release_date", "country", "duration", "imdb_rating", "description"]},)
-
-    interacted_item_ids = get_interacted_items_list(input={'user': int(user)})
-    if interacted_item_ids:
-        interacted_metadata = get_item_metadata_dict(input={'items': interacted_item_ids,
-                                                     'get': ["item_id", "title", "genres", "director", "producer", "actors", "release_date", "country", "duration", "imdb_rating", "description"]})
-    else:
-        interacted_metadata = {}
-
-    print(f"\n{get_time()} - Metadata of interacted items: {interacted_metadata}")
-    print(f"\n{get_time()} - Metadata of recommended items: {recommended_metadata}")
-
     return json.dumps({
         "status": "success",
         "message": (
-            f"Suggested recommendations for user {user}: {recommended_metadata}. "
-            "After listing the recommended items, ask the user if she/he would like to have an "
-            "explanation for the recommendations. If the answer is positive, try to provide an "
-            "explanation for the recommendations based on the similarities between metadata "
-            "(genres, director, duration, description, and so on) of the recommended items and the "
-            f"items the user interacted in the past, which are: {interacted_metadata}. "
-            "To explain recommendations, you could also use additional knowledge you have."
-        )
+            f"The top {k} recommendations for user {user} are returned."
+        ),
+        "data": list(recommended_items)
     })
 
 

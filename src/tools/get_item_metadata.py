@@ -2,7 +2,6 @@ import json
 from typing import List, Union, Dict
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
-
 from src.tools.utils import execute_sql_query, define_sql_query, convert_to_list
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -29,8 +28,7 @@ class GetItemMetadataInput(BaseModel):
 @tool
 def get_item_metadata_tool(input: GetItemMetadataInput) -> str:
     """
-    Tool to retrieve metadata for one or more items from the database.
-    Returns a stringified JSON result for use by the assistant.
+    Returns the requested item metadata given the item ID(s).
     """
     print(f"\n{get_time()} - get_item_metadata_tool has been triggered!!!\n")
 
@@ -52,14 +50,15 @@ def get_item_metadata_tool(input: GetItemMetadataInput) -> str:
     result = execute_sql_query(sql_query)
 
     if result:
-        return_str = ""
+        return_dict = {}
         for j in range(len(result)):
-            return_str += f"Item {result[j][0]}:"
+            return_dict[result[j][0]] = {}
             for i, spec in enumerate(specification):
-                return_str += f"\n\n{spec}: {result[j][i] if result[j][i] is not None else 'unknown'}\n"
+                return_dict[result[j][0]][spec] = result[j][i] if result[j][i] is not None else 'unknown'
         return json.dumps({
             "status": "success",
-            "message": f"This is the requested metadata for items {items}:\n{return_str}",
+            "message": f"This is the requested metadata for items {items}.",
+            "data": return_dict
         })
     else:
         return json.dumps({

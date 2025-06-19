@@ -1,15 +1,11 @@
 import json
 from typing import List, Optional, Union
-
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from langchain.tools import tool
-
 from qdrant_client import QdrantClient
 from qdrant_client.models import Filter, FieldCondition, MatchAny, SearchParams
-
 from sentence_transformers import SentenceTransformer
-
 from src.tools.utils import convert_to_list
 from src.utils import get_time
 from src.constants import JSON_GENERATION_ERROR, COLLECTION_NAME
@@ -21,18 +17,15 @@ class VectorStoreSearchParams(BaseModel):
     query: str = Field(..., description="Query to perform the vector store search.")
     items: Optional[Union[List[int], str]] = Field(
         None,
-        description="Item ID(s) that have to be included in the vector store search, either directly as a list or as a path to a JSON file."
+        description="Item ID(s) that have to be included in the vector store search, either directly as a list or as "
+                    "a path to a JSON file."
     )
 
 
 @tool
 def vector_store_search_tool(input: VectorStoreSearchParams) -> str:
     """
-    This function performs a Qdrant vector store search and returns the top matching item IDs.
-    This is useful to be used when the user wants to look for:
-        - movies similar to a given movie (get the storyline of the movie and then search by storyline);
-        - movies with a storyline similar to the given storyline (search by storyline);
-        - user's mood based recommendations (search by keywords matching the user mood).
+    Performs a vector store search and returns the 10 top matching item IDs.
     """
     print(f"\n{get_time()} - vector_store_search_tool has been triggered!!!\n")
 
@@ -108,7 +101,8 @@ def vector_store_search_tool(input: VectorStoreSearchParams) -> str:
 
         return json.dumps({
             "status": "success",
-            "message": f"These are the IDs of the best matching items produced by the vector store search: {item_ids}"
+            "message": "These are the IDs of the best matching items produced by the vector store search.",
+            "data": item_ids
         })
 
     except Exception as e:

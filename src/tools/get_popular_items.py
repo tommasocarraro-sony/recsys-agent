@@ -12,7 +12,8 @@ from pydantic import BaseModel, Field
 class GetPopularItemsInput(BaseModel):
     items: Optional[Union[List[int], str]] = Field(
         default=None,
-        description="Item ID(s) for which the popularity has to be computed, either directly as a list or as a path to a JSON file."
+        description="Item ID(s) for which the popularity has to be computed, either directly as a list or as a "
+                    "path to a JSON file."
     )
     popularity: Literal["standard", "by_user_group"] = Field(
         ...,
@@ -20,24 +21,26 @@ class GetPopularItemsInput(BaseModel):
     )
     user_group: Optional[List[str]] = Field(
         default=None,
-        description="User groups for computing popularity: 'kid', 'teenager', 'young_adult', 'adult', 'senior', 'male', 'female'."
+        description="User groups for computing popularity: 'kid', 'teenager', 'young_adult', 'adult', 'senior', 'male', "
+                    "'female'."
     )
-    get: Literal["all", "top3"] = Field(
-        ...,
-        description="Whether to return all the popular items or just the top 3."
+    k: int = Field(
+        default=20,
+        description="Number of popular items to be returned."
     )
 
 @tool
 def get_popular_items_tool(input: GetPopularItemsInput) -> str:
     """
-    Returns the IDs of the popular items based on ratings, optionally filtered by user group (i.e., age category) and
-    capped to top 3 popular items if requested.
+    Returns the IDs of the k most popular items based on the number of ratings they received. If a list of item IDs is
+    given, the popularity computation will be restricted to those items only.
+    The popularity can optionally be computed based on a user group.
     """
     print(f"\n{get_time()} - get_popular_items has been triggered!!!\n")
 
     try:
         popularity = input.popularity
-        get_type = input.get
+        k = input.k
         items = input.items
         user_group = input.user_group
     except Exception:
@@ -85,19 +88,13 @@ def get_popular_items_tool(input: GetPopularItemsInput) -> str:
         q75 = np.quantile([count for _, count in ids_with_count_sorted], 0.75)
         item_ids = [item_id for item_id, count in ids_with_count_sorted if count > q75]
 
-        filtered = False
-        if get_type == "top3":
-            item_ids = item_ids[:3]
-        elif len(item_ids) > 20:
-            item_ids = item_ids[:20]
-            filtered = True
+        if len(item_ids) > k:
+            item_ids = item_ids[:k]
 
         return json.dumps({
             "status": "success",
-            "message": (
-                f"These are the IDs of the {len(item_ids)} most popular items: {item_ids}. "
-                f"{'Explain the user that more than 20 popular items were retrieved by the tool. However, to avoid verbosity and for efficient use of tokens, the IDs of the 20 most popular items are generated.' if filtered else ''}"
-            )
+            "message": f"These are the IDs of the {len(item_ids)} most popular items",
+            "data": item_ids
         })
     else:
         return json.dumps({

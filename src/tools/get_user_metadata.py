@@ -2,7 +2,6 @@ import json
 from typing import List
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
-
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -20,7 +19,7 @@ class GetUserMetadataInput(BaseModel):
 @tool
 def get_user_metadata_tool(input: GetUserMetadataInput) -> str:
     """
-    Tool to retrieve user metadata from the database.
+    Returns the requested user metadata given the user ID.
     """
     print(f"\n{get_time()} - get_user_metadata_tool has been triggered!!!\n")
 
@@ -33,14 +32,14 @@ def get_user_metadata_tool(input: GetUserMetadataInput) -> str:
     result = execute_sql_query(sql_query)
 
     if result:
-        return_str = ""
-        for j in range(len(result)):
-            return_str += f"User {result[j][0]}:"
-            for i, spec in enumerate(specification):
-                return_str += f"\n\n{spec}: {result[j][i] if result[j][i] is not None else 'unknown'}\n"
+        return_dict = {}
+        for i, spec in enumerate(specification):
+            return_dict[spec] = result[0][i] if result[0][i] is not None else 'unknown'
+
         return json.dumps({
             "status": "success",
-            "message": f"This is the requested metadata for user {user}:\n{return_str}.",
+            "message": f"This is the requested metadata for user {user}",
+            "data": return_dict
         })
     else:
         return json.dumps({

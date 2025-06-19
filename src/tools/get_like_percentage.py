@@ -45,5 +45,6 @@ def get_like_percentage_tool(input: GetLikePercentageInput) -> str:
 
     return json.dumps({
         "status": "success",
-        "message": f"This is the percentage of users that might like the given items: {perc:.2f}%"
+        "message": "This is the percentage of users that might like the given items.",
+        "data": f"{perc:.2f}%"
     })

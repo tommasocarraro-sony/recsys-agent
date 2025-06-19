@@ -2,10 +2,8 @@ import json
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
 from typing import List, Union
-
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
-from src.tools.get_item_metadata import get_item_metadata_dict
 from src.utils import get_time
 
 
@@ -17,8 +15,7 @@ class GetInteractedItemsInput(BaseModel):
 @tool
 def get_interacted_items_tool(input: GetInteractedItemsInput) -> str:
     """
-    Tool to retrieve the list of items a user has previously interacted with,
-    returning detailed metadata for those items.
+    Retrieves the list of the twenty most recent items a user has previously interacted with.
     """
     print(f"\n{get_time()} - get_interacted_items_tool has been triggered!!!\n")
     try:
@@ -42,27 +39,14 @@ def get_interacted_items_tool(input: GetInteractedItemsInput) -> str:
     # Limit to most recent 20 if more than 20 interactions
     if len(interacted_items) > 20:
         interacted_items = interacted_items[-20:]
-        message = (f"User {user} has interacted with more than 20 items; showing the most recent 20.")
+        message = f"User {user} has interacted with more than 20 items; returning the most recent 20."
     else:
-        message = f"All items user {user} interacted with are shown."
-
-    # Prepare params for metadata retrieval
-    metadata_params = {
-        "items": interacted_items,
-        "get": [
-            "item_id", "title", "genres", "director", "producer", "actors",
-            "release_date", "release_month", "country", "duration",
-            "imdb_rating", "description"
-        ]
-    }
-
-    # Retrieve detailed metadata dictionary using helper function
-    metadata_dict = get_item_metadata_dict(input=metadata_params)
+        message = f"All items user {user} interacted with are returned."
 
     return json.dumps({
         "status": "success",
         "message": message,
-        "data": metadata_dict
+        "data": interacted_items
     })
 
 
