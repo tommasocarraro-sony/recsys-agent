@@ -11,3 +11,6 @@ if args.self_host:
     os.environ["SELF_HOST"] = "true"
 
 subprocess.run(cmd)
+
+# todo solve bug item 98
+# todo put the item_id in the query always so that is always returned and the LLM does not make confusion

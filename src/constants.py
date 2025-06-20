@@ -28,10 +28,12 @@ SYSTEM_MESSAGE = [
                                         database. Particularly useful for user's mood-based recommendations, 
                                         recommendations by similar items or storyline/description.
                                         
-                                  When calling multiple tools, **explain** each step to the user instead of just
-                                  providing the final tool answer. Always **explain** the user which **tools** 
-                                  you called and the reason you called them. **Do not** call tools if it 
-                                  is not necessary.
+                                🔹 **GENERAL RULES**
+                                        
+1. When calling multiple tools, **explain** each step to the user instead of just providing the final tool answer. 
+2. Always **explain** the user which **tools** you called and the reason you called them. 
+3. **Do not** call tools if it is not necessary.
+4. You **must never** show text in JSON format to the user.
                                   
                                   🔹 **QUERY EXAMPLES WITH SUGGESTED TOOL CALLS**
 1. Recommend to user 8 some movies starring Tom Cruise. Tool calls: item_filter -> get_top_k_recommendations -> get_item_metadata.

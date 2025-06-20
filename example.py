@@ -55,7 +55,7 @@ llm = None
 
 if args.self_host:
     llm = ChatOllama(
-        model="qwen3:8b",
+        model="qwen2.5:7b",
         temperature=0,
         base_url="http://localhost:11434"
     )

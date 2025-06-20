@@ -212,11 +212,11 @@ This command should create a `.env` file for you containing the path the weights
 
 After the successful training of the model, you must start Docker.
 
-If you want to self-host your model, we suggest using [Qwen3-8B](https://ollama.com/library/qwen3:8b) (our code use this model by default). To use this model, you should first download it from Ollama.
+If you want to self-host your model, we suggest using [Qwen2.5-7B](https://ollama.com/library/qwen2.5:7b) (our code use this model by default). To use this model, you should first download it from Ollama.
 
 To do so, be sure you have Ollama installed and then launch this command in your terminal:
 
-`ollama pull qwen3:8b`
+`ollama pull qwen2.5:7b`
 
 Instead, if you prefer to use the OpenAI inference provider, you must add an OpenAI API key to the .env file, for example, `OPENAI_API_KEY=<your_key>`.
 
@@ -228,13 +228,13 @@ Ollama self-hosting option: `python app_main.py --self_host`
 
 ## Do you need to self-host on a GPU that is on a remote cluster?
 
-Make sure that Ollama is installed on the cluster. Then, launch this command on your cluster (assuming you want to use the Qwen3-8B model):
+Make sure that Ollama is installed on the cluster. Then, launch this command on your cluster (assuming you want to use the Qwen2.5-7B model):
 
-`ollama pull qwen3:8b`
+`ollama pull qwen2.5:7b`
 
 Then, run the model on the cluster by launching:
 
-`ollama run qwen3:8b`
+`ollama run qwen2.5:7b`
 
 Once the model is running, create a tunnel from your local laptop to your remote cluster where Ollama is running. You can do this by opening the terminal and launching the command:
 
