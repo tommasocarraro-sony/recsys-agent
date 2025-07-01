@@ -38,9 +38,11 @@ def get_interacted_items_tool(user: int) -> str:
     # Limit to most recent 20 if more than 20 interactions
     if len(interacted_items) > 20:
         interacted_items = interacted_items[-20:]
-        message = f"User {user} has interacted with more than 20 items; returning the most recent 20."
+        message = f"User {user} has interacted with more than 20 items. The most recent 20 are returned."
     else:
         message = f"All items user {user} interacted with are returned."
+
+    print(f"\n{get_time()} - Returned list: {interacted_items}\n")
 
     return json.dumps({
         "status": "success",

@@ -184,4 +184,4 @@ while True:
 
 
 # todo add database for sessions
-# todo add chainlit
+# todo fix item_filter so that a list of items is returned instead of returning the path to a file??

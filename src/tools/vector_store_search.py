@@ -96,9 +96,11 @@ def vector_store_search_tool(query: str, items: Optional[Union[List[int], str]] 
 
         item_ids = list(item_metadata.keys())
 
+        print(f"\n{get_time()} - Returned list: {item_ids}\n")
+
         return json.dumps({
             "status": "success",
-            "message": "These are the IDs of the best matching items produced by the vector store search.",
+            "message": f"The IDs of the {len(item_ids)} best matching items produced by the vector store search are returned.",
             "data": item_ids
         })
 

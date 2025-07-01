@@ -38,9 +38,11 @@ def get_user_metadata_tool(user: int, get: List[AllowedFeatures]) -> str:
         for i, spec in enumerate(specification):
             return_dict[spec] = result[0][i] if result[0][i] is not None else 'unknown'
 
+        print(f"\n{get_time()} - Returned dictionary: {return_dict}\n")
+
         return json.dumps({
             "status": "success",
-            "message": f"This is the requested metadata for user {user}",
+            "message": f"The requested metadata for user {user} is returned.",
             "data": return_dict
         })
     else:

@@ -111,7 +111,7 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
             print(f"Saved item IDs to {file_path}")
             mess = (
                 "The IDs of the items satisfying the given conditions have been saved to the returned file path."
-                "If another tool call is needed, tou can now proceed to the next tool call. It is enough you pass "
+                "If another tool call is needed, you can now proceed to the next tool call. It is enough you pass "
                 "this path to the \"items\" parameter of the next tool call."
             )
             matched = True
@@ -135,6 +135,9 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
     )
 
     if matched or corrections or failed_corrections:
+
+        print(f"\n{get_time()} - Returned path {file_path}\n")
+
         return json.dumps({
             "status": "success",
             "message": correction_text + no_match_text,

@@ -60,7 +60,7 @@ def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[Union[
     else:
         recommended_items = recommend_full_catalog(uid_series, k=k)
 
-    print(f"\n{get_time()} - These are the recommended items: {recommended_items}")
+    print(f"\n{get_time()} - Returned recommended items: {recommended_items}\n")
 
     return json.dumps({
         "status": "success",

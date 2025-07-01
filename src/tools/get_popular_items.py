@@ -91,9 +91,11 @@ def get_popular_items_tool(popularity: AllowedPopularity, k: int = 20, items: Op
         if len(item_ids) > k:
             item_ids = item_ids[:k]
 
+        print(f"\n{get_time()} - Returned list: {item_ids}\n")
+
         return json.dumps({
             "status": "success",
-            "message": f"These are the IDs of the {len(item_ids)} most popular items",
+            "message": f"The IDs of the {len(item_ids)} most popular items are returned.",
             "data": item_ids
         })
     else:

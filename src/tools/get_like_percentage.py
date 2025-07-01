@@ -41,8 +41,10 @@ def get_like_percentage_tool(items: Union[List[int], str]) -> str:
     n_users_by_items = len(set(int(inter[0]) for inter in user_interactions if inter[1] in items))
     perc = n_users_by_items / n_users * 100
 
+    print(f"\n{get_time()} - Returned percentage: {perc:.2f}%\n")
+
     return json.dumps({
         "status": "success",
-        "message": "This is the percentage of users that might like the given items.",
+        "message": "The percentage of users that might like the given items is returned.",
         "data": f"{perc:.2f}%"
     })

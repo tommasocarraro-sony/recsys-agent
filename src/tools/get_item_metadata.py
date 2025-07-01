@@ -59,9 +59,12 @@ def get_item_metadata_tool(items: Union[List[int], str], get: List[AllowedFeatur
             return_dict[result[j][0]] = {}
             for i, spec in enumerate(specification):
                 return_dict[result[j][0]][spec] = result[j][i] if result[j][i] is not None else 'unknown'
+
+        print(f"\n{get_time()} - Returned dictionary: {return_dict}\n")
+
         return json.dumps({
             "status": "success",
-            "message": f"This is the requested metadata for items {items}.",
+            "message": "The requested metadata for the given item IDs is returned.",
             "data": return_dict
         })
     else:
