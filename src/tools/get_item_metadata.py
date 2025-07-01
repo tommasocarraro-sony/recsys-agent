@@ -40,7 +40,7 @@ def get_item_metadata_tool(items: Union[List[int], str], get: List[AllowedFeatur
     if items is None or get is None:
         return json.dumps(JSON_GENERATION_ERROR)
 
-    specification = get
+    specification = ["item_id"] + get
 
     try:
         items = convert_to_list(items)
@@ -58,7 +58,8 @@ def get_item_metadata_tool(items: Union[List[int], str], get: List[AllowedFeatur
         for j in range(len(result)):
             return_dict[result[j][0]] = {}
             for i, spec in enumerate(specification):
-                return_dict[result[j][0]][spec] = result[j][i] if result[j][i] is not None else 'unknown'
+                if spec != "item_id":
+                    return_dict[result[j][0]][spec] = result[j][i] if result[j][i] is not None else 'unknown'
 
         print(f"\n{get_time()} - Returned dictionary: {return_dict}\n")
 
