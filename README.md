@@ -184,7 +184,7 @@ After this, you should be able to start the application and see that the LLM is 
 
 If you are having issues creating your custom tools, we also invite you to follow this simple LangGraph [guide]{https://langchain-ai.github.io/langgraph/agents/agents/}.
 
-## Important consideration on LLM model selection
+## Important considerations on LLM model selection
 
 The majority of our experiments have been done using the closed-source GPT4.1. In our opinion, this is the best model when it comes to native function-calling capabilities, multi-step reasoning, and integration with the LangChain/LangGraph framework. In our experiments, GPT4.1 rarely made mistakes, even for very complex queries requiring more than three tool calls. If you want a smooth conversation flow, this is the model to go for. The drawback is that you need to pay for an OpenAI API key.
 
