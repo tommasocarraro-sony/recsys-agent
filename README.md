@@ -184,6 +184,18 @@ After this, you should be able to start the application and see that the LLM is 
 
 If you are having issues creating your custom tools, we also invite you to follow this simple LangGraph [guide]{https://langchain-ai.github.io/langgraph/agents/agents/}.
 
+## Important consideration on LLM model selection
+
+The majority of our experiments have been done using the closed-source GPT4.1. In our opinion, this is the best model when it comes to native function-calling capabilities, multi-step reasoning, and integration with the LangChain/LangGraph framework. In our experiments, GPT4.1 rarely made mistakes, even for very complex queries requiring more than three tool calls. If you want a smooth conversation flow, this is the model to go for. The drawback is that you need to pay for an OpenAI API key.
+
+For practitioners and researchers who cannot access GPT4.1, we decided to extend this project to the investigation of open-weight models that can be self-hosted on a laptop or cluster with GPUs. In this demo, open-source models can be self-hosted through Ollama.
+
+We made experiments with all the models available in Ollama that can support native function calling. The [Qwen2.5](https://ollama.com/library/qwen2.5/tags) model family has been the one that provided the best results in our scenario. We tried with the 7B model, with different quantizations, on a MacBook Pro (M4 Pro / 24 GB). Then, we tried with the 32B model on an L40S GPU with 48 GB of VRAM.
+
+Due to the inferior capability of these models with respect to GPT4.1, it is not guaranteed that system prompt instructions are always carefully followed. Additionally, even if comprehensive examples are provided in the system prompt, this model family can forget to call some tools or can call wrong or useless tools.
+
+These issues might be solved by implementing the tool's calling logic from scratch, instead of relying on the LangGraph/LangChain framework. The idea is to leave to the LLM the only task of generating the tool call plan as a list of JSON files containing function names and parameters. The self-implemented middleware layer must then understand that some JSONs have been generated, parse and validate them, and finally call the right tools and return the results to the LLM. As this is not a trivial task, we leave this for future work. We invite the reader to follow this [repository](https://github.com/frankie336/entities_api) for an open-source API that does exactly this. We tried this API in the early stages of this project, and it is constantly updated.
+
 ## Prerequisites
 
 - You should have [Docker](https://www.docker.com/) and [Conda](https://www.anaconda.com/docs/getting-started/miniconda/main) installed.
