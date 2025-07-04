@@ -21,7 +21,7 @@ from src.tools.get_like_percentage import get_like_percentage_tool
 from src.tools.get_popular_items import get_popular_items_tool
 from src.tools.vector_store_search import vector_store_search_tool
 from src.tools.utils import create_lists_for_fuzzy_matching
-from src.constants import SYSTEM_MESSAGE
+from src.constants import SYSTEM_MESSAGE, SYSTEM_MESSAGE_ENHANCED
 load_dotenv()
 
 parser = argparse.ArgumentParser()
@@ -161,7 +161,7 @@ def stream_graph_updates(user_input: str):
     messages = []
 
     if not conversation_started:
-        messages.extend(SYSTEM_MESSAGE)
+        messages.extend(SYSTEM_MESSAGE if args.self_host else SYSTEM_MESSAGE_ENHANCED)
         conversation_started = True
 
     messages.append({"role": "user", "content": user_input})
