@@ -166,7 +166,7 @@ async def stream_graph_updates(message: cl.Message):
     messages = cl.user_session.get("messages")
 
     if not conversation_started:
-        messages.extend(SYSTEM_MESSAGE if args.self_host else SYSTEM_MESSAGE_ENHANCED)
+        messages.extend(SYSTEM_MESSAGE if os.getenv("SELF_HOST") == "true" else SYSTEM_MESSAGE_ENHANCED)
         cl.user_session.set("conversation_started", True)
 
     messages.append({"role": "user", "content": user_input})
