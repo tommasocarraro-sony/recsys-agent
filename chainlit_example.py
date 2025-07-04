@@ -52,7 +52,7 @@ llm = None
 
 if os.getenv("SELF_HOST") == "true":
     llm = ChatOllama(
-        model="qwen2.5:7b",
+        model=os.getenv("LLM"),
         temperature=0,
         base_url="http://localhost:11434"
     )

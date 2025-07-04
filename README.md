@@ -258,9 +258,15 @@ Instead, if you prefer to use the OpenAI inference provider, you must add an Ope
 
 Finally, you can run the application by running the following command from the root folder of the project:
 
-OpenAI provider option: `python app_main.py`
+OpenAI provider option: `python app_main.py` --> We do not currently support other OpenAI closed-source models, so we do not give the option to change the LLM when using the OpenAI inference provider.
 
-Ollama self-hosting option: `python app_main.py --self_host`
+Ollama self-hosting option: `python app_main.py --self_host` --> By default, our application uses Qwen2.5:7b. If you want to change the self-hosted LLM, you can use the following command (assuming the chosen model is [Qwen2.5:72b](https://ollama.com/library/qwen2.5:72b)):
+
+`python app_main.py --self_host --llm Qwen2.5:72b`
+
+All Ollama models with function-calling capabilities are supported. [Here](https://ollama.com/search?c=tools) is a list.
+
+**Attention**: When self-hosting, be sure you have enough RAM or VRAM to load and use the chosen model.
 
 ## Do you need to self-host on a GPU that is on a remote cluster?
 
@@ -280,7 +286,7 @@ Be sure you do not have Ollama working on your local laptop. If it is working, s
 
 Everything is now set up. It is enough that you launch the command:
 
-`python app_main.py --self_host`
+`python app_main.py --self_host --llm Qwen2.5:72b`
 
 If tunneling is set up correctly and your model is running with Ollama in your remote cluster, the application should successfully connect to that Ollama instance, and you should now be able to interact with your LLM assistant.
 
