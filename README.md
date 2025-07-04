@@ -69,7 +69,7 @@ The infrastructure of this project includes different components that interact e
 1. A pre-trained recommendation system that the LLM can access. In this project, we use a simple Matrix Factorization model trained on the MovieLens-100k dataset using the [RecBole]{https://recbole.io/} recommendation framework.
 2. A MySQL database containing content information about users and items that can be accessed by the LLM to get textual descriptions of users and/or items.
 3. A [Qdrant]{https://qdrant.tech/} vector store containing embedded item descriptions that can be used by the LLM to answer ambiguous or complex queries where the recommendation system is not enough to provide a comprehensive reply. This vector store is run inside a Docker container.
-4. An LLM model, either self-hosted or accessible through AI inference providers. In our case, we experimented with GPT4.1 (closed-source and accessed through an OpenAI API key) and Qwen2.5-7B (open-weight and self-hosted). The only requirement is that the LLM has function-calling capabilities.
+4. An LLM model, either self-hosted or accessible through AI inference providers. In our case, we experimented with GPT4.1 (closed-source and accessed through an OpenAI API key), Qwen2.5-7B, and Qwen2.5-72B (open-weight and self-hosted). The only requirement is that the LLM has function-calling capabilities.
 5. An API to make the LLM interact with the user-defined tools. This is also called the middleware layer. This layer has to detect function calls, call the correct function, and return the result to the LLM. In our project, we use the [LangChain/LangGraph]{https://www.langchain.com/} framework.
 6. A front-end app for a smooth interaction between the user and the LLM. In this project, we used [Chainlit]{https://docs.chainlit.io/get-started/overview}.
 
@@ -214,9 +214,9 @@ The majority of our experiments have been done using the closed-source GPT4.1. I
 
 For practitioners and researchers who cannot access GPT4.1, we decided to extend this project to the investigation of open-weight models that can be self-hosted on a laptop or cluster with GPUs. In this demo, open-source models can be self-hosted through Ollama.
 
-We made experiments with all the models available in Ollama that can support native function calling. The [Qwen2.5](https://ollama.com/library/qwen2.5/tags) model family has been the one that provided the best results in our scenario. We tried with the 7B model, with different quantizations, on a MacBook Pro (M4 Pro / 24 GB). Then, we tried with the 32B model on an L40S GPU with 48 GB of VRAM.
+We made experiments with all the models available in Ollama that can support native function calling. The [Qwen2.5](https://ollama.com/library/qwen2.5/tags) model family has been the one that provided the best results in our scenario. We tried with the 7B model, with different quantizations, on a MacBook Pro (M4 Pro / 24 GB). Then, we tried with the 72B model on four NVIDIA L40S GPUs with 48 GB of VRAM.
 
-Due to the inferior capability of these models with respect to GPT4.1, it is not guaranteed that system prompt instructions are always carefully followed. Additionally, even if comprehensive examples are provided in the system prompt, this model family can forget to call some tools or can call wrong or useless tools.
+Due to the inferior capability of these models with respect to GPT4.1, it is not guaranteed that system prompt instructions are always carefully followed. Additionally, even if comprehensive examples are provided in the system prompt, this model family can forget to call some tools or can call wrong or useless tools. However, the more the model is capable, the better the function-calling and multi-step reasoning performance. Hence, if you have the chance to self-host Qwen2.5-72B on your cluster, we suggest you go for it. In our opinion, it is the best open-source model for this recommendation scenario.
 
 These issues might be solved by implementing the tool's calling logic from scratch, instead of relying on the LangGraph/LangChain framework. The idea is to leave to the LLM the only task of generating the tool call plan as a list of JSON files containing function names and parameters. The self-implemented middleware layer must then understand that some JSONs have been generated, parse and validate them, and finally call the right tools and return the results to the LLM. As this is not a trivial task, we leave this for future work. We invite the reader to follow this [repository](https://github.com/frankie336/entities_api) for an open-source API that does exactly this. We tried this API in the early stages of this project. It works relatively well, and it is constantly updated.
 
@@ -248,7 +248,7 @@ This command should create a `.env` file for you containing the path to the weig
 
 After the successful training of the model, you must start Docker.
 
-If you want to self-host your model, we suggest using [Qwen2.5-7B](https://ollama.com/library/qwen2.5:7b) (our code uses this model by default). To use this model, you should first download it from Ollama.
+If you want to self-host your model on the CPU, we suggest using [Qwen2.5-7B](https://ollama.com/library/qwen2.5:7b) (we tested this model a lot). To use this model, you should first download it from Ollama.
 
 To do so, be sure you have Ollama installed and then launch this command in your terminal:
 
@@ -264,13 +264,13 @@ Ollama self-hosting option: `python app_main.py --self_host`
 
 ## Do you need to self-host on a GPU that is on a remote cluster?
 
-Make sure that Ollama is installed on the cluster. Then, launch this command on your cluster (assuming you want to use the Qwen2.5-7B model):
+Make sure that Ollama is installed on the cluster. Then, launch this command on your cluster (assuming you want to use the [Qwen2.5-72B](https://ollama.com/library/qwen2.5:72b) model):
 
-`ollama pull qwen2.5:7b`
+`ollama pull qwen2.5:72b`
 
 Then, run the model on the cluster by launching:
 
-`ollama run qwen2.5:7b`
+`ollama run qwen2.5:72b`
 
 Once the model is running, create a tunnel from your local laptop to your remote cluster where Ollama is running. You can do this by opening the terminal and launching the command:
 
