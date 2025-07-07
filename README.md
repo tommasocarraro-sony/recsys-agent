@@ -133,7 +133,7 @@ Our assistant can currently respond to these kinds of questions:
 - Recommend to user 2 some movies that match this storyline/description: <description>.
 - Recommend to user 9 some movies where the main character is kidnapped.
 5. Questions about streaming platform statistics:
-- What might be the percentage of users interested in this storyline? <storyline>.
+- What might be the percentage of users interested in this storyline? <storyline\>.
 - What is the ideal content length for comedy genre movies?
 - What is the most engaging movie genre during the Christmas holidays?
 6. Questions about the historical interactions of the users:
