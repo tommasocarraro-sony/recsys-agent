@@ -54,7 +54,7 @@ The core question is: why do we not leave the LLM and the recommendation system 
 
 LLMs are very good at natural language understanding, complex query understanding, textual reasoning, and question answering. Recommendation systems, on the other hand, are specifically designed to provide recommendations.
 
-That is why we decided to move towards LLM-based Recommendation System Agents, where LLMs are assistants designed to answer complex recommendation queries. To answer these complex queries, LLMs can interact with external tools, like recommendation system agents. The tools provide some results, and the LLM can reason about them or use them as additional context to prepare the final answer for the user.
+That is why we decided to move towards LLM-based Recommendation System Agents, where LLMs are assistants designed to answer complex recommendation queries. To answer these complex queries, LLMs can interact with external tools, like recommendation system engines. The tools provide some results, and the LLM can reason about them or use them as additional context to prepare the final answer for the user.
 
 By doing so, there is no risk of hallucinations of user and item IDs by the LLM, as, in the end, it always has to interact with a recommender system that provides rankings narrowed to the item catalog.
 
