@@ -32,7 +32,7 @@ We found this work very interesting and novel. However, in real-world recommenda
 
 ### 3. LLMs are fine-tuned on the recommendation task
 
-The idea of these works is to convert the recommendation task into a natural language processing task, where prompt templates for the fine-tuning of the model are constructed in such a way that given the input (e.g., the item IDs in the history of the user) the LLM has to predict the output (e.g., the item ID of the next item the user will click on). Examples of these prompt templates are shown in the following figure taken from the [paper]{https://dl.acm.org/doi/10.1145/3523227.3546767}: `Recommendation as Language Processing (RLP): A Unified Pretrain, Personalized Prompt & Predict Paradigm (P5)`.
+The idea of these works is to convert the recommendation task into a natural language processing task, where prompt templates for the fine-tuning of the model are constructed in such a way that given the input (e.g., the item IDs in the history of the user) the LLM has to predict the output (e.g., the item ID of the next item the user will click on). Examples of these prompt templates are shown in the following figure taken from the [paper](https://dl.acm.org/doi/10.1145/3523227.3546767): `Recommendation as Language Processing (RLP): A Unified Pretrain, Personalized Prompt & Predict Paradigm (P5)`.
 
 ![P5 illustration](pics/p5.png)
 
@@ -71,12 +71,12 @@ The proposed direction has many advantages:
 
 The infrastructure of this project includes different components that interact each other:
 
-1. A pre-trained recommendation system that the LLM can access. In this project, we use a simple Matrix Factorization model trained on the MovieLens-100k dataset using the [RecBole]{https://recbole.io/} recommendation framework.
+1. A pre-trained recommendation system that the LLM can access. In this project, we use a simple Matrix Factorization model trained on the MovieLens-100k dataset using the [RecBole](https://recbole.io/) recommendation framework.
 2. A MySQL database containing content information about users and items that can be accessed by the LLM to get textual descriptions of users and/or items.
-3. A [Qdrant]{https://qdrant.tech/} vector store containing embedded item descriptions that can be used by the LLM to answer ambiguous or complex queries where the recommendation system is not enough to provide a comprehensive reply. This vector store is run inside a Docker container.
+3. A [Qdrant](https://qdrant.tech/) vector store containing embedded item descriptions that can be used by the LLM to answer ambiguous or complex queries where the recommendation system is not enough to provide a comprehensive reply. This vector store is run inside a Docker container.
 4. An LLM model, either self-hosted or accessible through AI inference providers. In our case, we experimented with GPT4.1 (closed-source and accessed through an OpenAI API key), Qwen2.5-7B, and Qwen2.5-72B (open-weight and self-hosted). The only requirement is that the LLM has function-calling capabilities.
-5. An API to make the LLM interact with the user-defined tools. This is also called the middleware layer. This layer has to detect function calls, call the correct function, and return the result to the LLM. In our project, we use the [LangChain/LangGraph]{https://www.langchain.com/} framework.
-6. A front-end app for a smooth interaction between the user and the LLM. In this project, we used [Chainlit]{https://docs.chainlit.io/get-started/overview}.
+5. An API to make the LLM interact with the user-defined tools. This is also called the middleware layer. This layer has to detect function calls, call the correct function, and return the result to the LLM. In our project, we use the [LangChain/LangGraph](https://www.langchain.com/) framework.
+6. A front-end app for a smooth interaction between the user and the LLM. In this project, we used [Chainlit](https://docs.chainlit.io/get-started/overview).
 
 ## Function calling workflow
 
@@ -211,7 +211,7 @@ After you have defined the tool logic, you just need to bind the tool to the LLM
 
 After this, you should be able to start the application and see that the LLM is using your custom tool when needed.
 
-If you are having issues creating your custom tools, we also invite you to follow this simple LangGraph [guide]{https://langchain-ai.github.io/langgraph/agents/agents/}.
+If you are having issues creating your custom tools, we also invite you to follow this simple LangGraph [guide](https://langchain-ai.github.io/langgraph/agents/agents/).
 
 ## Important considerations on LLM model selection
 
