@@ -80,10 +80,10 @@ The infrastructure of this project includes different components that interact e
 
 ## Function calling workflow
 
-For researchers and practitioners new to this topic, the function calling workflow can be summarized as:
+For researchers and practitioners new to this topic, the function-calling workflow can be summarized as:
 
 1. The user asks a query.
-2. The LLM needs to understand if the query requires calling an external tool or if it can be answered using its internal knowledge. The LLM is able to understand this also thanks to a system prompt, namely, a prompt that is sent to the LLM before the interaction with the user starts. This special prompt contains instructions to instruct the LLM about the tool calling process, specifically, when it has to access external tools.
+2. The LLM needs to understand if the query requires calling an external tool or if it can be answered using its internal knowledge. The LLM is able to understand this also thanks to a system prompt, namely, a prompt that is sent to the LLM before the interaction with the user starts. This special prompt contains instructions to instruct the LLM about the tool calling process, specifically, when it has to access external tools. For examples of system prompts, go to `./src/constants.py`.
 3. If the LLM detects that a tool call is needed, it has to generate a JSON file containing the name of the function that has to be called, plus the parameters for invoking this function.
 4. The tool is invoked, and the logic is executed.
 5. The tool returns the results to the LLM as text or JSON semi-structured data.
