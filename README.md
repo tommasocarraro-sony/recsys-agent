@@ -17,12 +17,12 @@ In this spectrum of works, the LLM is purely used as a feature extractor. The te
 The main drawback of these works is that the LLM capabilities are only exploited to extract some content features, so no LLM's advanced reasoning is taken into account. This means the LLM does not directly provide recommendations or reasons about user and item relationships. 
 
 An illustration of this category of works is depicted in the following figure taken from the [paper](https://dl.acm.org/doi/10.1145/3616855.3635845): `ONCE: Boosting Content-based Recommendation with Both Open- and Closed-source Large Language Models`.
-<img src="./pics/once.png"/>
+![ONCE architecture](./pics/once.png)
 
 ### 2. LLMs are used for the next item title prediction in sequential recommendation systems
 
 In these kinds of works, the user and item representations (i.e., embeddings) are first pre-trained using different techniques depending on the specific work. After that, a user encoder and an item encoder are learned to translate the user and item representations into the token space of the LLM model, so that users and items become internal tokens that the LLM can reason about. The training procedure of these encoders is depicted in the following figure taken from the [paper](https://dl.acm.org/doi/10.1145/3637528.3671931): `Large Language Models meet Collaborative Filtering: An Efficient All-round LLM-based Recommender System`.
-<img src="./pics/allmrec.png"/>
+![A-LLMRec architecture](./pics/allmrec.png)
 As you can see from the figure, the LLM is frozen. The prompt for the training is prepared so that the user and item representations are represented as token embeddings after the embedding layer of the LLM. Note that this is an interesting trick because it does not require enlarging the vocabulary of the LLM for the LLM to reason about new tokens (i.e., user and item tokens). By doing so, the LLM remains untouched. The two encoders are simply learned so that the LLM is always able to reconstruct the correct title given a pool of 20 candidate item titles.
 
 We found this work very interesting and novel. However, in real-world recommendation scenarios, it is the job of the recommender system to find plausible candidate items to then generate a ranking for the user. We discovered that if the candidate items are removed from the prompt at inference time, the test performance of the system dramatically drops. Hence, the main drawback of these works is twofold. First, the LLM is only able to predict the next item title, while, usually, recommendation systems work with user and item IDs. Second, these systems always need a pool of candidate items to be provided in the prompts, and this is impossible in real-world scenarios.
@@ -30,7 +30,7 @@ We found this work very interesting and novel. However, in real-world recommenda
 ### 3. LLMs are fine-tuned on the recommendation task
 
 The idea of these works is to convert the recommendation task into a natural language processing task, where prompt templates for the fine-tuning of the model are constructed in such a way that given the input (e.g., the item IDs in the history of the user) the LLM has to predict the output (e.g., the item ID of the next item the user will click on). Examples of these prompt templates are shown in the following figure taken from the [paper]{https://dl.acm.org/doi/10.1145/3523227.3546767}: `Recommendation as Language Processing (RLP): A Unified Pretrain, Personalized Prompt & Predict Paradigm (P5)`.
-<img src="./pics/p5.png"/>
+![P5 illustration](./pics/p5.png)
 On the left part of the figure, there is the input, while on the right part, the output. As you can see from the figure, different recommendation tasks can be performed by the same LLM thanks to the fact that all these tasks can be translated into natural language prompts for the fine-tuning of the LLM model. Interestingly, since these tasks are converted to text, the classical negative log-likelihood loss for LLM training can be used as the only loss for fine-tuning the LLM on all these tasks together. 
 
 We found these works interesting and novel; however, the recommendation performance measured in terms of offline ranking metrics such as NDCG and Hit ratio is bad compared to standard recommendation systems (e.g., under 0.1), indicating the LLM models struggle to learn these kinds of user-item relationships. One of the main issues that might explain the poor performance of these models is that user and item IDs are provided to the LLM. The LLM is pre-trained on language tasks, so it struggles to understand the differences between different numerical IDs. Instead, this difference is crucial for recommender systems, especially in sequential recommendation tasks, where the order of these IDs in the user history is very important. The LLM struggles to understand this ordering.
@@ -87,7 +87,7 @@ For researchers and practitioners new to this topic, the function calling workfl
 
 The tool call procedure is depicted in the following figure.
 
-<img src="./pics/tool-calling.png"/>
+![Tool call workflow illustration](./pics/tool-calling.png)
 
 ## Recommendation dataset
 
