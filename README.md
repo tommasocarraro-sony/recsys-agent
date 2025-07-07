@@ -62,7 +62,7 @@ By doing so, there is no risk of hallucinations of user and item IDs by the LLM,
 
 The proposed direction has many advantages:
 
-1. The LLM is not fine-tuned or trained from scratch. A standard pre-trained (on natural language tasks) LLM can be used. This makes it possible for researchers and practitioners with poor computational resources to research in this field.
+1. The LLM is not fine-tuned or trained from scratch. A standard pre-trained (on natural language tasks) LLM with function-calling capabilities can be used. This makes it possible for researchers and practitioners with poor computational resources to research in this field.
 2. The task of recommendation is left to the recommendation system, avoiding hallucinations or complex recommendation reasoning by the LLM.
 3. Minimal effort into the design of the Python code for the logic of the tools the LLM can interact with.
 4. AI inference providers can be used to access the LLM, making it possible to run the entire infrastructure on a basic laptop.
