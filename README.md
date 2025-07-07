@@ -10,7 +10,7 @@ By doing so, both components can do what they have been designed for at their be
 
 In the first stages of this project, we dove into the LLM-based recommendation literature. In particular, we discovered three main techniques of integrating recommendation systems and LLM models:
 
-### 1. LLMs are used for content-based sequential recommendation
+### 1. LLMs are used for content-based sequential recommendation (feature extraction)
 
 In this spectrum of works, the LLM is purely used as a feature extractor. The textual content features of an item are passed to an LLM that generates the item representation. Then, the items in the history of the user are passed to this LLM. The LLM generates the embeddings for these items that are then aggregated to form the user representation. To understand if an item has to be recommended, the dot product between the user representation (formed by the aggregated embeddings computed by the LLM) and the target item representation is computed. In these kinds of works, the LLM needs minimal fine-tuning to adapt its space to the specific features of the recommendation dataset. It has been shown that these approaches can improve the sequential recommendation performance. 
 
@@ -20,7 +20,7 @@ An illustration of this category of works is depicted in the following figure ta
 
 ![ONCE architecture](pics/once.png)
 
-### 2. LLMs are used for the next item title prediction in sequential recommendation systems
+### 2. LLMs are used for the next item title prediction in sequential recommendation systems (mapping to the LLM token space)
 
 In these kinds of works, the user and item representations (i.e., embeddings) are first pre-trained using different techniques depending on the specific work. After that, a user encoder and an item encoder are learned to translate the user and item representations into the token space of the LLM model, so that users and items become internal tokens that the LLM can reason about. The training procedure of these encoders is depicted in the following figure taken from the [paper](https://dl.acm.org/doi/10.1145/3637528.3671931): `Large Language Models meet Collaborative Filtering: An Efficient All-round LLM-based Recommender System`.
 
@@ -30,7 +30,7 @@ As you can see from the figure, the LLM is frozen. The prompt for the training i
 
 We found this work very interesting and novel. However, in real-world recommendation scenarios, it is the job of the recommender system to find plausible candidate items to then generate a ranking for the user. We discovered that if the candidate items are removed from the prompt at inference time, the test performance of the system dramatically drops. Hence, the main drawback of these works is twofold. First, the LLM is only able to predict the next item title, while, usually, recommendation systems work with user and item IDs. Second, these systems always need a pool of candidate items to be provided in the prompts, and this is impossible in real-world scenarios.
 
-### 3. LLMs are fine-tuned on the recommendation task
+### 3. LLMs are fine-tuned on the recommendation task (fine-tuning of the LLM)
 
 The idea of these works is to convert the recommendation task into a natural language processing task, where prompt templates for the fine-tuning of the model are constructed in such a way that given the input (e.g., the item IDs in the history of the user) the LLM has to predict the output (e.g., the item ID of the next item the user will click on). Examples of these prompt templates are shown in the following figure taken from the [paper](https://dl.acm.org/doi/10.1145/3523227.3546767): `Recommendation as Language Processing (RLP): A Unified Pretrain, Personalized Prompt & Predict Paradigm (P5)`.
 
@@ -42,7 +42,7 @@ We found these works interesting and novel; however, the recommendation performa
 
 Additionally, user and item IDs can be subdivided into multiple LLM tokens, meaning the representation of one user or item is shared between different token embeddings, making it difficult for the LLM to learn standalone user and item representations. Attempts have been made to treat each item and user ID as a special token. However, as the catalog of the recommendation platform increases in size, the number of tokens to be added to the LLM vocabulary also increases, making it really challenging for the LLM to be trained effectively. First, the embedding store becomes massive. Second, it becomes really challenging for the softmax at the last linear layer to predict the next token correctly, due to the massive number of plausible next tokens.
 
-By interacting with the authors of P5, we also discovered additional information that is worth sharing. They made tests with two different LLM backbones, T5 and Llama-7b. They discovered that the more the LLM is capable, the worse the performance on the recommendation task, meaning fine-tuning becomes more and more complex with very big Large Language Models. 
+By interacting with the authors of P5, we also discovered additional information that is worth sharing. They made tests with two different LLM backbones, [T5](https://arxiv.org/abs/1910.10683) and [Llama-7b](https://arxiv.org/abs/2302.13971). They discovered that the more the LLM is capable, the worse the performance on the recommendation task, meaning fine-tuning becomes more and more complex with very big Large Language Models. 
 
 Since we are going towards agentic frameworks research, we need good chatbot capabilities (capable LLMs). For this reason, we need to find ways to make recommendation systems work with very big LLM models.
 
@@ -54,7 +54,7 @@ The core question is: why do we not leave the LLM and the recommendation system 
 
 LLMs are very good at natural language understanding, complex query understanding, textual reasoning, and question answering. Recommendation systems, on the other hand, are specifically designed to provide recommendations.
 
-That is why we decided to move towards LLM-based Recommendation System Agents, where LLMs are assistants designed to answer complex recommendation queries. To answer these complex queries, LLMs can interact with external tools, like recommendation system agents. The tools provide some results, and the LLM can reason about them or use them as additional context to prepare the final answer for the user.
+That is why we decided to move towards LLM-based Recommendation System Agents, where LLMs are assistants designed to answer complex recommendation queries. To answer these complex queries, LLMs can interact with external tools, like recommendation system engines. The tools provide some results, and the LLM can reason about them or use them as additional context to prepare the final answer for the user.
 
 By doing so, there is no risk of hallucinations of user and item IDs by the LLM, as, in the end, it always has to interact with a recommender system that provides rankings narrowed to the item catalog.
 
@@ -62,7 +62,7 @@ By doing so, there is no risk of hallucinations of user and item IDs by the LLM,
 
 The proposed direction has many advantages:
 
-1. The LLM is not fine-tuned or trained from scratch. A standard pre-trained (on natural language tasks) LLM can be used. This makes it possible for researchers and practitioners with poor computational resources to research in this field.
+1. The LLM is not fine-tuned or trained from scratch. A standard pre-trained (on natural language tasks) LLM with function-calling capabilities can be used. This makes it possible for researchers and practitioners with poor computational resources to research in this field.
 2. The task of recommendation is left to the recommendation system, avoiding hallucinations or complex recommendation reasoning by the LLM.
 3. Minimal effort into the design of the Python code for the logic of the tools the LLM can interact with.
 4. AI inference providers can be used to access the LLM, making it possible to run the entire infrastructure on a basic laptop.
@@ -80,10 +80,10 @@ The infrastructure of this project includes different components that interact e
 
 ## Function calling workflow
 
-For researchers and practitioners new to this topic, the function calling workflow can be summarized as:
+For researchers and practitioners new to this topic, the function-calling workflow can be summarized as:
 
 1. The user asks a query.
-2. The LLM needs to understand if the query requires calling an external tool or if it can be answered using its internal knowledge. The LLM is able to understand this also thanks to a system prompt, namely, a prompt that is sent to the LLM before the interaction with the user starts. This special prompt contains instructions to instruct the LLM about the tool calling process, specifically, when it has to access external tools.
+2. The LLM needs to understand if the query requires calling an external tool or if it can be answered using its internal knowledge. The LLM is able to understand this also thanks to a system prompt, namely, a prompt that is sent to the LLM before the interaction with the user starts. This special prompt contains instructions to instruct the LLM about the tool calling process, specifically, when it has to access external tools. For examples of system prompts, go to `./src/constants.py`.
 3. If the LLM detects that a tool call is needed, it has to generate a JSON file containing the name of the function that has to be called, plus the parameters for invoking this function.
 4. The tool is invoked, and the logic is executed.
 5. The tool returns the results to the LLM as text or JSON semi-structured data.
@@ -133,7 +133,7 @@ Our assistant can currently respond to these kinds of questions:
 - Recommend to user 2 some movies that match this storyline/description: <description>.
 - Recommend to user 9 some movies where the main character is kidnapped.
 5. Questions about streaming platform statistics:
-- What might be the percentage of users interested in this storyline? <storyline>.
+- What might be the percentage of users interested in this storyline? <storyline\>.
 - What is the ideal content length for comedy genre movies?
 - What is the most engaging movie genre during the Christmas holidays?
 6. Questions about the historical interactions of the users:
@@ -217,13 +217,13 @@ If you are having issues creating your custom tools, we also invite you to follo
 
 The majority of our experiments have been done using the closed-source GPT4.1. In our opinion, this is the best model when it comes to native function-calling capabilities, multi-step reasoning, and integration with the LangChain/LangGraph framework. In our experiments, GPT4.1 rarely made mistakes, even for very complex queries requiring more than three tool calls. If you want a smooth conversation flow, this is the model to go for. The drawback is that you need to pay for an OpenAI API key.
 
-For practitioners and researchers who cannot access GPT4.1, we decided to extend this project to the investigation of open-weight models that can be self-hosted on a laptop or cluster with GPUs. In this demo, open-source models can be self-hosted through Ollama.
+For practitioners and researchers who cannot access GPT4.1, we decided to extend this project to the investigation of open-weight models that can be self-hosted on a laptop or cluster with GPUs. In this demo, open-source models can be self-hosted through [Ollama](https://ollama.com/).
 
 We made experiments with all the models available in Ollama that can support native function calling. The [Qwen2.5](https://ollama.com/library/qwen2.5/tags) model family has been the one that provided the best results in our scenario. We tried with the 7B model, with different quantizations, on a MacBook Pro (M4 Pro / 24 GB). Then, we tried with the 72B model on four NVIDIA L40S GPUs with 48 GB of VRAM.
 
 Due to the inferior capability of these models with respect to GPT4.1, it is not guaranteed that system prompt instructions are always carefully followed. Additionally, even if comprehensive examples are provided in the system prompt, this model family can forget to call some tools or can call wrong or useless tools. However, the more the model is capable, the better the function-calling and multi-step reasoning performance. Hence, if you have the chance to self-host Qwen2.5-72B on your cluster, we suggest you go for it. In our opinion, it is the best open-source model for this recommendation scenario.
 
-These issues might be solved by implementing the tool's calling logic from scratch, instead of relying on the LangGraph/LangChain framework. The idea is to leave to the LLM the only task of generating the tool call plan as a list of JSON files containing function names and parameters. The self-implemented middleware layer must then understand that some JSONs have been generated, parse and validate them, and finally call the right tools and return the results to the LLM. As this is not a trivial task, we leave this for future work. We invite the reader to follow this [repository](https://github.com/frankie336/entities_api) for an open-source API that does exactly this. We tried this API in the early stages of this project. It works relatively well, and it is constantly updated.
+These issues with open-weight models might be solved by implementing the tool's calling logic from scratch, instead of relying on the LangGraph/LangChain framework. The idea is to leave to the LLM the only task of generating the tool call plan as a list of JSON files containing function names and parameters. The self-implemented middleware layer must then understand that some JSONs have been generated, parse and validate them, and finally call the right tools and return the results to the LLM. As this is not a trivial task, we leave this for future work. We invite the reader to follow this [repository](https://github.com/frankie336/entities_api) for an open-source API that does exactly this. We tried this API in the early stages of this project. It works relatively well, and it is constantly updated.
 
 ## Prerequisites
 
@@ -271,7 +271,7 @@ Ollama self-hosting option: `python app_main.py --self_host` --> By default, our
 
 All Ollama models with function-calling capabilities are supported. [Here](https://ollama.com/search?c=tools) is a list.
 
-**Attention**: When self-hosting, be sure you have enough RAM or VRAM to load and use the chosen model.
+**Attention**: When self-hosting, be sure you have enough RAM or VRAM to load and use the chosen model. Also, be sure you downloaded the model with `ollama pull <your_model>` before running the application.
 
 ## Do you need to self-host on a GPU that is on a remote cluster?
 
