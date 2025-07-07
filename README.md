@@ -271,7 +271,7 @@ Ollama self-hosting option: `python app_main.py --self_host` --> By default, our
 
 All Ollama models with function-calling capabilities are supported. [Here](https://ollama.com/search?c=tools) is a list.
 
-**Attention**: When self-hosting, be sure you have enough RAM or VRAM to load and use the chosen model.
+**Attention**: When self-hosting, be sure you have enough RAM or VRAM to load and use the chosen model. Also, be sure you downloaded the model with `ollama pull <your_model>` before running the application.
 
 ## Do you need to self-host on a GPU that is on a remote cluster?
 
