@@ -29,7 +29,7 @@ parser.add_argument("--self_host", action="store_true", help="Use locally hosted
 parser.add_argument("--llm", default="qwen2.5:7b", help="Ollama model to be used")
 args = parser.parse_args()
 
-if not args.self_host and args.llm:
+if not args.self_host and args.llm != "qwen2.5:7b":
     raise Exception("You must specify --self_host when using --llm")
 
 memory = MemorySaver()

@@ -9,11 +9,13 @@ args = parser.parse_args()
 
 cmd = ["chainlit", "run", "chainlit_example.py"]
 
-if args.llm and not args.self_host:
+if args.llm != "qwen2.5:7b" and not args.self_host:
     raise Exception("You must specify --self_host when using --llm")
 
 if args.self_host:
     os.environ["SELF_HOST"] = "true"
     os.environ["LLM"] = args.llm
+else:
+    os.environ["SELF_HOST"] = "false"
 
 subprocess.run(cmd)
