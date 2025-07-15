@@ -149,6 +149,21 @@ Our assistant can currently respond to these kinds of questions:
 
 **EXTRA 3**: The assistant is instructed to explain to the user the steps it is using to prepare the answer, for example, which tools it is using and the reason why it decided to call them.
 
+## Use Cases
+
+We present here a series of use cases that we tested with our application. They are presented as GIF images.
+You can go through these use cases to understand what answers to expect based on the input queries. Moreover, these 
+examples will give you a clearer idea of the capabilities of our recommendation agent.
+
+### Standard recommendation and explanation
+
+This use case shows how the agent behaves when standard recommendations are requested. In this case, we ask recommendations
+for user 8. The agent understands it has to call the recommendation tool with `user=8` and `k=5` (default number of 
+recommended items). Then, it calls the item metadata tool with `items=[<IDs of recommended items>]` to get useful 
+information to be displayed for the recommended items.
+
+![Recommendation and explanation use case](pics/gifs/explanation.gif)
+
 ## Implemented tools
 
 The assistant can autonomously decide which tools to call and in which order.
