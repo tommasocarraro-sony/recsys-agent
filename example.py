@@ -21,7 +21,7 @@ from src.tools.get_like_percentage import get_like_percentage_tool
 from src.tools.get_popular_items import get_popular_items_tool
 from src.tools.vector_store_search import vector_store_search_tool
 from src.tools.utils import create_lists_for_fuzzy_matching
-from src.constants import SYSTEM_MESSAGE, SYSTEM_MESSAGE_ENHANCED
+from src.constants import SYSTEM_MESSAGE, SYSTEM_MESSAGE_ENHANCED, NEW_SYSTEM_MESSAGE, NEW_SHORT_SYSTEM_MESSAGE, NEW_NEW
 load_dotenv()
 
 parser = argparse.ArgumentParser()
@@ -63,6 +63,8 @@ if args.self_host:
         temperature=0,
         base_url="http://localhost:11434"
     )
+
+    llm = init_chat_model("mistral-small-latest", model_provider="mistralai", api_key=os.getenv("MISTRALAI_API_KEY"))
 else:
     api_key = os.getenv("OPENAI_API_KEY")
 
@@ -165,7 +167,7 @@ def stream_graph_updates(user_input: str):
     messages = []
 
     if not conversation_started:
-        messages.extend(SYSTEM_MESSAGE if args.self_host else SYSTEM_MESSAGE_ENHANCED)
+        messages.extend(NEW_SYSTEM_MESSAGE if args.self_host else SYSTEM_MESSAGE_ENHANCED)
         conversation_started = True
 
     messages.append({"role": "user", "content": user_input})
