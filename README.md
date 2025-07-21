@@ -6,7 +6,28 @@ The core idea of recommendation system agents is to decouple the LLM assistant f
 
 By doing so, both components can do what they have been designed for at their best. On the one hand, the LLM can understand and reason about complex queries made by the user. On the other hand, the recommendation engine can generate rankings of items given user and item IDs that are provided by the LLM agent.
 
-## Premise
+## Table of Contents
+
+1. [Analysis of the literature on LLM-based recommender systems](#analysis-of-the-literature-on-llm-based-recommender-systems)
+2. [Our idea](#our-idea)
+3. [Advantages w.r.t. current literature](#advantages-wrt-current-literature)
+4. [Infrastructure](#infrastructure)
+5. [Function calling workflow](#function-calling-workflow)
+6. [Recommendation dataset](#recommendation-dataset)
+7. [Recommendation assistant capabilities](#recommendation-assistant-capabilities)
+8. [Implemented tools](#implemented-tools)
+9. [Do you want to implement your custom tools?](#do-you-want-to-implement-your-custom-tools)
+10. [Use Cases](#use-cases)
+11. [Important considerations on LLM model selection](#important-considerations-on-llm-model-selection)
+12. [Prerequisites](#prerequisites)
+13. [Installation instructions](#installation-instructions)
+14. [Execution instructions](#execution-instructions)
+15. [Do you need to self-host on a GPU that is on a remote cluster?](#do-you-need-to-self-host-on-a-gpu-that-is-on-a-remote-cluster)
+16. [Issues with RecBole while training or using your model with our agent?](#issues-with-recbole-while-training-or-using-your-model-with-our-agent)
+17. [Issues with Chainlit port?](#issues-with-chainlit-port)
+18. [Do you want a different recommendation model or dataset?](#do-you-want-a-different-recommendation-model-or-dataset)
+
+## Analysis of the literature on LLM-based recommender systems
 
 In the first stages of this project, we dove into the LLM-based recommendation literature. In particular, we discovered three main techniques of integrating recommendation systems and LLM models:
 
@@ -110,7 +131,6 @@ For this project, we used the notable MovieLens-100k dataset enlarged with movie
 10. Number of reviews on IMDb
 11. Description
 12. Storyline
-
 
 ## Recommendation assistant capabilities
 
