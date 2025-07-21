@@ -149,35 +149,20 @@ Our assistant can currently respond to these kinds of questions:
 
 **EXTRA 3**: The assistant is instructed to explain to the user the steps it is using to prepare the answer, for example, which tools it is using and the reason why it decided to call them.
 
-## Use Cases
-
-We present here a series of use cases that we tested with our application. They are presented as GIF images.
-You can go through these use cases to understand what answers to expect based on the input queries. Moreover, these 
-examples will give you a clearer idea of the capabilities of our recommendation agent.
-
-### Standard recommendation and explanation
-
-This use case shows how the agent behaves when standard recommendations are requested. In this case, we ask recommendations
-for user 8. The agent understands it has to call the recommendation tool with `user=8` and `k=5` (default number of 
-recommended items). Then, it calls the item metadata tool with `items=[<IDs of recommended items>]` to get useful 
-information to be displayed for the recommended items.
-
-![Recommendation and explanation use case](pics/gifs/explanation.gif)
-
 ## Implemented tools
 
 The assistant can autonomously decide which tools to call and in which order.
 
 These are the available tools to date:
 
-1. `get_top_k_recommendations`: takes as input a user ID and a number (i.e., k) of desired recommended items, and it generates a ranking over these items using the pre-trained recommender system. It can optionally take item IDs as input, for example, when the recommended items must satisfy some user's given conditions.
-2. `item_filter`: takes as input some user's conditions and returns a list of IDs of items that satisfy the given conditions. Alternatively, it can generate the path to a .txt file containing these IDs. This is done for efficient use of streamed tokens.
-3. `vector_store_search`: takes as input a query and performs a search in the vector database. The IDs of the top 10 matching items are returned. The vector database contains embedded item descriptions/storylines.
-4. `get_like_percentage`: takes as input a list of item IDs and computes the percentage of users that like those items in the recommendation dataset.
-5. `get_popular_items`: generates a list of popular items by computing the .75 quantile `q` of the rating distribution. The items with more than `q` ratings are considered popular. If some item IDs are given to this tool, it only takes the given items into account for the popularity computation.
-6. `get_user_metadata`: takes as input a user ID and a list of desired metadata user features and returns the requested features.
-7. `get_item_metadata`: takes as input an item ID and a list of desired metadata item features and returns the requested features.
-8. `get_interacted_items`: takes as input a user ID and returns the IDs of the items the user interacted with in the past. It returns only the most recent 20 ones if the user interacted with more than 20 items in the dataset.
+1. `get_top_k_recommendations_tool`: takes as input a user ID and a number (i.e., k) of desired recommended items, and it generates a ranking over these items using the pre-trained recommender system. It can optionally take item IDs as input, for example, when the recommended items must satisfy some user's given conditions.
+2. `item_filter_tool`: takes as input some user's conditions and returns a list of IDs of items that satisfy the given conditions. Alternatively, it can generate the path to a .txt file containing these IDs. This is done for efficient use of streamed tokens.
+3. `vector_store_search_tool`: takes as input a query and performs a search in the vector database. The IDs of the top 10 matching items are returned. The vector database contains embedded item descriptions/storylines.
+4. `get_like_percentage_tool`: takes as input a list of item IDs and computes the percentage of users that like those items in the recommendation dataset.
+5. `get_popular_items_tool`: generates a list of popular items by computing the .75 quantile `q` of the rating distribution. The items with more than `q` ratings are considered popular. If some item IDs are given to this tool, it only takes the given items into account for the popularity computation.
+6. `get_user_metadata_tool`: takes as input a user ID and a list of desired metadata user features and returns the requested features.
+7. `get_item_metadata_tool`: takes as input an item ID and a list of desired metadata item features and returns the requested features.
+8. `get_interacted_items_tool`: takes as input a user ID and returns the IDs of the items the user interacted with in the past. It returns only the most recent 20 ones if the user interacted with more than 20 items in the dataset.
 
 ## Do you want to implement your custom tools?
 
@@ -227,6 +212,210 @@ After you have defined the tool logic, you just need to bind the tool to the LLM
 After this, you should be able to start the application and see that the LLM is using your custom tool when needed.
 
 If you are having issues creating your custom tools, we also invite you to follow this simple LangGraph [guide](https://langchain-ai.github.io/langgraph/agents/agents/).
+
+## Use Cases
+
+We present here a series of use cases that we tested with our application. They are presented as GIF images.
+You can go through these use cases to understand what answers to expect by our agent based on the input queries. 
+Moreover, these examples will give you a clearer idea of the capabilities of the agent and the tools it can use.
+
+### Standard recommendation and explanation
+
+This use case shows how the agent behaves when standard recommendations are requested. In this case, we ask recommendations
+for user 8. The agent understands it has to call:
+
+1. The recommendation tool (i.e., `get_top_k_recommendations_tool`) to get the top 5 (default value) recommended items for user 8. 
+2. The item metadata retrieval tool (i.e, `get_item_metadata_tool`) to get useful information to display regarding these items.
+
+After the recommendation, the agent asks the user whether he/she would like to get an explanation. Since the user 
+positively replies, the agent proceeds with the explanation. The process consists of:
+
+1. Calling the historical interactions retrieval tool (i.e., `get_interacted_items_tool`) to get the most recent 20 interactions of user 8;
+2. Calling the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get content features of these interacted items;
+3. Comparing content features of interacted and recommended items to provide a content-based and personalized explanation to the user.
+
+![Recommendation and explanation use case](pics/gifs/explanation.gif)
+
+### Constrained recommendation (single filter)
+
+This use case shows how the agent behaves when constrained recommendations are requested. In this case, we ask for horror
+movie recommendations for user 9. The agent understands it has to call:
+
+1. The item filtering tool (i.e., `item_filter_tool`) to get the item IDs of horror movies in the dataset;
+2. The recommendation tool (i.e., `get_top_k_recommendations_tool`) to get the top 5 horror movie recommendations for user 9. In this step, the previously retrieved item IDs are given to the recommendation tool to restrict ranking computation;
+3. The item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get useful information to display the recommended movies.
+
+![Constrained recommendation (single filter) use case](pics/gifs/horror.gif)
+
+### Constrained recommendation (multiple filters)
+
+This use case shows how the agent behaves when constrained recommendations (with multiple user's conditions) are requested. 
+In this case, we ask for recommendations for drama movies starring Tom Cruise for user 56. The agent understands it has to call:
+
+1. The item filtering tool (i.e., `item_filer_tool`) to get the item IDs of drama movies starring Tom Cruise;
+2. The recommendation tool (i.e., `get_top_k_recommendations_tool`) to get the top 5 recommended drama movies starring Tom Cruise for user 56;
+3. The item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get useful information to display the recommended movies.
+
+![Constrained recommendation (movie genre + actor) use case](pics/gifs/drama_tom_cruise.gif)
+
+We show here a similar use case with a different combination of filters (actor + release date). This kind of **lower/higher**
+filter is available for release dates, IMDb ratings, and durations of movies. Note that filters for directors, producers, 
+country of origin are also supported.
+
+![Constrained recommendation (actor + release date) use case](pics/gifs/tom_cruise_date.gif)
+
+### Recommendation with a specified number of recommended items
+
+This is very similar to previous use cases. The only difference is that the LLM agent understands the user is asking
+for a specified number of recommended items, namely, 9. For this reason, when calling the recommendation 
+tool (i.e., `get_top_k_recommendations_tool`), the agent sets the `k` (i.e., the number of recommended items) parameter to 9.
+
+![K items recommendation use case](pics/gifs/9_comedy_date.gif)
+
+### Item filtering
+
+This use case shows how the agent behaves when an item filtering operation is requested. In this case, we ask the agent
+to return the IDs of some horror movies. The agent understands that:
+
+1. It has to call the item filtering tool (i.e., `item_filter_tool`) to get the item IDs of all the horror movies;
+2. It has to call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get the titles of some of the items retrieved in the previous step.
+
+![Item filtering use case](pics/gifs/item_filter.gif)
+
+### Item metadata retrieval
+
+This use case shows how the agent behaves when an item metadata retrieval operation is requested. In this case, we ask the agent to get
+title and description of three movies. The agent understands it has to call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get the requested
+information.
+
+![Item metadata retrieval use case](pics/gifs/item_metadata.gif)
+
+### User metadata retrieval
+
+This use case shows how the agent behaves when a user metadata retrieval operation is requested. In this case, we
+ask the agent to get the age category and gender of user 9. The agent understands it has to call the user metadata retrieval
+tool (i.e., `get_user_metadata_tool`) to get the requested information.
+
+![User metadata retrieval use case](pics/gifs/user_metadata.gif)
+
+### User historical interactions retrieval
+
+This use case shows how the agent behaves when the historical interactions of a particular user are requested. In this case,
+we ask for historical data of user 34. The agent understands that:
+
+1. It has to call the historical data retrieval tool (i.e., `get_interacted_items_tool`) to get the most 20 recent items user 34 interacted with;
+2. It has to call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get useful information to list these items.
+
+![User historical interactions retrieval use case](pics/gifs/historical_data.gif)
+
+### User's mood-based recommendation
+
+This use case shows how the agent behaves when user's mood-based recommendations are requested. In this case, we ask for recommendations
+that might improve the mood of user 87, that is sad. The agent understands that:
+
+1. It has to call the vector store search tool (i.e., `vector_store_search_tool`) to find the IDs of movies whose description matches keywords such as `uplifting`, `heartwarming`, and so on;
+2. It has to call the recommendation tool (i.e., `get_top_k_recommendations_tool`) to get the top 5 recommended items for user 87 that match the given keywords;
+3. It has to call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get useful information to display the recommended items.
+
+![User's mood-based recommendation use case](pics/gifs/mood_recommendation.gif)
+
+### Recommendations by similar items
+
+This use case shows how the agent behaves when recommendations by similar items are requested. In this case, we ask for recommendations
+for user 89 for items similar to item 2. The agent understands that:
+
+1. It has to call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get the description of item 2;
+2. It has to call the vector store search tool (i.e., `vector_store_search_tool`) to find the IDs of movies whose description is similar to the description of item 2;
+3. It has to call the recommendation tool (i.e., `get_top_k_recommendations_tool`) to get the top 5 recommended movies for user 89 that match the description of item 2;
+4. It has to call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get useful information to display the recommended items.
+
+![Recommendation by similar items use case](pics/gifs/similar_items.gif)
+
+### Computation of percentage of users interested in a given storyline
+
+This use case shows how the agent behaves when the percentage of users interested in a given storyline is requested. In this case,
+we ask for the percentage of users interested in the Avatar storyline, taken from the IMDb database. The agent understands that:
+
+1. It has to call the vector store search tool (i.e., `vector_store_search_tool`) to find the IDs of movies with a storyline similar to the given one;
+2. It has to call the like percentage computation tool (i.e., `get_like_percentage_tool`) to compute the percentage of users that like the items found at the previous step in the dataset.
+
+![Computation of percentage of users interested in a given storyline use case](pics/gifs/percentage_storyline.gif)
+
+Note that it is also possible to get the percentage of users interested in a given actor, movie genre, or other item features.
+
+### Recommendation of movies popular in a given age category
+
+This use case shows how the agent behaves when recommendations for movies popular in a given sge category are requested.
+In this case, we ask for recommendations for user 43 for movies popular among teenagers. The agent understands that:
+
+1. It has to call the popular items retrieval tool (i.e., `get_popular_items_tool`) to get the IDs of movies popular among teenagers;
+2. It has to call the recommendation tool (i.e., `get_top_k_recommendations_tool`) to get the top 5 recommended items popular among teenagers for user 43;
+3. It has to call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get useful information to display the recommended items.
+
+![Recommendation of movies popular in a given age category use case](pics/gifs/popular_teen.gif)
+
+Note that the available age groups are: kids, teenagers, young adults, adults, and seniors.
+
+We show here another similar use case where we ask for recommendations for Tom Cruise movies popular among teenagers for user 76. In this case, the
+agent understands it has to call the item filtering tool (i.e., `item_filter_tool`) to get the IDs of all the movies starring Tom Cruise.
+After that, it can proceed with the same pipeline as showed in the previous use case to get recommendations for Tom Cruise movies popular among teenagers.
+
+![Recommendation of movies popular in a given age category (with additional filters) use case](pics/gifs/popular_teen_tom_cruise.gif)
+
+### Recommendation of movies popular in the age category of a given user
+
+This use case is very similar to previous use cases. The only difference is that the agent has to call the user metadata
+retrieval tool (i.e., `get_user_metadata_tool`) to get the age category of user 98 before calling the other tools in the pipeline.
+
+![Recommendation of movies popular in a given user's age category use case](pics/gifs/popular_age_group.gif)
+
+### Recommendations by movie description
+
+This use case shows how the agent behaves when recommendations by movie description are requested. In this case,
+we ask for recommendations for user 56 where *a child takes revenge*. The agent understands that:
+
+1. It has to call the vector store search tool (i.e., `vector_store_search_tool`) to find the IDs of movies whose description match the given description;
+2. It has to call the recommendation tool (i.e., `get_top_k_recommendations_tool`) to get the top 5 recommended movies for user 56 that match the given description;
+3. It has to call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get useful information to display the recommended items.
+
+![Recommendations by movie description use case](pics/gifs/child_revenge.gif)
+
+### Most engaging movie genre
+
+This use case shows how the agent behaves when statistics about the most engaging movie genre are requested. In this case,
+we ask for the most engaging movie genre during Christmas holidays. The agent understands that:
+
+1. It has to call the item filtering tool (i.e., `item_filter_tool`) to get the IDs of all movies released in December;
+2. It has to call the popular items retrieval tool (i.e., `get_popular_items_tool`) to get the IDs of the most 3 popular movies released in December;
+3. It has to call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get the movie genres of these three movies;
+4. It has to estimate the most engaging movie genre by looking at the movie genres of the most popular movies released in December.
+
+![Most engaging movie genre during Christmas holidays use case](pics/gifs/best_genre_christmas.gif)
+
+Note that is also possible to ask for the most engaging actor, director, and so on. It is also possible to ask for the most
+engaging movie genre across movies starring a particular actor or directed by a specific director. A lot of different combinations are supported.
+
+We show here a very similar use case where we ask for the most popular genre in the age group of user 9. The agent understands it has to call
+the user metadata retrieval tool (i.e., `user_metadata_tool`) to get the age category of user 9. Then, it can proceed with the
+popular items retrieval tool (i.e., `get_popular_items_tool`) to get the most popular movie in the age category of the user. Finally,
+it can call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get the movie genres of this movie.
+
+![Most popular genre in user's age group use case](pics/gifs/popular_genre_age_group.gif)
+
+### Ideal duration of movies
+
+This use case shows how the agent behaves when statistics about the ideal duration of movies are requested. In this case,
+we ask for the ideal duration of comedy movies. The agent understand that:
+
+1. It has to call the item filtering tool (i.e., `item_filter_tool`) to get the IDs of all comedy movies;
+2. It has to call the popular items retrieval tool (i.e., `get_popular_items_tool`) to get the IDs of the most 3 popular comedy movies;
+3. It has to call the item metadata retrieval tool (i.e., `get_item_metadata_tool`) to get the durations of these three movies;
+4. It has to estimate the ideal duration by looking at the durations of the most popular comedy movies.
+
+![Ideal duration of comedy movies use case](pics/gifs/ideal_duration_comedy.gif)
+
+Note that it is also possible to ask for the ideal duration of movies starring a particular actor, or released prior to a certain date, and so on.
+Again, a lot of different combinations are supported.
 
 ## Important considerations on LLM model selection
 
