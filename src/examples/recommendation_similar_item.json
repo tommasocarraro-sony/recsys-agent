@@ -1,0 +1,51 @@
+{
+  "query": "Recommend to user 42 some movies similar to movie 4.",
+  "tool_plan": [
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get the storyline of the movie."
+    },
+    {
+      "tool_name": "vector_store_search_tool",
+      "note": "To get the IDs of movies with a description similar to the one of movie 4."
+    },
+    {
+      "tool_name": "get_top_k_recommendations_tool",
+      "note": "To get a personalized ranking of movies with a description similar to the one of movie 4 for the user."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+    }
+  ],
+  "calls": [
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": [4],
+        "get": ["description"]
+      }
+    },
+    {
+      "name": "vector_store_search_tool",
+      "arguments": {
+        "query": "<Description returned by the get_item_metadata_tool>"
+      }
+    },
+    {
+      "name": "get_top_k_recommendations_tool",
+      "arguments": {
+        "user": 42,
+        "k": 5,
+        "items": "<String containing the file path returned by the item_filter_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
+        "get": ["title", "genres", "description"]
+      }
+    }
+  ]
+}

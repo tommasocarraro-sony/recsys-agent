@@ -1,0 +1,27 @@
+{
+  "query": "What is the percentage of users interested in this storyline? <storyline>.",
+  "tool_plan": [
+    {
+      "tool_name": "vector_store_search_tool",
+      "note": "To get the IDs of movies with a storyline similar to the given storyline."
+    },
+    {
+      "tool_name": "get_like_percentage_tool",
+      "note": "To compute the percentage of users that like the items with a storyline similar to the given storyline."
+    }
+  ],
+  "calls": [
+    {
+      "name": "vector_store_search_tool",
+      "arguments": {
+        "query": "<storyline>"
+      }
+    },
+    {
+      "name": "get_like_percentage_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by vector_store_search_tool>"
+      }
+    }
+  ]
+}

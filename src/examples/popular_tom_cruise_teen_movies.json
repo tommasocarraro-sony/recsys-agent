@@ -1,0 +1,53 @@
+{
+  "query": "Recommend to user 94 some movies starring Tom Cruise and popular among senior citizens.",
+  "tool_plan": [
+    {
+      "tool_name": "item_filter_tool",
+      "note": "To get the IDs of movies starring Tom Cruise."
+    },
+    {
+      "tool_name": "get_popular_items_tool",
+      "note": "To get the IDs of movies starring Tom Cruise that are popular among senior citizens."
+    },
+    {
+      "tool_name": "get_top_k_recommendations_tool",
+      "note": "To get a personalized ranking of movies starring Tom Cruise and popular among senior citizens for the user."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. Since the user requested for movies starring Tom Cruise, 'actors' is an important feature to be retrieved, together with 'title' and 'description'."
+    }
+  ],
+  "calls": [
+    {
+      "name": "item_filter_tool",
+      "arguments": {
+        "actors": ["Tom Cruise"]
+      }
+    },
+    {
+      "name": "get_popular_items_tool",
+      "arguments": {
+        "popularity": "by_user_group",
+        "user_group": "senior",
+        "k": 20,
+        "items": "<String containing the file path returned by the item_filter_tool>"
+      }
+    },
+    {
+      "name": "get_top_k_recommendations_tool",
+      "arguments": {
+        "user": 94,
+        "k": 5,
+        "items": "<Python list containing the IDs of movies returned by the get_popular_items_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
+        "get": ["title", "actors", "description"]
+      }
+    }
+  ]
+}

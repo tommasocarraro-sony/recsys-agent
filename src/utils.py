@@ -1,11 +1,12 @@
 import sqlite3
 import re
-from src.constants import DATABASE_NAME, COLLECTION_NAME
+from src.constants import DATABASE_NAME, COLLECTION_NAME, COLLECTION_NAME_EXAMPLES
 import time
+import json
 import pandas as pd
 from sentence_transformers import SentenceTransformer
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct
+from qdrant_client.models import Distance, VectorParams, PointStruct, SearchParams
 import uuid
 import docker
 from docker.errors import ImageNotFound, NotFound
@@ -321,3 +322,161 @@ def ensure_qdrant_running():
             detach=True
         )
         print("✅ Qdrant container started.")
+
+
+def create_vector_store_examples():
+    """
+    It creates a local Qdrant vector store with examples for in-context learning.
+    """
+    # Load JSON files containing in-context examples
+    # Dictionary to hold examples with progressive IDs
+    examples_dict = {}
+    examples_folder = "./src/examples"
+
+    # Sorted for deterministic ordering
+    for idx, filename in enumerate(sorted(os.listdir(examples_folder))):
+        if filename.endswith(".json"):
+            file_path = os.path.join(examples_folder, filename)
+            with open(file_path, "r") as f:
+                try:
+                    example = json.load(f)
+                    examples_dict[idx] = example  # Progressive ID as key
+                except json.JSONDecodeError as e:
+                    print(f"Skipping {filename}: invalid JSON - {e}")
+
+    # SentenceTransformer model
+    model = SentenceTransformer("paraphrase-MiniLM-L6-v2")
+
+    # Qdrant local client (ensure Qdrant is running locally on this port)
+    qdrant = QdrantClient(url="http://localhost:6333")
+
+    collection_name = COLLECTION_NAME_EXAMPLES
+
+    existing_collections = qdrant.get_collections().collections
+    existing_names = {col.name for col in existing_collections}
+
+    if collection_name in existing_names:
+        print(f"⚠️ Collection '{collection_name}' already exists. Skipping creation.")
+        return
+
+    # Create Qdrant collection
+    qdrant.create_collection(
+        collection_name=collection_name,
+        vectors_config=VectorParams(
+            size=model.get_sentence_embedding_dimension(),
+            distance=Distance.COSINE,
+        )
+    )
+
+    # Helper to build movie description
+    def build_embedding_text(example: dict) -> str:
+        return example["query"]
+
+    # Prepare data for insertion
+    points = []
+    for _, example in examples_dict.items():
+        text = build_embedding_text(example)
+        vec = model.encode(
+            text,
+            normalize_embeddings=True,
+            convert_to_numpy=True,
+        ).tolist()
+
+        metadata = {
+            "query": example["query"],
+            "tool_plan": example["tool_plan"],
+            "calls": example["calls"]
+        }
+
+        points.append(
+            PointStruct(
+                id=str(uuid.uuid4()),  # unique identifier
+                vector=vec,
+                payload=metadata
+            )
+        )
+
+    # Upload data to Qdrant
+    qdrant.upsert(
+        collection_name=collection_name,
+        points=points
+    )
+
+    print(f"✅ Ingested {len(points)} in-context examples into Qdrant collection '{collection_name}'.")
+
+
+def in_context_vector_store_search(query):
+    """
+    This function performs a vector search to find in-context examples for the given query using Qdrant.
+
+    :param query: query for which the examples have to be retrieved.
+    :return: in-context examples for the given query.
+    """
+    collection_name = COLLECTION_NAME_EXAMPLES
+    top_k = 2
+
+    # Connect to local Qdrant instance
+    client = QdrantClient(url="http://localhost:6333")
+
+    # Encode query
+    embedder = SentenceTransformer("paraphrase-MiniLM-L6-v2")
+    query_vector = embedder.encode(
+        query,
+        convert_to_numpy=True,
+        normalize_embeddings=True
+    ).tolist()
+
+    hits = client.query_points(
+        collection_name=collection_name,
+        query=query_vector,
+        limit=top_k,
+        search_params=SearchParams(hnsw_ef=128),
+        with_payload=True
+    ).model_dump()
+
+    in_context_examples = [
+        {
+            "score": hit["score"],
+            "query": hit["payload"]["query"],
+            "tool_plan": hit["payload"]["tool_plan"],
+            "calls": hit["payload"]["calls"]
+        } for hit in hits["points"] if "payload" in hit.keys()
+    ]
+
+    return in_context_examples
+
+
+def format_tool_example(example_json: dict) -> str:
+    """
+    It returns a formatted tool example given an in-context example in JSON format.
+    :param example_json: in-context example in JSON format.
+    :return: formatted tool example.
+    """
+    examples = []
+    for example in example_json:
+        query = example["query"]
+        plan_str = ""
+        for i, plan in enumerate(example["tool_plan"]):
+            plan_str += f"{i + 1}. {plan['tool_name']}: {plan['note']}\n"
+
+        calls = []
+        for i, call in enumerate(example["calls"], 1):
+            name = call["name"]
+            args = json.dumps(call["arguments"], indent=None)
+            calls.append(f"{i}. {name}(arguments={args})\n")
+
+        examples.append(f"""User query: 
+                            {query}
+                
+                            Tool call plan (an adaptation of this for the target query can be shown to the user):
+                            {plan_str}
+                            
+                            Tool calls (these cannot be shown to the user but you need it to take inspiration for calls):
+                            {chr(10).join(calls)}
+                            """)
+
+    examples_str = ""
+    for i, example in enumerate(examples):
+        examples_str += f"\n --- \nExample {i + 1}: \n\n{example} \n --- \n"
+
+    return f"IN-CONTEXT EXAMPLES: \n\nThese are in-context examples that you only sees. The user does not see this. Each example shows a user query, the tool call plan for that specific query, and the list of tool calls to answer that query. Please, take inspiration from these in-context examples to call the proper tools to answer the target user query. Use the tool_calls format. \n \n {examples_str}\nEND OF IN-CONTEXT EXAMPLES\n\n"

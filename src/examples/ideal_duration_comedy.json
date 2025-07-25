@@ -1,0 +1,40 @@
+{
+  "query": "What is the ideal duration of comedy movies?",
+  "tool_plan": [
+    {
+      "tool_name": "item_filter_tool",
+      "note": "To get the IDs of comedy movies."
+    },
+    {
+      "tool_name": "get_popular_items_tool",
+      "note": "To get the top 3 popular comedy movies."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get the duration of the most popular horror movies and reason about what could be the ideal duration."
+    }
+  ],
+  "calls": [
+    {
+      "name": "item_filter_tool",
+      "arguments": {
+        "genres": ["comedy"]
+      }
+    },
+    {
+      "name": "get_popular_items_tool",
+      "arguments": {
+        "popularity": "standard",
+        "k": 3,
+        "items": "<String containing the file path returned by the item_filter_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_popular_items_tool>",
+        "get": ["title", "duration"]
+      }
+    }
+  ]
+}

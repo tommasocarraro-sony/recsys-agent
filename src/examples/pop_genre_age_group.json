@@ -1,0 +1,41 @@
+{
+  "query": "What is the most popular genre in the age group of user 9?",
+  "tool_plan": [
+    {
+      "tool_name": "get_user_metadata_tool",
+      "note": "To get the age category of the user."
+    },
+    {
+      "tool_name": "get_popular_items_tool",
+      "note": "To get the top 3 popular movies in the age category of the user."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get the genres of these popular movies and reason about what could be the most popular genre."
+    }
+  ],
+  "calls": [
+    {
+      "name": "get_user_metadata_tool",
+      "arguments": {
+        "user": 9,
+        "get": ["age_category"]
+      }
+    },
+    {
+      "name": "get_popular_items_tool",
+      "arguments": {
+        "popularity": "by_user_group",
+        "user_group": "<age_category returned by the get_user_metadata_tool>",
+        "k": 3
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_popular_items_tool>",
+        "get": ["title", "genres"]
+      }
+    }
+  ]
+}

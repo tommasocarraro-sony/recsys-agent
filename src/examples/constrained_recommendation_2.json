@@ -1,0 +1,41 @@
+{
+  "query": "Recommend to user 56 some drama movies starring Tom Cruise.",
+  "tool_plan": [
+    {
+      "tool_name": "item_filter_tool",
+      "note": "To get the IDs of movies starring Tom Cruise."
+    },
+    {
+      "tool_name": "get_top_k_recommendations_tool",
+      "note": "To get a personalized ranking of movies starring Tom Cruise for the user."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. Since the user requested for movies starring Tom Cruise, 'actors' is an important feature to be retrieved, together with 'title' and 'description'."
+    }
+  ],
+  "calls": [
+    {
+      "name": "item_filter_tool",
+      "arguments": {
+        "genres": ["horror"],
+        "actors": ["Tom Cruise"]
+      }
+    },
+    {
+      "name": "get_top_k_recommendations_tool",
+      "arguments": {
+        "user": 56,
+        "k": 5,
+        "items": "<String containing the file path returned by the item_filter_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
+        "get": ["title", "actors", "description"]
+      }
+    }
+  ]
+}

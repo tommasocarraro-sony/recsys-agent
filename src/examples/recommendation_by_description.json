@@ -1,0 +1,40 @@
+{
+  "query": "Recommend to user 432 some movies where the main character is kidnapped.",
+  "tool_plan": [
+    {
+      "tool_name": "vector_store_search_tool",
+      "note": "To get the IDs of movies with a storyline where the main character is kidnapped."
+    },
+    {
+      "tool_name": "get_top_k_recommendations_tool",
+      "note": "To get a personalized ranking of movies where the main character is kidnapped for the user."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+    }
+  ],
+  "calls": [
+    {
+      "name": "vector_store_search_tool",
+      "arguments": {
+        "query": "main character is kidnapped"
+      }
+    },
+    {
+      "name": "get_top_k_recommendations_tool",
+      "arguments": {
+        "user": 432,
+        "k": 5,
+        "items": "<String containing the file path returned by the item_filter_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
+        "get": ["title", "genres", "description"]
+      }
+    }
+  ]
+}

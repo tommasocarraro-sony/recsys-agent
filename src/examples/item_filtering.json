@@ -1,0 +1,28 @@
+{
+  "query": "Provide the titles of some action movies.",
+  "tool_plan": [
+    {
+      "tool_name": "item_filter_tool",
+      "note": "To get the IDs of action movies."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get the titles of the action movies. It is enough that some of these movies are listed as the user is asking for 'some' action movies, not 'all' action movies."
+    }
+  ],
+  "calls": [
+    {
+      "name": "item_filter_tool",
+      "arguments": {
+        "genre": ["action"]
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<String containing the file path returned by the item_filter_tool>",
+        "get": ["title", "genres", "description"]
+      }
+    }
+  ]
+}

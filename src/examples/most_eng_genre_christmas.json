@@ -1,0 +1,40 @@
+{
+  "query": "What is the most engaging movie genre during Christmas holidays?",
+  "tool_plan": [
+    {
+      "tool_name": "item_filter_tool",
+      "note": "To get the IDs of movies released in December (Christmas holidays)."
+    },
+    {
+      "tool_name": "get_popular_items_tool",
+      "note": "To get the top 3 popular movies released in December."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get the movie genres of the most popular movies and reason about what could be the most popular/engaging genre."
+    }
+  ],
+  "calls": [
+    {
+      "name": "item_filter_tool",
+      "arguments": {
+        "release_month": 12
+      }
+    },
+    {
+      "name": "get_popular_items_tool",
+      "arguments": {
+        "popularity": "standard",
+        "k": 3,
+        "items": "<String containing the file path returned by the item_filter_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_popular_items_tool>",
+        "get": ["title", "genres"]
+      }
+    }
+  ]
+}

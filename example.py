@@ -12,7 +12,7 @@ import json
 from langchain_core.messages import ToolMessage, AIMessageChunk
 from langchain_ollama.chat_models import ChatOllama
 from src.tools.get_top_k_recommendations import get_top_k_recommendations_tool
-from src.utils import create_ml100k_db, create_vector_store, ensure_qdrant_running
+from src.utils import create_ml100k_db, create_vector_store, ensure_qdrant_running, create_vector_store_examples, in_context_vector_store_search, format_tool_example
 from src.tools.item_filter import item_filter_tool
 from src.tools.get_user_metadata import get_user_metadata_tool
 from src.tools.get_item_metadata import get_item_metadata_tool
@@ -21,7 +21,7 @@ from src.tools.get_like_percentage import get_like_percentage_tool
 from src.tools.get_popular_items import get_popular_items_tool
 from src.tools.vector_store_search import vector_store_search_tool
 from src.tools.utils import create_lists_for_fuzzy_matching
-from src.constants import SYSTEM_MESSAGE, SYSTEM_MESSAGE_ENHANCED
+from src.constants import SYSTEM_MESSAGE, SYSTEM_MESSAGE_ENHANCED, SHORT_SYSTEM_MESSAGE
 load_dotenv()
 
 parser = argparse.ArgumentParser()
@@ -39,6 +39,7 @@ create_ml100k_db()
 create_lists_for_fuzzy_matching()
 ensure_qdrant_running()
 create_vector_store()
+create_vector_store_examples()
 
 # this is the list of tools that can be used by the LLM
 tools = [item_filter_tool, get_user_metadata_tool, get_item_metadata_tool, get_interacted_items_tool,
@@ -83,6 +84,7 @@ def chatbot(state: State):
         include_system=True,
     )
     response = llm_with_tools.invoke(messages)
+    print(f"\n\n----\n\nTool calls related to response:\n\n{response.tool_calls}\n\n----\n\n")
     return {"messages": [response]}
 
 # this is the tool node
@@ -165,10 +167,16 @@ def stream_graph_updates(user_input: str):
     messages = []
 
     if not conversation_started:
-        messages.extend(SYSTEM_MESSAGE if args.self_host else SYSTEM_MESSAGE_ENHANCED)
+        messages.extend(SHORT_SYSTEM_MESSAGE if args.self_host else SYSTEM_MESSAGE_ENHANCED)
         conversation_started = True
 
-    messages.append({"role": "user", "content": user_input})
+    in_context_examples = in_context_vector_store_search(user_input)
+
+    if in_context_examples[0]["score"] > 0.7:
+        print(f"Selected in-context examples: {in_context_examples}")
+        messages.append({"role": "user", "content": format_tool_example(in_context_examples) + "\n\nTarget user query:\n\n'" + user_input + "'. \n\n**Call** the planned tools."})
+    else:
+        messages.append({"role": "user", "content": user_input})
 
     for message_chunk, metadata in graph.stream({"messages": messages}, config=config, stream_mode="messages"):
         if message_chunk.content and isinstance(message_chunk, AIMessageChunk):

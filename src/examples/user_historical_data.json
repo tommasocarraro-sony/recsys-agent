@@ -1,0 +1,17 @@
+{
+  "query": "What are the historical interactions of user 45.",
+  "tool_plan": [
+    {
+      "tool_name": "get_interacted_items_tool",
+      "note": "To get the 20 most recent historical interactions of user 45."
+    }
+  ],
+  "calls": [
+    {
+      "name": "get_interacted_items_tool",
+      "arguments": {
+        "user": 45
+      }
+    }
+  ]
+}

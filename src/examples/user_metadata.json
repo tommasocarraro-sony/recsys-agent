@@ -1,0 +1,18 @@
+{
+  "query": "Provide the age group of user 3.",
+  "tool_plan": [
+    {
+      "tool_name": "get_user_metadata_tool",
+      "note": "To get the age category of the user."
+    }
+  ],
+  "calls": [
+    {
+      "name": "get_user_metadata_tool",
+      "arguments": {
+        "user": 3,
+        "get": ["age_category"]
+      }
+    }
+  ]
+}
