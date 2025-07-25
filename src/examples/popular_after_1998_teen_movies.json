@@ -1,17 +1,17 @@
 {
-  "query": "Recommend to user 94 some movies starring Tom Cruise and popular among senior citizens.",
+  "query": "Recommend to user 94 some movies released after 1998 and popular among senior citizens.",
   "tool_plan": [
     {
       "tool_name": "item_filter_tool",
-      "note": "To get the IDs of movies starring Tom Cruise."
+      "note": "To get the IDs of movies released after 1998."
     },
     {
       "tool_name": "get_popular_items_tool",
-      "note": "To get the IDs of movies starring Tom Cruise that are popular among senior citizens."
+      "note": "To get the IDs of movies released after 1998 that are popular among senior citizens."
     },
     {
       "tool_name": "get_top_k_recommendations_tool",
-      "note": "To get a personalized ranking of movies starring Tom Cruise and popular among senior citizens for the user."
+      "note": "To get a personalized ranking of movies released after 1998 and popular among senior citizens for the user."
     },
     {
       "tool_name": "get_item_metadata_tool",
@@ -22,7 +22,10 @@
     {
       "name": "item_filter_tool",
       "arguments": {
-        "actors": ["Tom Cruise"]
+        "release_date": {
+          "request": "higher",
+          "threshold": 1998
+        }
       }
     },
     {

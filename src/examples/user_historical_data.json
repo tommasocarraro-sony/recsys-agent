@@ -1,9 +1,13 @@
 {
-  "query": "What are the historical interactions of user 45.",
+  "query": "What are the historical interactions of user 45?",
   "tool_plan": [
     {
       "tool_name": "get_interacted_items_tool",
       "note": "To get the 20 most recent historical interactions of user 45."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get title and description to display the items the user interacted with."
     }
   ],
   "calls": [
@@ -11,6 +15,13 @@
       "name": "get_interacted_items_tool",
       "arguments": {
         "user": 45
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by the get_interacted_items_tool>",
+        "get": ["title", "description"]
       }
     }
   ]

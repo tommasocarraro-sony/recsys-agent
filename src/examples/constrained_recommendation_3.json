@@ -1,5 +1,5 @@
 {
-  "query": "Recommend to user 23 some movies starring Tom Cruise released prior to 1996 and with an IMDb rating higher than 6.",
+  "query": "Recommend to user 23 10 movies starring Tom Cruise released prior to 1996 and with an IMDb rating higher than 6.",
   "tool_plan": [
     {
       "tool_name": "item_filter_tool",
@@ -7,7 +7,7 @@
     },
     {
       "tool_name": "get_top_k_recommendations_tool",
-      "note": "To get a personalized ranking of movies starring Tom Cruise, released prior to 1996, and with an IMDb rating higher than 6 for the user."
+      "note": "To get a personalized ranking of 10 movies starring Tom Cruise, released prior to 1996, and with an IMDb rating higher than 6 for the user."
     },
     {
       "tool_name": "get_item_metadata_tool",
@@ -33,7 +33,7 @@
       "name": "get_top_k_recommendations_tool",
       "arguments": {
         "user": 23,
-        "k": 5,
+        "k": 10,
         "items": "<String containing the file path returned by the item_filter_tool>"
       }
     },

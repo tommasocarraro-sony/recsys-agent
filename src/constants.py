@@ -184,30 +184,34 @@ SYSTEM_MESSAGE_ENHANCED = [
         
         ### 🧪 EXAMPLES: USER QUERIES & SUGGESTED TOOL CALLS
         
-        | 💬 User Query                                                    | 🧰 Suggested Tool Flow                                                          |
-        |------------------------------------------------------------------|----------------------------------------------------------------------------------|
-        | Recommend to user 8 some movies starring Tom Cruise              | `item_filter` → `get_top_k_recommendations` → `get_item_metadata`              |
-        | Recommend to user 2 popular teenager content                     | `get_popular_items` → `get_top_k_recommendations` → `get_item_metadata`        |
-        | Recommend to user 89 content popular in their age group          | `get_user_metadata` → `get_popular_items` → `get_top_k_recommendations`        |
-        | User 5 is depressed today. What should we recommend?             | `vector_store_search` → `get_top_k_recommendations` → `get_item_metadata`      |
-        | Recommend to user 2 movies similar to movie 56                   | `get_item_metadata` → `vector_store_search` → `get_top_k_recommendations`      |
-        | Recommend to user 9 some movies about war pilots                 | `vector_store_search` → `get_top_k_recommendations` → `get_item_metadata`      |
-        | What are the title and release date of movie 9?                  | `get_item_metadata`                                                             |
-        | What is the gender of user 4?                                    | `get_user_metadata`                                                             |
-        | Show the history of user 90                                      | `get_interacted_items` → `get_item_metadata`                                   |
-        | Which movies star Tom Cruise and were released after 1990?       | `item_filter` → `get_item_metadata`                                            |
-        | Recommend to user 4 some items                                   | `get_top_k_recommendations` → `get_item_metadata`                              |
-        | Recommend popular horror movies to user 89                       | `item_filter` → `get_popular_items` → `get_top_k_recommendations`              |
-        | Recommend to user 9 action movies released before 1999, popular among female teenagers | `item_filter` → `get_popular_items` → `get_top_k_recommendations`              |
-        | What percentage of users will like this storyline? "<storyline>" | `vector_store_search` → `get_like_percentage`                                  |
-        | What’s the ideal length for comedy content?                      | `item_filter` → `get_popular_items` → `get_item_metadata`                      |
-        | What’s the most popular genre in user 4’s age group?             | `get_user_metadata` → `get_popular_items` → `get_item_metadata`                |
-        | Which genre performs best during Christmas holidays?             | `item_filter` → `get_popular_items` → `get_item_metadata`                      |
-        | Recommend to user 9 8 comedy movies                              | `item_filter` → `get_top_k_recommendations` → `get_item_metadata`             |
-        | Find movies where the main character is kidnapped                | `vector_store_search` → `get_item_metadata`                                    |
-        | Give titles of some horror movies                                | `item_filter` → `get_item_metadata`                                            |
+        | 💬 User Query                                                                                                     | 🧰 Suggested Tool Flow                                                                                               |
+        |-------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------|
+        | Recommend some horror movies to user 3                                                                            | `item_filter_tool` → `get_top_k_recommendations_tool` → `get_item_metadata_tool`                                     |
+        | Recommend to user 23 some movies popular among teenagers                                                          | `get_popular_items_tool` → `get_top_k_recommendations_tool` → `get_item_metadata_tool`                               |
+        | Recommend to user 43 some movies popular in his/her age category                                                  | `get_user_metadata_tool` → `get_popular_items_tool` → `get_top_k_recommendations_tool` → `get_item_metadata_tool`    |
+        | User 45 is sad today. What could we recommend?                                                                    | `vector_store_search_tool` → `get_top_k_recommendations_tool` → `get_item_metadata_tool`                             |
+        | Recommend to user 42 some movies similar to movie 4                                                               | `get_item_metadata_tool` → `vector_store_search_tool` → `get_top_k_recommendations_tool` → `get_item_metadata_tool`  |
+        | Recommend to user 432 some movies where the main character is kidnapped                                           | `vector_store_search_tool` → `get_top_k_recommendations_tool` → `get_item_metadata_tool`                             |
+        | Provide IMDb rating and description of movies 45, 87, and 456                                                     | `get_item_metadata_tool`                                                                                             |
+        | Provide the gender of user 3                                                                                      | `get_user_metadata_tool`                                                                                             |
+        | What are the historical interactions of user 45?                                                                  | `get_interacted_items_tool` → `get_item_metadata_tool`                                                               |
+        | Recommend to user 23 10 movies starring Tom Cruise released prior to 1996 and with an IMDb rating higher than 6   | `item_filter_tool` → `get_top_k_recommendations_tool` → `get_item_metadata_tool`                                     |
+        | Recommend some movies to user 9                                                                                   | `get_top_k_recommendations_tool` → `get_item_metadata_tool`                                                          |
+        | Recommend popular horror movies to user 89                                                                        | `item_filter_tool` → `get_popular_items_tool` → `get_top_k_recommendations_tool` → `get_item_metadata_tool`          |
+        | Recommend 8 movies to user 92                                                                                     | `get_top_k_recommendations` → `get_item_metadata_tool`                                                               |
+        | What is the percentage of users interested in this storyline? <storyline>                                         | `vector_store_search_tool` → `get_like_percentage_tool`                                                              |
+        | What is the ideal duration of comedy movies?                                                                      | `item_filter_tool` → `get_popular_items_tool` → `get_item_metadata_tool`                                             |
+        | What is the most popular genre in the age group of user 9?                                                        | `get_user_metadata_tool` → `get_popular_items_tool` → `get_item_metadata_tool`                                       |
+        | What is the most engaging movie genre during Christmas holidays?                                                  | `item_filter_tool` → `get_popular_items_tool` → `get_item_metadata_tool`                                             |
+        | Recommend to user 94 some movies released after 1998 and popular among senior citizens                            | `item_filter_tool` → `get_popular_items_tool` → `get_top_k_recommendations_tool` → `get_item_metadata_tool`          |
+        | Find movies where the main character pilots airplanes during war                                                  | `vector_store_search_tool` → `get_item_metadata_tool`                                                                |
+        | Provide the titles of some action movies                                                                          | `item_filter_tool` → `get_item_metadata_tool`                                                                        |
+        | Recommend to user 56 some drama movies directer by Quentin Tarantino                                              | `item_filter_tool` → `get_top_k_recommendations_tool` → `get_item_metadata_tool`                                     |
 """}
 ]
+
+# todo give the models what I would like to see exactly so we can test performance. This has to be fair, we probably need to show usual output for all. Title, genre, and description
+# todo when needed, other stuff. GPT does it autonoumly, the other needs guidance and we already did it
 
 # possible way to force the model to provide some explanation after each tool is called
 

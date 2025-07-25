@@ -1,0 +1,28 @@
+{
+  "query": "Find movies where the main character pilots airplanes during war.",
+  "tool_plan": [
+    {
+      "tool_name": "vector_store_search_tool",
+      "note": "To get the IDs of movies with a storyline where the main character pilots airplanes during war."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+    }
+  ],
+  "calls": [
+    {
+      "name": "vector_store_search_tool",
+      "arguments": {
+        "query": "main character pilots airplanes during war"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by vector_store_search_tool>",
+        "get": ["title", "genres", "description"]
+      }
+    }
+  ]
+}
