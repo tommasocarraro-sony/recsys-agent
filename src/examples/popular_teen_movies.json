@@ -19,7 +19,7 @@
       "name": "get_popular_items_tool",
       "arguments": {
         "popularity": "by_user_group",
-        "user_group": "teenager",
+        "user_group": ["teenager"],
         "k": 20
       }
     },

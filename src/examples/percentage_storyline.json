@@ -1,5 +1,5 @@
 {
-  "query": "What is the percentage of users interested in this storyline? <storyline>.",
+  "query": "What is the percentage of users interested in this storyline? 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.'",
   "tool_plan": [
     {
       "tool_name": "vector_store_search_tool",
@@ -14,7 +14,7 @@
     {
       "name": "vector_store_search_tool",
       "arguments": {
-        "query": "<storyline>"
+        "query": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster."
       }
     },
     {

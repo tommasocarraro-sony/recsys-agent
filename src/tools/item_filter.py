@@ -69,6 +69,14 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
 
     matched = False
 
+    # convert dict to Pydantic objects if they are not already -> this is especially useful for the test
+    if isinstance(imdb_rating, dict):
+        imdb_rating = ComparisonFilter(**imdb_rating)
+    if isinstance(duration, dict):
+        duration = ComparisonFilter(**duration)
+    if isinstance(release_date, dict):
+        release_date = ComparisonFilter(**release_date)
+
     # Build the filters dict
     filters = {
         key: value

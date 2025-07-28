@@ -32,7 +32,7 @@
       "name": "get_popular_items_tool",
       "arguments": {
         "popularity": "by_user_group",
-        "user_group": "senior",
+        "user_group": ["senior"],
         "k": 20,
         "items": "<String containing the file path returned by the item_filter_tool>"
       }

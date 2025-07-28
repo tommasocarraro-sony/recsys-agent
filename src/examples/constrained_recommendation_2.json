@@ -19,7 +19,7 @@
       "name": "item_filter_tool",
       "arguments": {
         "genres": ["drama"],
-        "directors": ["Quentin Tarantino"]
+        "director": ["Quentin Tarantino"]
       }
     },
     {
