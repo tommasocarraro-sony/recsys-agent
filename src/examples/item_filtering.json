@@ -7,7 +7,7 @@
     },
     {
       "tool_name": "get_item_metadata_tool",
-      "note": "To get the titles of the action movies. It is enough that some of these movies are listed as the user is asking for 'some' action movies, not 'all' action movies. For example, take the first 20 ones."
+      "note": "To get the titles of the action movies. It is enough that some of these movies are listed as the user is asking for 'some' action movies, not 'all' action movies."
     }
   ],
   "calls": [

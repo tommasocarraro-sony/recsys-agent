@@ -115,11 +115,12 @@ def save_as_json(data: list, output_path: str, prefix: str = "example"):
 def main(input_folder: str, output_file: str):
     result_rows = []
     for fname in sorted(os.listdir(input_folder)):
-        if fname.endswith(".json"):
-            print(f"\n\n --- \n\nProcessing {fname}")
-            path = os.path.join(input_folder, fname)
-            result = process_example(path, tool_functions)
-            result_rows.append(result)
+        if "filtering" not in fname:
+            if fname.endswith(".json"):
+                print(f"\n\n --- \n\nProcessing {fname}")
+                path = os.path.join(input_folder, fname)
+                result = process_example(path, tool_functions)
+                result_rows.append(result)
     write_to_csv(result_rows, output_file + ".csv")
     save_as_json(result_rows, output_file + ".json")
     print(f"✅ Evaluation data written to {output_file}")
