@@ -36,8 +36,9 @@ def resolve_argument_placeholders(arg, previous_results):
                     return [previous_results[-1]["age_category"].replace(" ", "_")]
                 if "gender" in previous_results[-1]:
                     return [previous_results[-1]["gender"]]
-                if "description" in next(iter(previous_results[-1].values())):
-                    return next(iter(previous_results[-1].values()))["description"]
+            if isinstance(previous_results[-1], list):
+                if "description" in previous_results[-1][0]:
+                    return previous_results[-1][0]["description"]
             return previous_results[-1]  # Use last tool result
         else:
             return arg

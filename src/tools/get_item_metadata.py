@@ -54,19 +54,19 @@ def get_item_metadata_tool(items: Union[List[int], str], get: List[AllowedFeatur
     result = execute_sql_query(sql_query)
 
     if result:
-        return_dict = {}
+        return_list = []
         for j in range(len(result)):
-            return_dict[result[j][0]] = {}
+            current_dict = {}
             for i, spec in enumerate(specification):
-                if spec != "item_id":
-                    return_dict[result[j][0]][spec] = result[j][i] if result[j][i] is not None else 'unknown'
+                current_dict[spec] = result[j][i] if result[j][i] is not None else 'unknown'
+            return_list.append(current_dict)
 
-        print(f"\n{get_time()} - Returned dictionary: {return_dict}\n")
+        print(f"\n{get_time()} - Returned list: {return_list}\n")
 
         return json.dumps({
             "status": "success",
             "message": "The requested metadata for the given item IDs is returned.",
-            "data": return_dict
+            "data": return_list
         })
     else:
         return json.dumps({
