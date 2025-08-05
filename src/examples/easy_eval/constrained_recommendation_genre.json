@@ -1,31 +1,30 @@
 {
-  "query": "Recommend to user 56 some drama movies directer by Quentin Tarantino.",
+  "query": "Recommend some horror movies to user 3.",
   "tool_plan": [
     {
       "tool_name": "item_filter_tool",
-      "note": "To get the IDs of drama movies directed by Quentin Tarantino."
+      "note": "To get the IDs of horror movies."
     },
     {
       "tool_name": "get_top_k_recommendations_tool",
-      "note": "To get a personalized ranking of movies starring Tom Cruise for the user."
+      "note": "To get a personalized ranking of horror movies for the user."
     },
     {
       "tool_name": "get_item_metadata_tool",
-      "note": "To get useful information to list the recommended items. Since the user requested for movies starring Tom Cruise, 'actors' is an important feature to be retrieved, together with 'title' and 'description'."
+      "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
     }
   ],
   "calls": [
     {
       "name": "item_filter_tool",
       "arguments": {
-        "genres": ["drama"],
-        "director": ["Quentin Tarantino"]
+        "genres": ["horror"]
       }
     },
     {
       "name": "get_top_k_recommendations_tool",
       "arguments": {
-        "user": 56,
+        "user": 3,
         "k": 5,
         "items": "<String containing the file path returned by the item_filter_tool>"
       }
@@ -34,7 +33,7 @@
       "name": "get_item_metadata_tool",
       "arguments": {
         "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
-        "get": ["title", "actors", "description"]
+        "get": ["title", "genres", "description"]
       }
     }
   ]

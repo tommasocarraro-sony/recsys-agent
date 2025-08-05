@@ -1,0 +1,40 @@
+{
+  "query": "User 23 is depressed today. What could we recommend?",
+  "tool_plan": [
+    {
+      "tool_name": "vector_store_search_tool",
+      "note": "To get the IDs of movies that might improve the user mood. In this case, keywords like 'uplifting' and 'heartwarming' might be included in the query for the vector store search."
+    },
+    {
+      "tool_name": "get_top_k_recommendations_tool",
+      "note": "To get a personalized ranking of movies that might improve the user mood."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+    }
+  ],
+  "calls": [
+    {
+      "name": "vector_store_search_tool",
+      "arguments": {
+        "query": "uplifting, heartwarming"
+      }
+    },
+    {
+      "name": "get_top_k_recommendations_tool",
+      "arguments": {
+        "user": 23,
+        "k": 5,
+        "items": "<Python list of item IDs returned by vector_store_search_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
+        "get": ["title", "genres", "description"]
+      }
+    }
+  ]
+}

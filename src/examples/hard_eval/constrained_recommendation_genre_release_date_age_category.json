@@ -1,0 +1,68 @@
+{
+  "query": "Recommend to user 78 some horror movies released prior to 1996 that are popular in the age category of the user.",
+  "tool_plan": [
+    {
+      "tool_name": "item_filter_tool",
+      "note": "To get the IDs of horror movies released prior to 1996."
+    },
+    {
+      "tool_name": "get_user_metadata_tool",
+      "note": "To get the age group of the user."
+    },
+    {
+      "tool_name": "get_popular_items_tool",
+      "note": "To get the IDs of horror movies released prior to 1996 that are popular in the age category of the user."
+    },
+    {
+      "tool_name": "get_top_k_recommendations_tool",
+      "note": "To get a personalized ranking of horror movies released prior to 1996 that are popular in the age category of the user for the user."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. Since the user requested for movies released prior to 1996, 'release_date' is an important feature to be retrieved, together with 'title', 'genres', and 'description'."
+    }
+  ],
+  "calls": [
+    {
+      "name": "item_filter_tool",
+      "arguments": {
+        "genres": ["horror"],
+        "release_date": {
+          "request": "lower",
+          "threshold": 1996
+        }
+      }
+    },
+    {
+      "name": "get_user_metadata_tool",
+      "arguments": {
+        "user": 78,
+        "get": ["age_category"]
+      }
+    },
+    {
+      "name": "get_popular_items_tool",
+      "arguments": {
+        "popularity": "by_user_group",
+        "user_group": "<Python list containing the age category returned by the get_user_metadata_tool>",
+        "k": 20,
+        "items": "<String containing the file path returned by the item_filter_tool>"
+      }
+    },
+    {
+      "name": "get_top_k_recommendations_tool",
+      "arguments": {
+        "user": 78,
+        "k": 5,
+        "items": "<Python list containing the IDs of movies returned by the get_popular_items_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
+        "get": ["title", "release_date", "genres", "description"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,41 @@
+{
+  "query": "What is the most popular actor in the age group of user 34?",
+  "tool_plan": [
+    {
+      "tool_name": "get_user_metadata_tool",
+      "note": "To get the age category of the user."
+    },
+    {
+      "tool_name": "get_popular_items_tool",
+      "note": "To get the top 3 popular movies in the age category of the user."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get the actors of these popular movies and reason about what could be the most popular actor."
+    }
+  ],
+  "calls": [
+    {
+      "name": "get_user_metadata_tool",
+      "arguments": {
+        "user": 34,
+        "get": ["age_category"]
+      }
+    },
+    {
+      "name": "get_popular_items_tool",
+      "arguments": {
+        "popularity": "by_user_group",
+        "user_group": "<Python list containing the age category returned by the get_user_metadata_tool>",
+        "k": 3
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_popular_items_tool>",
+        "get": ["title", "actors"]
+      }
+    }
+  ]
+}

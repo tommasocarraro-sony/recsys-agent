@@ -1,5 +1,4 @@
 import json
-import csv
 import os
 from typing import Dict, Any, List, Callable
 from src.tools.get_like_percentage import get_like_percentage_tool
@@ -11,6 +10,12 @@ from src.tools.get_user_metadata import get_user_metadata_tool
 from src.tools.vector_store_search import vector_store_search_tool
 from src.tools.get_interacted_items import get_interacted_items_tool
 from src.tools.utils import create_lists_for_fuzzy_matching
+import argparse
+
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--evaluation", default="easy", help="Type of evaluation: easy, medium, or hard")
+args = parser.parse_args()
 
 create_lists_for_fuzzy_matching()
 create_recbole_environment(os.getenv("RECSYS_MODEL_PATH"))
@@ -27,25 +32,37 @@ tool_functions = {
 }
 
 
-def resolve_argument_placeholders(arg, previous_results):
-    """Recursively resolve <...> placeholders in the arguments."""
+def resolve_argument_placeholders(arg, previous_results, tool_calls=None):
+    """Recursively resolve <...> placeholders in the arguments using tool call context."""
     if isinstance(arg, str):
         if arg.startswith("<") and arg.endswith(">"):
-            if isinstance(previous_results[-1], dict):
-                if "age_category" in previous_results[-1]:
-                    return [previous_results[-1]["age_category"].replace(" ", "_")]
-                if "gender" in previous_results[-1]:
-                    return [previous_results[-1]["gender"]]
-            if isinstance(previous_results[-1], list):
-                if "description" in previous_results[-1][0]:
-                    return previous_results[-1][0]["description"]
-            return previous_results[-1]  # Use last tool result
+            placeholder = arg.strip("<>")
+            # Go backwards through the tool calls to find the relevant result
+            for i in range(len(previous_results) - 1, -1, -1):
+                if tool_calls:
+                    tool_name = tool_calls[i]["name"]
+                    if tool_name.replace("_", " ") in placeholder or tool_name in placeholder:
+                        result = previous_results[i]
+                        if "storyline" in placeholder.lower() and 'storyline' in result[0]:
+                            return result[0]['storyline']
+                        if "age category" in placeholder.lower() and isinstance(result, dict) and "age_category" in result:
+                            return [result["age_category"]]
+                        if "gender" in placeholder.lower() and isinstance(result, dict) and "gender" in result:
+                            return [result["gender"]]
+                        if "file path" in placeholder.lower() and isinstance(result, str):
+                            return result
+                        if "list" in placeholder.lower() and isinstance(result, list):
+                            return result
+                        if "string" in placeholder.lower() and isinstance(result, str):
+                            return result
+                        if "dictionary" in placeholder.lower() and isinstance(result, dict):
+                            return result
         else:
             return arg
     elif isinstance(arg, list):
-        return [resolve_argument_placeholders(a, previous_results) for a in arg]
+        return [resolve_argument_placeholders(a, previous_results, tool_calls) for a in arg]
     elif isinstance(arg, dict):
-        return {k: resolve_argument_placeholders(v, previous_results) for k, v in arg.items()}
+        return {k: resolve_argument_placeholders(v, previous_results, tool_calls) for k, v in arg.items()}
     else:
         return arg
 
@@ -63,7 +80,7 @@ def process_example(example_path: str, tool_functions: Dict[str, Callable]) -> D
     for step in tool_calls:
         tool_name = step["name"]
         raw_args = step["arguments"]
-        resolved_args = resolve_argument_placeholders(raw_args, previous_results)
+        resolved_args = resolve_argument_placeholders(raw_args, previous_results, tool_calls)
 
         if tool_name not in tool_functions:
             raise ValueError(f"Tool '{tool_name}' is not implemented.")
@@ -77,25 +94,24 @@ def process_example(example_path: str, tool_functions: Dict[str, Callable]) -> D
             "result": result
         })
 
+    output = ""
+    if isinstance(previous_results[-1], list):
+        output += "Here is the list: \n\n"
+        for i, result in enumerate(previous_results[-1]):
+            output += f"{i + 1}. \n"
+            output += "\n".join([f"{k}: {v}" for k, v in result.items()])
+
+    elif isinstance(previous_results[-1], dict):
+        output += "\n".join(f"{k}: {v}" for k, v in previous_results[-1].items())
+
+    else:
+        output = previous_results[-1]
+
     return {
         "query": query,
-        "output": previous_results[-1],
+        "output": output,
         "tool_calls": actual_tool_trace
     }
-
-
-def write_to_csv(results: List[Dict[str, Any]], out_path: str):
-    keys = ["query", "output", "tool_calls"]
-    with open(out_path, "w", newline="", encoding="utf-8") as f:
-        writer = csv.DictWriter(f, fieldnames=keys)
-        writer.writeheader()
-        for r in results:
-            writer.writerow({
-                "query": r["query"],
-                "output": json.dumps(r["output"], ensure_ascii=False),
-                "tool_calls": json.dumps(r["tool_calls"], ensure_ascii=False)
-            })
-
 
 def save_as_json(data: list, output_path: str, prefix: str = "example"):
     """
@@ -115,16 +131,16 @@ def save_as_json(data: list, output_path: str, prefix: str = "example"):
 def main(input_folder: str, output_file: str):
     result_rows = []
     for fname in sorted(os.listdir(input_folder)):
-        if "filtering" not in fname:
+        if "filtering" not in fname and "vector_store_search" not in fname:
             if fname.endswith(".json"):
                 print(f"\n\n --- \n\nProcessing {fname}")
                 path = os.path.join(input_folder, fname)
                 result = process_example(path, tool_functions)
                 result_rows.append(result)
-    write_to_csv(result_rows, output_file + ".csv")
     save_as_json(result_rows, output_file + ".json")
     print(f"✅ Evaluation data written to {output_file}")
 
 
 if __name__ == "__main__":
-    main(input_folder="./src/examples", output_file="./tests/evaluation_examples")
+    assert args.evaluation in ["easy", "medium", "hard"], "Wrong evaluation type"
+    main(input_folder=f"./src/examples/{args.evaluation}_eval", output_file=f"./tests/evaluation_{args.evaluation}")

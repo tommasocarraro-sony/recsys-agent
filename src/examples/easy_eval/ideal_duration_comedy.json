@@ -11,7 +11,7 @@
     },
     {
       "tool_name": "get_item_metadata_tool",
-      "note": "To get the duration of the most popular horror movies and reason about what could be the ideal duration."
+      "note": "To get the duration of the most popular comedy movies and reason about what could be the ideal duration."
     }
   ],
   "calls": [

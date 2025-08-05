@@ -1,0 +1,40 @@
+{
+  "query": "Recommend some movies about war crimes to user 45.",
+  "tool_plan": [
+    {
+      "tool_name": "vector_store_search_tool",
+      "note": "To get the IDs of movies with a storyline regarding war crimes."
+    },
+    {
+      "tool_name": "get_top_k_recommendations_tool",
+      "note": "To get a personalized ranking of movies about war crimes for the user."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+    }
+  ],
+  "calls": [
+    {
+      "name": "vector_store_search_tool",
+      "arguments": {
+        "query": "war crimes"
+      }
+    },
+    {
+      "name": "get_top_k_recommendations_tool",
+      "arguments": {
+        "user": 45,
+        "k": 5,
+        "items": "<Python list of item IDs returned by vector_store_search_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
+        "get": ["title", "genres", "description"]
+      }
+    }
+  ]
+}

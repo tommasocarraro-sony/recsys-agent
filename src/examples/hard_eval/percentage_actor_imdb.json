@@ -1,0 +1,31 @@
+{
+  "query": "What is the percentage of users interested in Leonardo DiCaprio movies with an IMDb rating lower than 9?",
+  "tool_plan": [
+    {
+      "tool_name": "item_filter_tool",
+      "note": "To get the IDs of movies starring Leonardo DiCaprio and with an IMDb rating lower than 9."
+    },
+    {
+      "tool_name": "get_like_percentage_tool",
+      "note": "To compute the percentage of users that like movies starring Leonardo DiCaprio and with an IMDb rating lower than 9."
+    }
+  ],
+  "calls": [
+    {
+      "name": "item_filter_tool",
+      "arguments": {
+        "actors": ["Leonardo DiCaprio"],
+        "imdb_rating": {
+          "request": "lower",
+          "threshold": 9
+        }
+      }
+    },
+    {
+      "name": "get_like_percentage_tool",
+      "arguments": {
+        "items": "<String containing the file path returned by the item_filter_tool>"
+      }
+    }
+  ]
+}

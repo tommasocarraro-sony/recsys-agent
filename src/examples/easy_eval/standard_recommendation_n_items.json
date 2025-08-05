@@ -1,0 +1,29 @@
+{
+  "query": "Recommend 7 movies to user 130.",
+  "tool_plan": [
+    {
+      "tool_name": "get_top_k_recommendations_tool",
+      "note": "To get a personalized ranking of 8 movies for the user."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+    }
+  ],
+  "calls": [
+    {
+      "name": "get_top_k_recommendations_tool",
+      "arguments": {
+        "user": 130,
+        "k": 7
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
+        "get": ["title", "genres", "description"]
+      }
+    }
+  ]
+}

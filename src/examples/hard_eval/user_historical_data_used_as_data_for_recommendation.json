@@ -1,0 +1,40 @@
+{
+  "query": "What are the historical interactions of user 91? Take them and then recommend some movies to user 2 based on them.",
+  "tool_plan": [
+    {
+      "tool_name": "get_interacted_items_tool",
+      "note": "To get the 20 most recent historical interactions of user 91."
+    },
+    {
+      "tool_name": "get_top_k_recommendations_tool",
+      "note": "To get a personalized ranking of movies for user 2 based on the historical interactions of user 91."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+    }
+  ],
+  "calls": [
+    {
+      "name": "get_interacted_items_tool",
+      "arguments": {
+        "user": 91
+      }
+    },
+    {
+      "name": "get_top_k_recommendations_tool",
+      "arguments": {
+        "user": 2,
+        "k": 5,
+        "items": "<Python list of item IDs returned by the get_interacted_items_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by the get_top_k_recommendations_tool>",
+        "get": ["title", "genres", "description"]
+      }
+    }
+  ]
+}

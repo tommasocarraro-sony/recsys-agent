@@ -11,7 +11,7 @@
     },
     {
       "tool_name": "get_item_metadata_tool",
-      "note": "To get useful information to list the recommended items. Since the user requested for movies starring Tom Cruise, released prior to 1996, and with an IMDb rating higher than 6, 'actors', 'release_date', and 'imdb_rating' are important features to be retrieved, together with 'title' and 'description'."
+      "note": "To get useful information to list the recommended items. Since the user requested for movies starring Tom Cruise, released prior to 1996, and with an IMDb rating higher than 6, 'actors', 'release_date', and 'imdb_rating' are important features to be retrieved, together with 'title', 'genres', and 'description'."
     }
   ],
   "calls": [
@@ -41,7 +41,7 @@
       "name": "get_item_metadata_tool",
       "arguments": {
         "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
-        "get": ["title", "actors", "release_date", "imdb_rating", "description"]
+        "get": ["title", "genres", "actors", "release_date", "imdb_rating", "description"]
       }
     }
   ]

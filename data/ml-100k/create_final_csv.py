@@ -73,7 +73,7 @@ def compute_n_ratings(rating_file_path, user_meta_path=None, category=None):
     Args:
         rating_file_path (str): Path to the CSV file.
         user_meta_path (str): Path to user metadata file
-        category (str): kid, teenager, young adult, adult, senior, male, female
+        category (str): kid, teenager, young_adult, adult, senior, male, female
 
     Returns:
         number of ratings per item

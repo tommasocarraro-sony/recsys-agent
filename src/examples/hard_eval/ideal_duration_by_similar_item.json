@@ -1,0 +1,51 @@
+{
+  "query": "What is the ideal duration of movies similar to movie 8?",
+  "tool_plan": [
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get the storyline of the movie."
+    },
+    {
+      "tool_name": "vector_store_search_tool",
+      "note": "To get the IDs of movies with a description similar to the one of movie 8."
+    },
+    {
+      "tool_name": "get_popular_items_tool",
+      "note": "To get the top 3 popular movies similar to movie 8."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get the duration of the most popular movies similar to movie 8 and reason about what could be the ideal duration."
+    }
+  ],
+  "calls": [
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": [8],
+        "get": ["storyline"]
+      }
+    },
+    {
+      "name": "vector_store_search_tool",
+      "arguments": {
+        "query": "<Storyline returned by the get_item_metadata_tool>"
+      }
+    },
+    {
+      "name": "get_popular_items_tool",
+      "arguments": {
+        "popularity": "standard",
+        "k": 3,
+        "items": "<Python list of item IDs returned by the vector_store_search_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_popular_items_tool>",
+        "get": ["title", "duration"]
+      }
+    }
+  ]
+}

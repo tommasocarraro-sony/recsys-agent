@@ -114,6 +114,7 @@ class Agent:
         self.graph = graph_builder.compile(checkpointer=self.memory)
 
     def init_agent(self):
+        self.create_agent_envinroment()
         self.set_memory(MemorySaver())
         self.set_graph(StateGraph(State))
 
@@ -125,22 +126,35 @@ class Agent:
         create_vector_store()
         create_vector_store_examples()
 
-    def stream_graph_updates(self, user_input: str):
-        messages = []
-
+    def prepare_messages(self, user_input, messages, in_context_examples):
         if not self.conversation_started:
             messages.extend(self.system_message)
             self.conversation_started = True
 
-        in_context_examples = in_context_vector_store_search(user_input)
+        if in_context_examples:
+            in_context_examples = in_context_vector_store_search(user_input)
 
-        if in_context_examples[0]["score"] > 0.7:
-            print(f"Selected in-context examples: {in_context_examples}")
-            messages.append({"role": "user", "content": format_tool_example(
-                in_context_examples) + "\n\nTarget user query:\n\n'" + user_input + "'. \n\n**Call** the planned tools."})
+            if in_context_examples[0]["score"] > 0.7:
+                print(f"Selected in-context examples: {in_context_examples}")
+                messages.append({"role": "user", "content": format_tool_example(
+                    in_context_examples) + "\n\nTarget user query:\n\n'" + user_input + "'. \n\n**Call** the planned tools."})
+            else:
+                messages.append({"role": "user", "content": user_input})
         else:
             messages.append({"role": "user", "content": user_input})
+
+    def stream_graph_updates(self, user_input: str, in_context_examples=False):
+        messages = []
+
+        self.prepare_messages(user_input, messages, in_context_examples)
 
         for message_chunk, metadata in self.graph.stream({"messages": messages}, config={"configurable": {"thread_id": "1"}}, stream_mode="messages"):
             if message_chunk.content and isinstance(message_chunk, AIMessageChunk):
                 print(message_chunk.content, end="", flush=True)
+
+    def graph_invoke(self, user_input: str, in_context_examples=False):
+        messages = []
+
+        self.prepare_messages(user_input, messages, in_context_examples)
+
+        return self.graph.invoke({"messages": messages}, config={"configurable": {"thread_id": "1"}})

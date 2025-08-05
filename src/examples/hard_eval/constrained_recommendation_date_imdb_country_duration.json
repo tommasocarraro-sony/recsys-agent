@@ -1,0 +1,53 @@
+{
+  "query": "Recommend some horror movies released prior to 1997, with an IMDb rating higher than 5, released in the United States, and that last less than 2 hours to user 5.",
+  "tool_plan": [
+    {
+      "tool_name": "item_filter_tool",
+      "note": "To get the IDs of horror movies released prior to 1997, with an IMDb rating higher than 5, released in the United States, and that last less than 2 hours."
+    },
+    {
+      "tool_name": "get_top_k_recommendations_tool",
+      "note": "To get a personalized ranking of horror movies released prior to 1997, with an IMDb rating higher than 5, released in the United States, and that last less than 2 hours for the user."
+    },
+    {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get useful information to list the recommended items. Since the user requested for horror movies released prior to 1997, with an IMDb rating higher than 5, released in the United States, and that last less than 2 hours, 'release_date', 'imdb_rating', 'country', and 'duration' are important features to be retrieved, together with 'title', 'genres', and 'description'."
+    }
+  ],
+  "calls": [
+    {
+      "name": "item_filter_tool",
+      "arguments": {
+        "genres": ["horror"],
+        "release_date": {
+          "request": "lower",
+          "threshold": 1997
+        },
+        "imdb_rating": {
+          "request": "higher",
+          "threshold": 5
+        },
+        "country": "United States",
+        "duration": {
+          "request": "lower",
+          "threshold": 120
+        }
+      }
+    },
+    {
+      "name": "get_top_k_recommendations_tool",
+      "arguments": {
+        "user": 5,
+        "k": 5,
+        "items": "<String containing the file path returned by the item_filter_tool>"
+      }
+    },
+    {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
+        "get": ["title", "genres", "release_date", "country", "imdb_rating", "duration", "description"]
+      }
+    }
+  ]
+}

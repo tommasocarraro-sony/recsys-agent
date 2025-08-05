@@ -1,13 +1,17 @@
 {
-  "query": "User 45 is sad today. What could we recommend?",
+  "query": "Recommend to user 76 some movies similar to movie 90.",
   "tool_plan": [
     {
+      "tool_name": "get_item_metadata_tool",
+      "note": "To get the storyline of the movie."
+    },
+    {
       "tool_name": "vector_store_search_tool",
-      "note": "To get the IDs of movies that might improve the user mood. In this case, keywords like 'uplifting' and 'heartwarming' might be included in the query for the vector store search."
+      "note": "To get the IDs of movies with a description similar to the one of movie 90."
     },
     {
       "tool_name": "get_top_k_recommendations_tool",
-      "note": "To get a personalized ranking of movies that might improve the user mood."
+      "note": "To get a personalized ranking of movies with a description similar to the one of movie 90 for the user."
     },
     {
       "tool_name": "get_item_metadata_tool",
@@ -16,17 +20,24 @@
   ],
   "calls": [
     {
+      "name": "get_item_metadata_tool",
+      "arguments": {
+        "items": [90],
+        "get": ["storyline"]
+      }
+    },
+    {
       "name": "vector_store_search_tool",
       "arguments": {
-        "query": "uplifting, heartwarming movies"
+        "query": "<Storyline returned by the get_item_metadata_tool>"
       }
     },
     {
       "name": "get_top_k_recommendations_tool",
       "arguments": {
-        "user": 45,
+        "user": 76,
         "k": 5,
-        "items": "<String containing the file path returned by the item_filter_tool>"
+        "items": "<Python list of item IDs returned by vector_store_search_tool>"
       }
     },
     {

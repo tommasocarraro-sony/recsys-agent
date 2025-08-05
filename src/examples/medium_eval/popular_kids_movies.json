@@ -1,13 +1,13 @@
 {
-  "query": "Recommend to user 432 some movies where the main character is kidnapped.",
+  "query": "Recommend to user 29 some movies popular among kids.",
   "tool_plan": [
     {
-      "tool_name": "vector_store_search_tool",
-      "note": "To get the IDs of movies with a storyline where the main character is kidnapped."
+      "tool_name": "get_popular_items_tool",
+      "note": "To get the IDs of movies popular among kids."
     },
     {
       "tool_name": "get_top_k_recommendations_tool",
-      "note": "To get a personalized ranking of movies where the main character is kidnapped for the user."
+      "note": "To get a personalized ranking of movies popular among kids for the user."
     },
     {
       "tool_name": "get_item_metadata_tool",
@@ -16,17 +16,19 @@
   ],
   "calls": [
     {
-      "name": "vector_store_search_tool",
+      "name": "get_popular_items_tool",
       "arguments": {
-        "query": "main character is kidnapped"
+        "popularity": "by_user_group",
+        "user_group": ["kid"],
+        "k": 20
       }
     },
     {
       "name": "get_top_k_recommendations_tool",
       "arguments": {
-        "user": 432,
+        "user": 29,
         "k": 5,
-        "items": "<String containing the file path returned by the item_filter_tool>"
+        "items": "<Python list containing the IDs of movies returned by the get_popular_items_tool>"
       }
     },
     {

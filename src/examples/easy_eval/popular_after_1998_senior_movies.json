@@ -15,7 +15,7 @@
     },
     {
       "tool_name": "get_item_metadata_tool",
-      "note": "To get useful information to list the recommended items. Since the user requested for movies starring Tom Cruise, 'actors' is an important feature to be retrieved, together with 'title' and 'description'."
+      "note": "To get useful information to list the recommended items. Since the user requested for movies released after 1998, 'release_date' is an important feature to be retrieved, together with 'title' and 'description'."
     }
   ],
   "calls": [
@@ -49,7 +49,7 @@
       "name": "get_item_metadata_tool",
       "arguments": {
         "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
-        "get": ["title", "actors", "description"]
+        "get": ["title", "release_date", "genres", "description"]
       }
     }
   ]

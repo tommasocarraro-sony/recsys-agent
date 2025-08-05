@@ -124,7 +124,7 @@ def create_ml100k_db():
                 continue
             user_id, age, gender, occupation, location = line.strip().split('\t')
             cursor.execute('INSERT OR REPLACE INTO users (user_id, age_category, gender) VALUES (?, ?, ?)',
-                           (user_id, convert_age_to_string(int(age)), gender))
+                           (user_id, convert_age_to_string(int(age)), convert_gender_to_string(gender)))
 
 
     conn.commit()
@@ -156,11 +156,25 @@ def convert_age_to_string(age):
     if 12 < age < 20:
         return "teenager"
     if 20 <= age <= 30:
-        return "young adult"
+        return "young_adult"
     if 30 < age <= 60:
         return "adult"
     if 60 < age <= 100:
         return "senior"
+    return None
+
+
+def convert_gender_to_string(gender):
+    """
+    This simply converts gender (M, F) in a string (Male, Female)
+
+    :param gender: gender of the person
+    :return: string indicating the gender of the person
+    """
+    if gender == 'M':
+        return "Male"
+    if gender == 'F':
+        return "Female"
     return None
 
 
@@ -331,7 +345,7 @@ def create_vector_store_examples():
     # Load JSON files containing in-context examples
     # Dictionary to hold examples with progressive IDs
     examples_dict = {}
-    examples_folder = "./src/examples"
+    examples_folder = "./src/examples/easy_eval"
 
     # Sorted for deterministic ordering
     for idx, filename in enumerate(sorted(os.listdir(examples_folder))):

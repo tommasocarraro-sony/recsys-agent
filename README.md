@@ -124,7 +124,7 @@ Our assistant can currently respond to these kinds of questions:
 - Recommend a Tom Cruise movie to user 9.
 - Recommend 3 comedy movies to user 98.
 - Recommend some movies starring Tom Cruise and with an IMDb rating higher than 6 to user 2;
-- Recommend some movies released in the USA prior to 1997 to user 9.
+- Recommend some movies released in the United States prior to 1997 to user 9.
 3. User's mood-based recommendation questions:
 - User 6 is very sad today. What could we recommend to him?
 - User 9 is happy, suggest some movies that match his/her emotional state.

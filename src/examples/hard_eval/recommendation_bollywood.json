@@ -1,30 +1,30 @@
 {
-  "query": "Recommend some horror movies to user 3.",
+  "query": "Recommend some bollywood movies to user 46.",
   "tool_plan": [
     {
       "tool_name": "item_filter_tool",
-      "note": "To get the IDs of horror movies."
+      "note": "To get the IDs of movies released in India."
     },
     {
       "tool_name": "get_top_k_recommendations_tool",
-      "note": "To get a personalized ranking of horror movies for the user."
+      "note": "To get a personalized ranking of movies released in India for the user."
     },
     {
       "tool_name": "get_item_metadata_tool",
-      "note": "To get useful information to list the recommended items. Since the user requested for horror movies, 'genres' is an important feature to be retrieved, together with 'title' and 'description'."
+      "note": "To get useful information to list the recommended items. Since the user requested for movies released in India, 'country' in an important item feature to retrieve together with 'title', 'genres', and 'description'."
     }
   ],
   "calls": [
     {
       "name": "item_filter_tool",
       "arguments": {
-        "genres": ["horror"]
+        "country": "India"
       }
     },
     {
       "name": "get_top_k_recommendations_tool",
       "arguments": {
-        "user": 3,
+        "user": 46,
         "k": 5,
         "items": "<String containing the file path returned by the item_filter_tool>"
       }
@@ -33,7 +33,7 @@
       "name": "get_item_metadata_tool",
       "arguments": {
         "items": "<Python list of item IDs returned by get_top_k_recommendations_tool>",
-        "get": ["title", "genres", "description"]
+        "get": ["title", "country", "genres", "description"]
       }
     }
   ]
