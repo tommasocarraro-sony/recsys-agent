@@ -1,12 +1,12 @@
 from langchain.tools import tool
 import json
 import numpy as np
-from src.tools.utils import execute_sql_query, define_sql_query, convert_to_list
+from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
 
 
-from typing import List, Union, Optional, Literal
+from typing import List, Optional, Literal
 from pydantic import BaseModel, Field
 
 AllowedGroups = Literal['kid', 'teenager', 'young_adult', 'adult', 'senior', 'male', 'female']
@@ -21,20 +21,19 @@ class GetPopularItemsInput(BaseModel):
         default=20,
         description="Number of popular items to be returned."
     )
-    items: Optional[Union[List[int], str]] = Field(
-        default=None,
-        description="Item ID(s) for which the popularity has to be computed, either directly as a list or as a "
-                    "path to a JSON file."
+    items: List[int] = Field(
+        default_factory=list,
+        description="List of item ID(s) for which the popularity has to be computed."
     )
-    user_group: Optional[List[AllowedGroups]] = Field(
-        default=None,
+    user_group: List[AllowedGroups] = Field(
+        default_factory=list,
         description="User groups for computing popularity: 'kid', 'teenager', 'young_adult', 'adult', 'senior', 'male', "
                     "'female'."
     )
 
 
 @tool(args_schema=GetPopularItemsInput)
-def get_popular_items_tool(popularity: AllowedPopularity, k: int = 20, items: Optional[Union[List[int], str]] = None,
+def get_popular_items_tool(popularity: AllowedPopularity, k: int = 20, items: Optional[List[int]] = None,
                            user_group: Optional[List[AllowedGroups]] = None) -> str:
     """
     Returns the IDs of the k most popular items based on the number of ratings they received. If a list of item IDs is
@@ -48,32 +47,16 @@ def get_popular_items_tool(popularity: AllowedPopularity, k: int = 20, items: Op
 
     # SQL query building
     if popularity == "standard":
-        if items is not None and items:
-            try:
-                items = convert_to_list(items)
-            except Exception:
-                return json.dumps({
-                    "status": "failure",
-                    "message": "There are issues with the temporary file containing the "
-                               "item IDs.",
-                })
+        if items:
             items = [int(i) for i in items]
             sql_query, _, _ = define_sql_query("items", {"select": ["item_id", "n_ratings"], "items": items})
         else:
             sql_query, _, _ = define_sql_query("items", {"select": ["item_id", "n_ratings"]})
     else:
-        if user_group is not None and not user_group:
+        if not user_group:
             return json.dumps(JSON_GENERATION_ERROR)
         user_group_cols = [f"n_ratings_{group}" for group in user_group]
         if items:
-            try:
-                items = convert_to_list(items)
-            except Exception:
-                return json.dumps({
-                    "status": "failure",
-                    "message": "There are issues with the temporary file containing the "
-                               "item IDs.",
-                })
             items = [int(i) for i in items]
             sql_query, _, _ = define_sql_query("items", {"select": ["item_id"] + user_group_cols, "items": items})
         else:
@@ -101,5 +84,6 @@ def get_popular_items_tool(popularity: AllowedPopularity, k: int = 20, items: Op
     else:
         return json.dumps({
             "status": "failure",
-            "message": "The SQL query did not produce any result"
+            "message": "The SQL query did not produce any result",
+            "data": None
         })

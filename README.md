@@ -74,7 +74,7 @@ The infrastructure of this project includes different components that interact e
 1. A pre-trained recommendation system that the LLM can access. In this project, we use a simple Matrix Factorization model trained on the MovieLens-100k dataset using the [RecBole](https://recbole.io/) recommendation framework.
 2. A MySQL database containing content information about users and items that can be accessed by the LLM to get textual descriptions of users and/or items.
 3. A [Qdrant](https://qdrant.tech/) vector store containing embedded item descriptions that can be used by the LLM to answer ambiguous or complex queries where the recommendation system is not enough to provide a comprehensive reply. This vector store is run inside a Docker container.
-4. An LLM model, either self-hosted or accessible through AI inference providers. In our case, we experimented with GPT4.1 (closed-source and accessed through an OpenAI API key), Qwen2.5-7B, and Qwen2.5-72B (open-weight and self-hosted). The only requirement is that the LLM has function-calling capabilities.
+4. An LLM model, either self-hosted or accessible through AI inference providers. In our case, we experimented with GPT4.1 (closed-source and accessed through an OpenAI API key), GPT-OSS-20B, Qwen2.5-7B, and Qwen2.5-72B (open-weight and self-hosted). The only requirement is that the LLM has function-calling capabilities.
 5. An API to make the LLM interact with the user-defined tools. This is also called the middleware layer. This layer has to detect function calls, call the correct function, and return the result to the LLM. In our project, we use the [LangChain/LangGraph](https://www.langchain.com/) framework.
 6. A front-end app for a smooth interaction between the user and the LLM. In this project, we used [Chainlit](https://docs.chainlit.io/get-started/overview).
 
@@ -155,14 +155,14 @@ The assistant can autonomously decide which tools to call and in which order.
 
 These are the available tools to date:
 
-1. `get_top_k_recommendations`: takes as input a user ID and a number (i.e., k) of desired recommended items, and it generates a ranking over these items using the pre-trained recommender system. It can optionally take item IDs as input, for example, when the recommended items must satisfy some user's given conditions.
-2. `item_filter`: takes as input some user's conditions and returns a list of IDs of items that satisfy the given conditions. Alternatively, it can generate the path to a .txt file containing these IDs. This is done for efficient use of streamed tokens.
-3. `vector_store_search`: takes as input a query and performs a search in the vector database. The IDs of the top 10 matching items are returned. The vector database contains embedded item descriptions/storylines.
-4. `get_like_percentage`: takes as input a list of item IDs and computes the percentage of users that like those items in the recommendation dataset.
-5. `get_popular_items`: generates a list of popular items by computing the .75 quantile `q` of the rating distribution. The items with more than `q` ratings are considered popular. If some item IDs are given to this tool, it only takes the given items into account for the popularity computation.
-6. `get_user_metadata`: takes as input a user ID and a list of desired metadata user features and returns the requested features.
-7. `get_item_metadata`: takes as input an item ID and a list of desired metadata item features and returns the requested features.
-8. `get_interacted_items`: takes as input a user ID and returns the IDs of the items the user interacted with in the past. It returns only the most recent 20 ones if the user interacted with more than 20 items in the dataset.
+1. `get_top_k_recommendations_tool`: takes as input a user ID and a number (i.e., k) of desired recommended items, and it generates a ranking over these items using the pre-trained recommender system. It can optionally take item IDs as input, for example, when the recommended items must satisfy some user's given conditions.
+2. `item_filter_tool`: takes as input some user's conditions and returns a list of IDs of items that satisfy the given conditions.
+3. `vector_store_search_tool`: takes as input a query and performs a search in the vector database. The IDs of the top 10 matching items are returned. The vector database contains embedded item descriptions/storylines.
+4. `get_like_percentage_tool`: takes as input a list of item IDs and computes the percentage of users that like those items in the recommendation dataset.
+5. `get_popular_items_tool`: generates a list of popular items by computing the .75 quantile `q` of the rating distribution. The items with more than `q` ratings are considered popular. If some item IDs are given to this tool, it only takes the given items into account for the popularity computation.
+6. `get_user_metadata_tool`: takes as input a user ID and a list of desired metadata user features and returns the requested features.
+7. `get_item_metadata_tool`: takes as input an item ID and a list of desired metadata item features and returns the requested features.
+8. `get_interacted_items_tool`: takes as input a user ID and returns the IDs of the items the user interacted with in the past. It returns only the most recent 20 ones if the user interacted with more than 20 items in the dataset.
 
 ## Do you want to implement your custom tools?
 
@@ -219,9 +219,13 @@ The majority of our experiments have been done using the closed-source GPT4.1. I
 
 For practitioners and researchers who cannot access GPT4.1, we decided to extend this project to the investigation of open-weight models that can be self-hosted on a laptop or cluster with GPUs. In this demo, open-source models can be self-hosted through [Ollama](https://ollama.com/).
 
-We made experiments with all the models available in Ollama that can support native function calling. The [Qwen2.5](https://ollama.com/library/qwen2.5/tags) model family has been the one that provided the best results in our scenario. We tried with the 7B model, with different quantizations, on a MacBook Pro (M4 Pro / 24 GB). Then, we tried with the 72B model on four NVIDIA L40S GPUs with 48 GB of VRAM.
+We made experiments with all the models available in Ollama that can support native function calling. [GPT-OSS-7B](https://ollama.com/library/gpt-oss) has been the open-source model that provided the best results in our scenario, so, we suggest using this model with our demo.
 
-Due to the inferior capability of these models with respect to GPT4.1, it is not guaranteed that system prompt instructions are always carefully followed. Additionally, even if comprehensive examples are provided in the system prompt, this model family can forget to call some tools or can call wrong or useless tools. However, the more the model is capable, the better the function-calling and multi-step reasoning performance. Hence, if you have the chance to self-host Qwen2.5-72B on your cluster, we suggest you go for it. In our opinion, it is the best open-source model for this recommendation scenario.
+### Condideration on other open-source models
+
+Among the others, the [Qwen2.5](https://ollama.com/library/qwen2.5/tags) model family has been the one that provided the best results in our scenario. We tried with the 7B model, with different quantizations, on a MacBook Pro (M4 Pro / 24 GB). Then, we tried with the 72B model on four NVIDIA L40S GPUs with 48 GB of VRAM.
+
+Due to the inferior capability of these models with respect to GPT4.1, it is not guaranteed that system prompt instructions are always carefully followed. Additionally, even if comprehensive examples are provided in the system prompt, this model family can forget to call some tools or can call wrong or useless tools. However, the more the model is capable, the better the function-calling and multi-step reasoning performance. Hence, if you have the chance to self-host Qwen2.5-72B on your cluster, we suggest you go for it. In our opinion, it is the best non-OpenAI open-source model for this recommendation scenario.
 
 These issues with open-weight models might be solved by implementing the tool's calling logic from scratch, instead of relying on the LangGraph/LangChain framework. The idea is to leave to the LLM the only task of generating the tool call plan as a list of JSON files containing function names and parameters. The self-implemented middleware layer must then understand that some JSONs have been generated, parse and validate them, and finally call the right tools and return the results to the LLM. As this is not a trivial task, we leave this for future work. We invite the reader to follow this [repository](https://github.com/frankie336/entities_api) for an open-source API that does exactly this. We tried this API in the early stages of this project. It works relatively well, and it is constantly updated.
 
@@ -253,11 +257,11 @@ This command should create a `.env` file for you containing the path to the weig
 
 After the successful training of the model, you must start Docker.
 
-If you want to self-host your model on the CPU, we suggest using [Qwen2.5-7B](https://ollama.com/library/qwen2.5:7b) (we tested this model a lot). To use this model, you should first download it from Ollama.
+If you want to self-host your model on the CPU, we suggest using [GPT-OSS-20B](https://ollama.com/library/gpt-oss) (we tested this model a lot). To use this model, you should first download it from Ollama.
 
 To do so, be sure you have Ollama installed and then launch this command in your terminal:
 
-`ollama pull qwen2.5:7b`
+`ollama pull gpt-oss:20b`
 
 Instead, if you prefer to use the OpenAI inference provider, you must add an OpenAI API key to the .env file, for example, `OPENAI_API_KEY=<your_key>`.
 
@@ -265,7 +269,7 @@ Finally, you can run the application by running the following command from the r
 
 OpenAI provider option: `python app_main.py` --> We do not currently support other OpenAI closed-source models, so we do not give the option to change the LLM when using the OpenAI inference provider.
 
-Ollama self-hosting option: `python app_main.py --self_host` --> By default, our application uses Qwen2.5:7b. If you want to change the self-hosted LLM, you can use the following command (assuming the chosen model is [Qwen2.5:72b](https://ollama.com/library/qwen2.5:72b)):
+Ollama self-hosting option: `python app_main.py --self_host` --> By default, our application uses GPT-OSS-20B. If you want to change the self-hosted LLM, you can use the following command (assuming the chosen model is [Qwen2.5:72b](https://ollama.com/library/qwen2.5:72b)):
 
 `python app_main.py --self_host --llm Qwen2.5:72b`
 

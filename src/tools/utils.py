@@ -145,9 +145,6 @@ def process_textual(feature, conditions, names_list, query_parts, corrections, f
     """
     if feature in conditions:
         f = conditions[feature]
-        # convert to list before cycling it, otherwise it will cycle strings too
-        if not isinstance(f, list):
-            f = [f]
         for f_ in f:
             # perform fuzzy matching
             f_corrected = correct_name(f_, names_list)
@@ -193,33 +190,3 @@ def process_numerical(feature, conditions, query_parts):
                 f"{feature} < {f}")
         else:
             query_parts.append(f"{feature} = {f}")
-
-
-def convert_to_list(items):
-    """
-    It takes a list of item IDs or a path to a JSON file containing a list of item IDs.
-    If `items` is a string containing the path, then it converts the content to a list.
-    :param items: list or string
-    :return: list of item IDs
-    """
-    if isinstance(items, str):
-        # Assume it's a path to a JSON file
-        if not os.path.exists(items):
-            raise FileNotFoundError(f"Item list file not found: {items}")
-
-        with open(items, 'r') as f:
-            data = json.load(f)
-
-        if not isinstance(data, dict) or 'items' not in data:
-            raise ValueError(
-                f"Invalid file format: expected a JSON object with an 'items' key, got: {data}")
-
-        items = data['items']
-
-        if not isinstance(items, list):
-            raise ValueError(
-                f"The 'items' key in the file must contain a list. Got: {type(items)}")
-    elif isinstance(items, int):
-        items = [items]
-
-    return items

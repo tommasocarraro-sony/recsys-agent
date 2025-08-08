@@ -2,7 +2,7 @@ import json
 from typing import List, Union, Dict, Literal
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
-from src.tools.utils import execute_sql_query, define_sql_query, convert_to_list
+from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
 
@@ -14,11 +14,10 @@ AllowedFeatures = Literal[
 
 class GetItemMetadataInput(BaseModel):
     """Schema for retrieving item metadata."""
-    items: Union[List[int], str] = Field(
+    items: List[int] = Field(
         ...,
         description=(
-            "Item ID(s) for which the metadata has to be retrieved, either as a list of integers "
-            "or as a path to a JSON file containing the item IDs."
+            "List of item ID(s) for which the metadata has to be retrieved."
         )
     )
     get: List[AllowedFeatures] = Field(
@@ -31,7 +30,7 @@ class GetItemMetadataInput(BaseModel):
 
 
 @tool(args_schema=GetItemMetadataInput)
-def get_item_metadata_tool(items: Union[List[int], str], get: List[AllowedFeatures]) -> str:
+def get_item_metadata_tool(items: List[int], get: List[AllowedFeatures]) -> str:
     """
     Returns the requested item metadata given the item ID(s).
     """
@@ -42,12 +41,11 @@ def get_item_metadata_tool(items: Union[List[int], str], get: List[AllowedFeatur
 
     specification = ["item_id"] + get
 
-    try:
-        items = convert_to_list(items)
-    except Exception:
+    if not items:
         return json.dumps({
             "status": "failure",
-            "message": "There are issues with the temporary file containing the item IDs.",
+            "message": "The given list of item IDs is empty.",
+            "data": None
         })
 
     sql_query, _, _ = define_sql_query("items", {"items": items, "specification": specification})
@@ -72,6 +70,7 @@ def get_item_metadata_tool(items: Union[List[int], str], get: List[AllowedFeatur
         return json.dumps({
             "status": "failure",
             "message": f"No information found for the given items: {items}.",
+            "data": None
         })
 
 

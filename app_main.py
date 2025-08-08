@@ -4,12 +4,12 @@ import os
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--self_host", action="store_true", help="Use locally hosted model via Ollama")
-parser.add_argument("--llm", default="qwen2.5:7b", help="Ollama model to be used")
+parser.add_argument("--llm", default="gpt-oss:20b", help="Ollama model to be used")
 args = parser.parse_args()
 
 cmd = ["chainlit", "run", "chainlit_example.py"]
 
-if args.llm != "qwen2.5:7b" and not args.self_host:
+if args.llm != "gpt-oss:20b" and not args.self_host:
     raise Exception("You must specify --self_host when using --llm")
 
 if args.self_host:

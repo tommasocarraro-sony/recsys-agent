@@ -4,15 +4,15 @@ from langchain.chat_models import init_chat_model
 from dotenv import load_dotenv
 from langchain_ollama.chat_models import ChatOllama
 from src.agent import Agent
-from src.constants import SYSTEM_MESSAGE, SHORT_SYSTEM_MESSAGE, SYSTEM_MESSAGE_ENHANCED
+from src.constants import SHORT_SYSTEM_MESSAGE, SHORT_SYSTEM_MESSAGE_ENHANCED
 load_dotenv()
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--self_host", action="store_true", help="Use locally hosted model via Ollama")
-parser.add_argument("--llm", default="qwen2.5:7b", help="Ollama model to be used")
+parser.add_argument("--llm", default="gpt-oss:20b", help="Ollama model to be used")
 args = parser.parse_args()
 
-if not args.self_host and args.llm != "qwen2.5:7b":
+if not args.self_host and args.llm != "gpt-oss:20b":
     raise Exception("You must specify --self_host when using --llm")
 
 llm = None

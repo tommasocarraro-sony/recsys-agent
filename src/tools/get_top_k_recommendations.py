@@ -1,21 +1,21 @@
 import json
 import torch
-from src.tools.utils import get_time, convert_to_list
+from src.tools.utils import get_time
 from recbole.quick_start import load_data_and_model
 from recbole.utils.case_study import full_sort_scores, full_sort_topk
 from langchain_core.tools import tool
 from src.constants import JSON_GENERATION_ERROR
 from pydantic import BaseModel, Field
-from typing import List, Union, Optional
+from typing import List, Optional
 import os
 
 
 class TopKRecommendationInput(BaseModel):
     user: int = Field(..., description="User ID.")
     k: int = Field(default=5, description="Number of recommended items.")
-    items: Optional[Union[List[int], str]] = Field(
-        default=None,
-        description="Item IDs (list) or path to a JSON file containing the item IDs."
+    items: List[int] = Field(
+        default_factory=list,
+        description="List of item IDs to be given to the recommender system."
     )
 
 
@@ -32,11 +32,10 @@ def create_recbole_environment(model_path):
     )
 
 @tool(args_schema=TopKRecommendationInput)
-def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[Union[List[int], str]] = None) -> str:
+def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[List[int]] = None) -> str:
     """
     Returns a list of the IDs of the top k recommended items for the given user.
-    It computes recommendations over the entire item catalog unless a list of items or a path to a temporary file
-    containing a list of item is given.
+    It computes recommendations over the entire item catalog unless a list of items is given.
     """
     print(f"\n{get_time()} - get_top_k_recommendations has been triggered!!!\n")
 
@@ -48,15 +47,8 @@ def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[Union[
 
     uid_series = dataset.token2id(dataset.uid_field, [str(user)])
 
-    if items is not None:
-        try:
-            item_list = convert_to_list(items)
-        except Exception:
-            return json.dumps({
-                "status": "failure",
-                "message": "There are issues with the temporary file containing the item IDs.",
-            })
-        recommended_items = recommend_given_items(uid_series, item_list, k=k)
+    if items:
+        recommended_items = recommend_given_items(uid_series, items, k=k)
     else:
         recommended_items = recommend_full_catalog(uid_series, k=k)
 

@@ -30,6 +30,7 @@ def get_interacted_items_tool(user: int) -> str:
         return json.dumps({
             "status": "failure",
             "message": f"No interaction information found for user {user}.",
+            "data": None
         })
 
     # Extract interacted item IDs from query result

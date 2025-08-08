@@ -49,4 +49,5 @@ def get_user_metadata_tool(user: int, get: List[AllowedFeatures]) -> str:
         return json.dumps({
             "status": "failure",
             "message": f"No information found for user {user}.",
+            "data": None
         })

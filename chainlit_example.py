@@ -5,7 +5,6 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph.message import add_messages
 import os
-import argparse
 from langchain.chat_models import init_chat_model
 from dotenv import load_dotenv
 import json
@@ -21,7 +20,7 @@ from src.tools.get_like_percentage import get_like_percentage_tool
 from src.tools.get_popular_items import get_popular_items_tool
 from src.tools.vector_store_search import vector_store_search_tool
 from src.tools.utils import create_lists_for_fuzzy_matching
-from src.constants import SYSTEM_MESSAGE, SYSTEM_MESSAGE_ENHANCED
+from src.constants import SHORT_SYSTEM_MESSAGE, SHORT_SYSTEM_MESSAGE_ENHANCED
 import chainlit as cl
 load_dotenv()
 
@@ -166,7 +165,7 @@ async def stream_graph_updates(message: cl.Message):
     messages = cl.user_session.get("messages")
 
     if not conversation_started:
-        messages.extend(SYSTEM_MESSAGE if os.getenv("SELF_HOST") == "true" else SYSTEM_MESSAGE_ENHANCED)
+        messages.extend(SHORT_SYSTEM_MESSAGE if os.getenv("SELF_HOST") == "true" else SHORT_SYSTEM_MESSAGE_ENHANCED)
         cl.user_session.set("conversation_started", True)
 
     messages.append({"role": "user", "content": user_input})

@@ -1,12 +1,11 @@
 import json
-from typing import List, Optional, Union
+from typing import List, Optional
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
 from langchain.tools import tool
 from qdrant_client import QdrantClient
 from qdrant_client.models import Filter, FieldCondition, MatchAny, SearchParams
 from sentence_transformers import SentenceTransformer
-from src.tools.utils import convert_to_list
 from src.utils import get_time
 from src.constants import JSON_GENERATION_ERROR, COLLECTION_NAME
 
@@ -15,17 +14,17 @@ load_dotenv()
 
 class VectorStoreSearchParams(BaseModel):
     query: str = Field(..., description="Query to perform the vector store search.")
-    items: Optional[Union[List[int], str]] = Field(
-        None,
-        description="Item ID(s) that have to be included in the vector store search, either directly as a list or as "
-                    "a path to a JSON file."
+    items: List[int] = Field(
+        default_factory=list,
+        description="List of item ID(s) that have to be included in the vector store search."
     )
 
 
 @tool(args_schema=VectorStoreSearchParams)
-def vector_store_search_tool(query: str, items: Optional[Union[List[int], str]] = None) -> str:
+def vector_store_search_tool(query: str, items: Optional[List[int]] = None) -> str:
     """
-    Performs a vector store search and returns the 10 top matching item IDs.
+    Performs a vector store search and returns the 10 top matching item IDs. The search is performed over the entire
+    vector store unless a list of items is provided.
     """
     print(f"\n{get_time()} - vector_store_search_tool has been triggered!!!\n")
 
@@ -50,14 +49,7 @@ def vector_store_search_tool(query: str, items: Optional[Union[List[int], str]] 
         print(f"\n{get_time()} - Performing vector store search with query: {query}.\n")
         # Build optional filters
         qdrant_filter = None
-        if items is not None and items:
-            try:
-                items = convert_to_list(items)
-            except Exception:
-                return json.dumps({
-                    "status": "failure",
-                    "message": "There are issues with the temporary file containing the item IDs."
-                })
+        if items:
             items = [int(i) for i in items]
             qdrant_filter = Filter(
                 must=[
@@ -107,5 +99,6 @@ def vector_store_search_tool(query: str, items: Optional[Union[List[int], str]] 
     except Exception as e:
         return json.dumps({
             "status": "failure",
-            "message": f"Vector store search failed due to: {str(e)}"
+            "message": f"Vector store search failed due to: {str(e)}",
+            "data": None
         })

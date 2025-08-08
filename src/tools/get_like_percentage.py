@@ -1,22 +1,21 @@
 import json
-from typing import List, Union
-from pydantic import BaseModel, Field, root_validator
+from typing import List
+from pydantic import BaseModel, Field
 from langchain.tools import tool
 
 from src.constants import JSON_GENERATION_ERROR
-from src.tools.utils import convert_to_list
 from src.utils import get_time, read_ml100k_ratings
 
 
 class GetLikePercentageInput(BaseModel):
-    items: Union[List[int], str] = Field(
+    items: List[int] = Field(
         ...,
-        description="A list of item IDs or a path to a JSON file containing them."
+        description="A list of item IDs."
     )
 
 
 @tool(args_schema=GetLikePercentageInput)
-def get_like_percentage_tool(items: Union[List[int], str]) -> str:
+def get_like_percentage_tool(items: List[int]) -> str:
     """
     Returns the percentage of users that like the given item IDs.
     """
@@ -25,14 +24,12 @@ def get_like_percentage_tool(items: Union[List[int], str]) -> str:
     if items is None:
         return json.dumps(JSON_GENERATION_ERROR)
 
-    try:
-        items = convert_to_list(items)
-    except Exception:
+    if not items:
         return json.dumps({
             "status": "failure",
-            "message": "There are issues with the temporary file containing the item IDs.",
+            "message": "The given list of item IDs is empty.",
+            "data": None
         })
-
 
     items = [int(i) for i in items]
     # Load rating file
