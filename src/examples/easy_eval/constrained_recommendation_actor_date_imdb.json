@@ -34,7 +34,7 @@
       "arguments": {
         "user": 23,
         "k": 10,
-        "items": "<String containing the file path returned by the item_filter_tool>"
+        "items": "<Python list of item IDs returned by the item_filter_tool>"
       }
     },
     {

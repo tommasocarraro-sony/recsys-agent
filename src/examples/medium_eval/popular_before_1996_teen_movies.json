@@ -34,7 +34,7 @@
         "popularity": "by_user_group",
         "user_group": ["teenager"],
         "k": 20,
-        "items": "<String containing the file path returned by the item_filter_tool>"
+        "items": "<Python list of item IDs returned by the item_filter_tool>"
       }
     },
     {

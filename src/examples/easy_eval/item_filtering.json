@@ -20,7 +20,7 @@
     {
       "name": "get_item_metadata_tool",
       "arguments": {
-        "items": "<String containing the file path returned by the item_filter_tool>",
+        "items": "<Python list of item IDs returned by the item_filter_tool>",
         "get": ["title", "genres", "description"]
       }
     }
