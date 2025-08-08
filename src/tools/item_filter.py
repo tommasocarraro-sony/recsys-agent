@@ -65,8 +65,6 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
     """
     print(f"\n{get_time()} - item_filter has been triggered!!!\n")
 
-    matched = False
-
     # convert dict to Pydantic objects if they are not already -> this is especially useful for the test
     if isinstance(imdb_rating, dict):
         imdb_rating = ComparisonFilter(**imdb_rating)

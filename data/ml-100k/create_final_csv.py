@@ -1,6 +1,6 @@
 import pandas as pd
 import ast
-from src.my_app.utils import convert_age_to_string
+from src.utils import convert_age_to_string
 
 # Genre mapping
 genre_map = {

@@ -28,7 +28,7 @@ else:
 
     llm = init_chat_model("openai:gpt-4.1", api_key=api_key)
 
-agent = Agent(llm, SHORT_SYSTEM_MESSAGE if args.self_host else SYSTEM_MESSAGE_ENHANCED)
+agent = Agent(llm, SHORT_SYSTEM_MESSAGE if args.self_host else SHORT_SYSTEM_MESSAGE_ENHANCED)
 
 while True:
     user_input = input("User: ")
