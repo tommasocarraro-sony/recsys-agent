@@ -36,7 +36,7 @@ from langsmith import Client
 from src.agent import Agent
 from langchain.chat_models import init_chat_model
 from langchain_ollama.chat_models import ChatOllama
-from src.constants import SYSTEM_MESSAGE_ENHANCED, SHORT_SYSTEM_MESSAGE
+from src.constants import SHORT_SYSTEM_MESSAGE_ENHANCED, SHORT_SYSTEM_MESSAGE
 from src.eval.utils import create_langsmith_dataset, evaluate_model
 import argparse
 
@@ -52,7 +52,7 @@ client = Client(api_key=os.getenv("LANGSMITH_API_KEY"))
 
 if args.llm == "openai:gpt-4.1":
     llm = init_chat_model("openai:gpt-4.1", api_key=os.getenv("OPENAI_API_KEY"))
-    llm_agent = Agent(llm, SYSTEM_MESSAGE_ENHANCED)
+    llm_agent = Agent(llm, SHORT_SYSTEM_MESSAGE_ENHANCED)
 else:
     llm = ChatOllama(model=args.llm, temperature=0, base_url="http://localhost:11434")
     llm_agent = Agent(llm, SHORT_SYSTEM_MESSAGE)
