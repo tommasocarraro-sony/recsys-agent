@@ -36,7 +36,7 @@ from langsmith import Client
 from src.agent import Agent
 from langchain.chat_models import init_chat_model
 from langchain_ollama.chat_models import ChatOllama
-from src.constants import SHORT_SYSTEM_MESSAGE_ENHANCED, SHORT_SYSTEM_MESSAGE
+from src.constants import SHORT_SYSTEM_MESSAGE_ENHANCED, SHORT_SYSTEM_MESSAGE, LONG_SYSTEM_MESSAGE_ENHANCED, LONG_SYSTEM_MESSAGE
 from src.eval.utils import create_langsmith_dataset, evaluate_model
 import argparse
 
@@ -44,24 +44,27 @@ import argparse
 parser = argparse.ArgumentParser()
 parser.add_argument("--llm", default="openai:gpt-4.1", help="Model to be evaluated")
 parser.add_argument("--evaluation", default="easy", help="Type of evaluation: easy, medium, or hard")
+parser.add_argument("--in_context", action="store_true", help="Whether to use in-context RAG")
+parser.add_argument("--system_message", default="short", help="Type of system message: short or long")
 args = parser.parse_args()
 
 assert args.evaluation in ["easy", "medium", "hard"], "Wrong evaluation type"
+assert args.system_message in ["short", "long"], "Wrong system message type"
 
 client = Client(api_key=os.getenv("LANGSMITH_API_KEY"))
 
 if args.llm == "openai:gpt-4.1":
     llm = init_chat_model("openai:gpt-4.1", api_key=os.getenv("OPENAI_API_KEY"))
-    llm_agent = Agent(llm, SHORT_SYSTEM_MESSAGE_ENHANCED)
+    llm_agent = Agent(llm, SHORT_SYSTEM_MESSAGE_ENHANCED if args.system_message == "short" else LONG_SYSTEM_MESSAGE_ENHANCED)
 else:
     llm = ChatOllama(model=args.llm, temperature=0, base_url="http://localhost:11434")
-    llm_agent = Agent(llm, SHORT_SYSTEM_MESSAGE)
+    llm_agent = Agent(llm, SHORT_SYSTEM_MESSAGE if args.system_message == "short" else LONG_SYSTEM_MESSAGE)
 
 create_langsmith_dataset(client, f"./tests/evaluation_{args.evaluation}.json", f"{args.evaluation} evaluation")
 # GPT does not use in-context examples because the model is capable enough to read a long system prompt that can contain all the examples
 # Qwen needs in-context examples because is not capable enough to deal with long system prompts
 
-evaluate_model(llm_agent, f"{args.evaluation} evaluation", in_context_examples=False if args.llm == "openai:gpt-4.1" else True)
+evaluate_model(llm_agent, f"{args.evaluation} evaluation", in_context_examples=args.in_context)
 
 # todo take into consideration that there are some prompts that should not be deterministic and we gave too detailed instruction to the model that could probably no generalize due to this problems
 # todo let's see tomorrow
