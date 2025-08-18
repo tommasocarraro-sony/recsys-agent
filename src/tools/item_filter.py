@@ -62,7 +62,9 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
     """
     Returns the list of IDs of the items that satisfy the given conditions.
     """
-    print(f"\n{get_time()} - item_filter has been triggered!!!\n")
+    print(f"\n{get_time()} - item_filter_tool(actors={actors}, genres={genres}, director={director}, producer={producer}, "
+          f"imdb_rating={imdb_rating}, duration={duration}, release_date={release_date}, release_month={release_month}, "
+          f"country={country})\n")
 
     # convert dict to Pydantic objects if they are not already -> this is especially useful for the test
     if isinstance(imdb_rating, dict):

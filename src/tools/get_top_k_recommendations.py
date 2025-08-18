@@ -36,7 +36,7 @@ def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[List[i
     Returns a list of the IDs of the top k recommended items for the given user.
     It computes recommendations over the entire item catalog unless a list of items is given.
     """
-    print(f"\n{get_time()} - get_top_k_recommendations has been triggered!!!\n")
+    print(f"\n{get_time()} - get_top_k_recommendations_tool(user={user}, k={k}, items={items})\n")
 
     if user is None or k is None:
         return JSON_GENERATION_ERROR

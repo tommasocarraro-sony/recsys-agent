@@ -18,7 +18,7 @@ def get_like_percentage_tool(items: List[int]) -> dict:
     """
     Returns the percentage of users that like the given item IDs.
     """
-    print(f"\n{get_time()} - get_like_percentage has been triggered!!!\n")
+    print(f"\n{get_time()} - get_like_percentage_tool(items={items})\n")
 
     if items is None:
         return JSON_GENERATION_ERROR

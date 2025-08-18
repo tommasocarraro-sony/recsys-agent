@@ -33,7 +33,7 @@ def get_item_metadata_tool(items: List[int], get: List[AllowedFeatures]) -> dict
     """
     Returns the requested item metadata given the item ID(s).
     """
-    print(f"\n{get_time()} - get_item_metadata_tool has been triggered!!!\n")
+    print(f"\n{get_time()} - get_item_metadata_tool(items={items}, get={get})\n")
 
     if items is None or get is None:
         return JSON_GENERATION_ERROR

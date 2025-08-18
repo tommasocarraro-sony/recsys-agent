@@ -16,7 +16,7 @@ def get_interacted_items_tool(user: int) -> dict:
     """
     Retrieves the list of the twenty most recent items a user has previously interacted with.
     """
-    print(f"\n{get_time()} - get_interacted_items_tool has been triggered!!!\n")
+    print(f"\n{get_time()} - get_interacted_items_tool(user={user})!!!\n")
 
     if user is None:
         return JSON_GENERATION_ERROR

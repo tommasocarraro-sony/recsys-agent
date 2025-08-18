@@ -22,7 +22,7 @@ def get_user_metadata_tool(user: int, get: List[AllowedFeatures]) -> dict:
     """
     Returns the requested user metadata given the user ID.
     """
-    print(f"\n{get_time()} - get_user_metadata_tool has been triggered!!!\n")
+    print(f"\n{get_time()} - get_user_metadata_tool(user={user}, get={get})\n")
 
     if user is None or get is None:
         return JSON_GENERATION_ERROR

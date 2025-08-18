@@ -25,7 +25,7 @@ def vector_store_search_tool(query: str, items: Optional[List[int]] = None) -> d
     Performs a vector store search and returns the 10 top matching item IDs. The search is performed over the entire
     vector store unless a list of items is provided.
     """
-    print(f"\n{get_time()} - vector_store_search_tool has been triggered!!!\n")
+    print(f"\n{get_time()} - vector_store_search_tool(query={query}, items={items})\n")
 
     if query is None:
         return JSON_GENERATION_ERROR

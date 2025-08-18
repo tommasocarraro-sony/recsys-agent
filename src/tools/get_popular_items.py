@@ -39,7 +39,7 @@ def get_popular_items_tool(popularity: AllowedPopularity, k: int = 20, items: Op
     given, the popularity computation will be restricted to those items only.
     The popularity can optionally be computed based on a user group.
     """
-    print(f"\n{get_time()} - get_popular_items has been triggered!!!\n")
+    print(f"\n{get_time()} - get_popular_items_tool(popularity={popularity}, k={k}, items={items}, user_group={user_group})\n")
 
     if popularity is None or k is None:
         return JSON_GENERATION_ERROR
