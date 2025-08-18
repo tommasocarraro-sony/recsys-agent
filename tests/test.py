@@ -33,7 +33,7 @@ os.environ["LANGCHAIN_ENDPOINT"]="https://eu.api.smith.langchain.com/"
 from dotenv import load_dotenv
 load_dotenv()
 from langsmith import Client
-from src.agent import Agent
+from src.agents.agent import Agent
 from langchain.chat_models import init_chat_model
 from langchain_ollama.chat_models import ChatOllama
 from src.constants import SHORT_SYSTEM_MESSAGE_ENHANCED, SHORT_SYSTEM_MESSAGE, LONG_SYSTEM_MESSAGE_ENHANCED, LONG_SYSTEM_MESSAGE

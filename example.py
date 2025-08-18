@@ -3,7 +3,7 @@ import argparse
 from langchain.chat_models import init_chat_model
 from dotenv import load_dotenv
 from langchain_ollama.chat_models import ChatOllama
-from src.agent import Agent
+from src.agents.agent import Agent
 from src.constants import SYSTEM_MESSAGE_GPT_OSS, SHORT_SYSTEM_MESSAGE_ENHANCED
 load_dotenv()
 
