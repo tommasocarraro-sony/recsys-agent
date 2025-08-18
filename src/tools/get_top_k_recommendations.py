@@ -1,4 +1,3 @@
-import json
 import torch
 from src.tools.utils import get_time
 from recbole.quick_start import load_data_and_model
@@ -12,7 +11,7 @@ import os
 
 class TopKRecommendationInput(BaseModel):
     user: int = Field(..., description="User ID.")
-    k: int = Field(default=5, description="Number of recommended items.")
+    k: int = Field(default=5, description="Number of recommended items. Default is 5.")
     items: List[int] = Field(
         default_factory=list,
         description="List of item IDs to be given to the recommender system."
@@ -32,7 +31,7 @@ def create_recbole_environment(model_path):
     )
 
 @tool(args_schema=TopKRecommendationInput)
-def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[List[int]] = None) -> str:
+def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[List[int]] = None) -> dict:
     """
     Returns a list of the IDs of the top k recommended items for the given user.
     It computes recommendations over the entire item catalog unless a list of items is given.
@@ -40,7 +39,7 @@ def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[List[i
     print(f"\n{get_time()} - get_top_k_recommendations has been triggered!!!\n")
 
     if user is None or k is None:
-        return json.dumps(JSON_GENERATION_ERROR)
+        return JSON_GENERATION_ERROR
 
     if 'config' not in globals():
         create_recbole_environment(os.getenv("RECSYS_MODEL_PATH"))
@@ -54,13 +53,13 @@ def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[List[i
 
     print(f"\n{get_time()} - Returned recommended items: {recommended_items}\n")
 
-    return json.dumps({
+    return {
         "status": "success",
         "message": (
             f"The top {k} recommendations for user {user} are returned."
         ),
         "data": list(recommended_items)
-    })
+    }
 
 
 def recommend_full_catalog(user, k=5):

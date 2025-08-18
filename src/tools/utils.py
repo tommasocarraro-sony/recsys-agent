@@ -145,6 +145,9 @@ def process_textual(feature, conditions, names_list, query_parts, corrections, f
     """
     if feature in conditions:
         f = conditions[feature]
+        # check if a string is passed. If yes, we need to convert it in a list for the next cycle to work properly
+        if isinstance(f, str):
+            f = [f]
         for f_ in f:
             # perform fuzzy matching
             f_corrected = correct_name(f_, names_list)

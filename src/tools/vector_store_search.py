@@ -1,4 +1,3 @@
-import json
 from typing import List, Optional
 from dotenv import load_dotenv
 from pydantic import BaseModel, Field
@@ -21,7 +20,7 @@ class VectorStoreSearchParams(BaseModel):
 
 
 @tool(args_schema=VectorStoreSearchParams)
-def vector_store_search_tool(query: str, items: Optional[List[int]] = None) -> str:
+def vector_store_search_tool(query: str, items: Optional[List[int]] = None) -> dict:
     """
     Performs a vector store search and returns the 10 top matching item IDs. The search is performed over the entire
     vector store unless a list of items is provided.
@@ -29,7 +28,7 @@ def vector_store_search_tool(query: str, items: Optional[List[int]] = None) -> s
     print(f"\n{get_time()} - vector_store_search_tool has been triggered!!!\n")
 
     if query is None:
-        return json.dumps(JSON_GENERATION_ERROR)
+        return JSON_GENERATION_ERROR
 
     try:
         # Load env variables
@@ -90,15 +89,15 @@ def vector_store_search_tool(query: str, items: Optional[List[int]] = None) -> s
 
         print(f"\n{get_time()} - Returned list: {item_ids}\n")
 
-        return json.dumps({
+        return {
             "status": "success",
             "message": f"The IDs of the {len(item_ids)} best matching items produced by the vector store search are returned.",
             "data": item_ids
-        })
+        }
 
     except Exception as e:
-        return json.dumps({
+        return {
             "status": "failure",
             "message": f"Vector store search failed due to: {str(e)}",
             "data": None
-        })
+        }

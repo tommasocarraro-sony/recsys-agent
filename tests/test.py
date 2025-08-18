@@ -58,7 +58,7 @@ if args.llm == "openai:gpt-4.1":
     llm_agent = Agent(llm, SHORT_SYSTEM_MESSAGE_ENHANCED if args.system_message == "short" else LONG_SYSTEM_MESSAGE_ENHANCED)
 else:
     llm = ChatOllama(model=args.llm, temperature=0, base_url="http://localhost:11434")
-    llm_agent = Agent(llm, SHORT_SYSTEM_MESSAGE if args.system_message == "short" else LONG_SYSTEM_MESSAGE)
+    llm_agent = Agent(llm, SHORT_SYSTEM_MESSAGE_ENHANCED if args.system_message == "short" else LONG_SYSTEM_MESSAGE)
 
 create_langsmith_dataset(client, f"./tests/evaluation_{args.evaluation}.json", f"{args.evaluation} evaluation")
 # GPT does not use in-context examples because the model is capable enough to read a long system prompt that can contain all the examples

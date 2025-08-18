@@ -1,4 +1,3 @@
-import json
 from typing import List, Literal
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
@@ -19,14 +18,14 @@ class GetUserMetadataInput(BaseModel):
 
 
 @tool(args_schema=GetUserMetadataInput)
-def get_user_metadata_tool(user: int, get: List[AllowedFeatures]) -> str:
+def get_user_metadata_tool(user: int, get: List[AllowedFeatures]) -> dict:
     """
     Returns the requested user metadata given the user ID.
     """
     print(f"\n{get_time()} - get_user_metadata_tool has been triggered!!!\n")
 
     if user is None or get is None:
-        return json.dumps(JSON_GENERATION_ERROR)
+        return JSON_GENERATION_ERROR
 
     specification = get
 
@@ -40,14 +39,14 @@ def get_user_metadata_tool(user: int, get: List[AllowedFeatures]) -> str:
 
         print(f"\n{get_time()} - Returned dictionary: {return_dict}\n")
 
-        return json.dumps({
+        return {
             "status": "success",
             "message": f"The requested metadata for user {user} is returned.",
             "data": return_dict
-        })
+        }
     else:
-        return json.dumps({
+        return {
             "status": "failure",
             "message": f"No information found for user {user}.",
             "data": None
-        })
+        }

@@ -1,4 +1,3 @@
-import json
 from typing import List, Union, Dict, Literal
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
@@ -21,32 +20,32 @@ class GetItemMetadataInput(BaseModel):
         )
     )
     get: List[AllowedFeatures] = Field(
-        ...,
+        default = ['title', 'genres', 'description'],
         description='List of item metadata features to retrieve. Available features: '
                     '"title", "description", "genres", "director", "producer", "duration", '
                     '"release_date", "release_month", "country", "actors", "imdb_rating", '
-                    '"storyline".'
+                    '"storyline". By default, title, genres, and description are retrieved.'
     )
 
 
 @tool(args_schema=GetItemMetadataInput)
-def get_item_metadata_tool(items: List[int], get: List[AllowedFeatures]) -> str:
+def get_item_metadata_tool(items: List[int], get: List[AllowedFeatures]) -> dict:
     """
     Returns the requested item metadata given the item ID(s).
     """
     print(f"\n{get_time()} - get_item_metadata_tool has been triggered!!!\n")
 
     if items is None or get is None:
-        return json.dumps(JSON_GENERATION_ERROR)
+        return JSON_GENERATION_ERROR
 
     specification = ["item_id"] + get
 
     if not items:
-        return json.dumps({
+        return {
             "status": "failure",
             "message": "The given list of item IDs is empty.",
             "data": None
-        })
+        }
 
     sql_query, _, _ = define_sql_query("items", {"items": items, "specification": specification})
     result = execute_sql_query(sql_query)
@@ -61,17 +60,17 @@ def get_item_metadata_tool(items: List[int], get: List[AllowedFeatures]) -> str:
 
         print(f"\n{get_time()} - Returned list: {return_list}\n")
 
-        return json.dumps({
+        return {
             "status": "success",
             "message": "The requested metadata for the given item IDs is returned.",
             "data": return_list
-        })
+        }
     else:
-        return json.dumps({
+        return {
             "status": "failure",
             "message": f"No information found for the given items: {items}.",
             "data": None
-        })
+        }
 
 
 def get_item_metadata_dict(input: GetItemMetadataInput) -> Union[Dict[int, Dict[str, str]], None]:

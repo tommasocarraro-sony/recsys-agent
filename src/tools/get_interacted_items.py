@@ -1,4 +1,3 @@
-import json
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool
 from typing import List, Union
@@ -13,25 +12,25 @@ class GetInteractedItemsInput(BaseModel):
 
 
 @tool(args_schema=GetInteractedItemsInput)
-def get_interacted_items_tool(user: int) -> str:
+def get_interacted_items_tool(user: int) -> dict:
     """
     Retrieves the list of the twenty most recent items a user has previously interacted with.
     """
     print(f"\n{get_time()} - get_interacted_items_tool has been triggered!!!\n")
 
     if user is None:
-        return json.dumps(JSON_GENERATION_ERROR)
+        return JSON_GENERATION_ERROR
 
     # Define SQL query to get interacted items for user
     sql_query, _, _ = define_sql_query("interactions", {"user": user})
     result = execute_sql_query(sql_query)
 
     if not result or not result[0] or not result[0][0]:
-        return json.dumps({
+        return {
             "status": "failure",
             "message": f"No interaction information found for user {user}.",
             "data": None
-        })
+        }
 
     # Extract interacted item IDs from query result
     interacted_items = result[0][0].split(",")
@@ -45,11 +44,11 @@ def get_interacted_items_tool(user: int) -> str:
 
     print(f"\n{get_time()} - Returned list: {interacted_items}\n")
 
-    return json.dumps({
+    return {
         "status": "success",
         "message": message,
         "data": interacted_items
-    })
+    }
 
 
 def get_interacted_items_list(input: GetInteractedItemsInput) -> Union[List[int], None]:

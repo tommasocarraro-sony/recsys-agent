@@ -1,4 +1,3 @@
-import json
 from typing import List
 from pydantic import BaseModel, Field
 from langchain.tools import tool
@@ -15,21 +14,21 @@ class GetLikePercentageInput(BaseModel):
 
 
 @tool(args_schema=GetLikePercentageInput)
-def get_like_percentage_tool(items: List[int]) -> str:
+def get_like_percentage_tool(items: List[int]) -> dict:
     """
     Returns the percentage of users that like the given item IDs.
     """
     print(f"\n{get_time()} - get_like_percentage has been triggered!!!\n")
 
     if items is None:
-        return json.dumps(JSON_GENERATION_ERROR)
+        return JSON_GENERATION_ERROR
 
     if not items:
-        return json.dumps({
+        return {
             "status": "failure",
             "message": "The given list of item IDs is empty.",
             "data": None
-        })
+        }
 
     items = [int(i) for i in items]
     # Load rating file
@@ -40,8 +39,8 @@ def get_like_percentage_tool(items: List[int]) -> str:
 
     print(f"\n{get_time()} - Returned percentage: {perc:.2f}%\n")
 
-    return json.dumps({
+    return {
         "status": "success",
         "message": "The percentage of users that might like the given items is returned.",
         "data": f"{perc:.2f}%"
-    })
+    }

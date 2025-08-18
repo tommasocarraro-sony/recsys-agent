@@ -1,4 +1,3 @@
-import json
 from typing import List, Optional, Literal
 from langchain_core.tools import tool
 from pydantic import BaseModel, Field
@@ -59,7 +58,7 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
                      director: Optional[List[str]] = None, producer: Optional[List[str]] = None,
                      imdb_rating: Optional[ComparisonFilter] = None, duration: Optional[ComparisonFilter] = None,
                      release_date: Optional[ComparisonFilter] = None, release_month: Optional[int] = None,
-                     country: Optional[str] = None) -> str:
+                     country: Optional[str] = None) -> dict:
     """
     Returns the list of IDs of the items that satisfy the given conditions.
     """
@@ -91,7 +90,7 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
     }
 
     if not filters:
-        return json.dumps(JSON_GENERATION_ERROR)
+        return JSON_GENERATION_ERROR
 
     sql_query, corrections, failed_corrections = define_sql_query("items", filters)
     mess = ""
@@ -128,14 +127,14 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
     print(f"\n{get_time()} - Returned item IDs: {item_ids}")
 
     if item_ids:
-        return json.dumps({
+        return {
             "status": "success",
             "message": correction_text + mess,
             "data": item_ids
-        })
+        }
     else:
-        return json.dumps({
+        return {
             "status": "failure",
             "message": no_match_text,
             "data": None
-        })
+        }
