@@ -1,7 +1,5 @@
-from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import StateGraph, START, END
 from langchain_core.messages.utils import count_tokens_approximately, trim_messages
-from src.utils import create_ml100k_db, create_vector_store, ensure_qdrant_running, create_vector_store_examples
 from src.tools.item_filter import item_filter_tool
 from src.tools.get_user_metadata import get_user_metadata_tool
 from src.tools.get_item_metadata import get_item_metadata_tool
@@ -9,32 +7,25 @@ from src.tools.get_interacted_items import get_interacted_items_tool
 from src.tools.get_like_percentage import get_like_percentage_tool
 from src.tools.get_popular_items import get_popular_items_tool
 from src.tools.vector_store_search import vector_store_search_tool
-from src.tools.utils import create_lists_for_fuzzy_matching
 from src.tools.get_top_k_recommendations import get_top_k_recommendations_tool
 from langchain_core.messages import AIMessageChunk
 from src.utils import in_context_vector_store_search, format_tool_example
 from src.agents.utils import State, route_tools, BasicToolNode
 
+available_tools = (item_filter_tool, get_user_metadata_tool, get_item_metadata_tool, get_interacted_items_tool,
+                   get_top_k_recommendations_tool, get_like_percentage_tool, get_popular_items_tool,
+                   vector_store_search_tool)
+
 
 class Agent:
-    def __init__(self, model, system_message):
+    def __init__(self, model, system_message, memory, tools=available_tools):
         self.system_message = system_message
-        self.memory = None
+        self.memory = memory
         self.graph = None
-        self.tools = [item_filter_tool,
-                      get_user_metadata_tool,
-                      get_item_metadata_tool,
-                      get_interacted_items_tool,
-                      get_top_k_recommendations_tool,
-                      get_like_percentage_tool,
-                      get_popular_items_tool,
-                      vector_store_search_tool]
+        self.tools = tools
         self.model_with_tools = model.bind_tools(self.tools)
         self.conversation_started = False
-        self.init_agent()
-
-    def set_memory(self, memory: MemorySaver):
-        self.memory = memory
+        self.set_graph(StateGraph(State))
 
     def set_graph(self, graph_builder: StateGraph):
         def chatbot_node(state: State):
@@ -58,20 +49,7 @@ class Agent:
         graph_builder.add_edge(START, "chatbot")
         self.graph = graph_builder.compile(checkpointer=self.memory)
 
-    def init_agent(self):
-        self.create_agent_envinroment()
-        self.set_memory(MemorySaver())
-        self.set_graph(StateGraph(State))
-
-    @staticmethod
-    def create_agent_envinroment():
-        create_ml100k_db()
-        create_lists_for_fuzzy_matching()
-        ensure_qdrant_running()
-        create_vector_store()
-        create_vector_store_examples()
-
-    def prepare_messages(self, user_input, messages, in_context_examples):
+    def prepare_messages(self, user_input, messages, in_context_examples=False):
         if not self.conversation_started:
             messages.extend(self.system_message)
             self.conversation_started = True

@@ -4,6 +4,8 @@ from typing_extensions import TypedDict
 from langgraph.graph.message import add_messages
 from typing import Annotated
 from langgraph.graph import END
+from src.tools.utils import create_lists_for_fuzzy_matching
+from src.utils import create_ml100k_db, create_vector_store, ensure_qdrant_running, create_vector_store_examples
 
 
 # this defines the state of the LLM, containing all the messages of the session
@@ -56,3 +58,13 @@ class BasicToolNode:
                 )
             )
         return {"messages": outputs}
+
+
+def create_agent_envinroment(in_context_examples: bool = False):
+    create_ml100k_db()
+    create_lists_for_fuzzy_matching()
+    ensure_qdrant_running()
+    create_vector_store()
+    # only create the vector store if the user wants to use the model with in-context examples
+    if in_context_examples:
+        create_vector_store_examples()
