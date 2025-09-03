@@ -40,4 +40,4 @@ while True:
     if user_input.lower() in ["quit", "exit", "q"]:
         print("Goodbye!")
         break
-    agent.stream_graph_updates(user_input, in_context_examples=args.in_context)
+    agent.stream(user_input, in_context_examples=args.in_context)

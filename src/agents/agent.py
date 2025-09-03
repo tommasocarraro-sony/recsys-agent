@@ -18,7 +18,8 @@ available_tools = (item_filter_tool, get_user_metadata_tool, get_item_metadata_t
 
 
 class Agent:
-    def __init__(self, model, system_message, memory, tools=available_tools):
+    def __init__(self, name, model, system_message, memory, tools=available_tools):
+        self.name = name
         self.system_message = system_message
         self.memory = memory
         self.graph = None
@@ -27,26 +28,27 @@ class Agent:
         self.conversation_started = False
         self.set_graph(StateGraph(State))
 
-    def set_graph(self, graph_builder: StateGraph):
-        def chatbot_node(state: State):
-            messages = trim_messages(
-                state["messages"],
-                strategy="last",
-                token_counter=count_tokens_approximately,
-                max_tokens=20000,
-                start_on="human",
-                end_on=("human", "tool"),
-                include_system=True,
-            )
-            response = self.model_with_tools.invoke(messages)
-            print(f"\n\n----\n\nTool calls related to response:\n\n{response.tool_calls}\n\n----\n\n")
-            return {"messages": [response]}
 
-        graph_builder.add_node("chatbot", chatbot_node)
+    def call_llm(self, state: State):
+        messages = trim_messages(
+            state["messages"],
+            strategy="last",
+            token_counter=count_tokens_approximately,
+            max_tokens=20000,
+            start_on="human",
+            end_on=("human", "tool"),
+            include_system=True,
+        )
+        response = self.model_with_tools.invoke(messages)
+        print(f"\n\n----\n\nTool calls related to response:\n\n{response.tool_calls}\n\n----\n\n")
+        return {"messages": [response]}
+
+    def set_graph(self, graph_builder: StateGraph):
+        graph_builder.add_node(self.name, self.call_llm)
         graph_builder.add_node("tools", BasicToolNode(tools=self.tools))
-        graph_builder.add_conditional_edges("chatbot", route_tools,{"tools": "tools", END: END})
-        graph_builder.add_edge("tools", "chatbot")
-        graph_builder.add_edge(START, "chatbot")
+        graph_builder.add_conditional_edges(self.name, route_tools,{"tools": "tools", END: END})
+        graph_builder.add_edge("tools", self.name)
+        graph_builder.add_edge(START, self.name)
         self.graph = graph_builder.compile(checkpointer=self.memory)
 
     def prepare_messages(self, user_input, messages, in_context_examples=False):
@@ -66,7 +68,7 @@ class Agent:
         else:
             messages.append({"role": "user", "content": user_input})
 
-    def stream_graph_updates(self, user_input: str, in_context_examples=False):
+    def stream(self, user_input: str, in_context_examples=False):
         messages = []
 
         self.prepare_messages(user_input, messages, in_context_examples)

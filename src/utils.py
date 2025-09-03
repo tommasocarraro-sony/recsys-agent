@@ -457,6 +457,8 @@ def in_context_vector_store_search(query):
         } for hit in hits["points"] if "payload" in hit.keys()
     ]
 
+    print(f"\n{get_time()} - Matching in-context examples: {in_context_examples}")
+
     return in_context_examples
 
 
