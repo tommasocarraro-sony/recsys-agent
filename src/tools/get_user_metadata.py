@@ -10,7 +10,7 @@ AllowedFeatures = Literal["age_category", "gender"]
 
 class GetUserMetadataInput(BaseModel):
     """Schema for retrieving user metadata."""
-    user: int = Field(..., description="User ID.")
+    user: int = Field(..., description="User ID of the user for which the metadata is requested.")
     get: List[AllowedFeatures] = Field(
         ...,
         description='List of user metadata features to be retrieved. Available features are: "age_category", "gender".'

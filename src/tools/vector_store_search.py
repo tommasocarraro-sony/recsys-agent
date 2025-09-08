@@ -12,10 +12,10 @@ load_dotenv()
 
 
 class VectorStoreSearchParams(BaseModel):
-    query: str = Field(..., description="Query to perform the vector store search.")
+    query: str = Field(..., description="Natural language query describing the item(s) to search for. Can be an item description, storyline, or some keywords useful for item search.")
     items: List[int] = Field(
         default_factory=list,
-        description="List of item ID(s) that have to be included in the vector store search."
+        description="Optional list of item IDs. If provided, the search will only consider these items."
     )
 
 

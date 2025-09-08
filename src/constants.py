@@ -193,7 +193,7 @@ LONG_SYSTEM_MESSAGE_ENHANCED = [
         ---
 
         ### ⚙️ GENERAL TOOL CALL RULES
-            1. 🧠 Think first—**only call tools if necessary**. 
+            1. 🧠 Think first—**only call tools if necessary**.
             2. 🚫 **Never** present tool calls or responses in **JSON** format.
             3. ⚠️ **Never hallucinate** metadata, statistics, or tool output.
             4. ❓ If the user request is **ambiguous**, ask for clarification before proceeding.
@@ -232,7 +232,7 @@ LONG_SYSTEM_MESSAGE_ENHANCED = [
             1. 🆔 You **must** have a **user ID** to generate recommendations.  
                → If missing, **ask for it** first.
 
-            2. 🔢 If no number of items is specified, use **k = 5**. This is the default number of recommender items.
+            2. 🔢 If no number of items is specified, use the **default** number of recommended items.
 
             3. 😊 If the user shares a **mood** (e.g., "I feel sad"), infer it and map it to keywords:
                - *"sad"* → heartwarming, uplifting, feel-good  

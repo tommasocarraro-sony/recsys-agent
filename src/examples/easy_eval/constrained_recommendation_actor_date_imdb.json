@@ -44,5 +44,6 @@
         "get": ["title", "genres", "actors", "release_date", "imdb_rating", "description"]
       }
     }
-  ]
+  ],
+  "agent": "Recommendation"
 }

@@ -25,5 +25,6 @@
         "get": ["title", "genres", "description"]
       }
     }
-  ]
+  ],
+  "agent": "Recommendation"
 }

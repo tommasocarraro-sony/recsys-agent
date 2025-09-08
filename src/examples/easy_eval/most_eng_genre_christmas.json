@@ -36,5 +36,6 @@
         "get": ["title", "genres"]
       }
     }
-  ]
+  ],
+  "agent": "Statistician"
 }

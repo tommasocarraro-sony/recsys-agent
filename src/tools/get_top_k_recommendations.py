@@ -10,11 +10,11 @@ import os
 
 
 class TopKRecommendationInput(BaseModel):
-    user: int = Field(..., description="User ID.")
-    k: int = Field(default=5, description="Number of recommended items. Default is 5.")
+    user: int = Field(..., description="User ID for whom recommendations are requested.")
+    k: int = Field(default=5, description="Number of recommended items. Default is 5. Can be set explicitly by the user if they ask for more or fewer items.")
     items: List[int] = Field(
         default_factory=list,
-        description="List of item IDs to be given to the recommender system."
+        description="Optional list of candidate item IDs. If provided, recommendations will be restricted to these items. Leave empty for standard recommendations."
     )
 
 

@@ -399,7 +399,8 @@ def create_vector_store_examples():
         metadata = {
             "query": example["query"],
             "tool_plan": example["tool_plan"],
-            "calls": example["calls"]
+            "calls": example["calls"],
+            "agent": example["agent"]
         }
 
         points.append(
@@ -453,7 +454,8 @@ def in_context_vector_store_search(query):
             "score": hit["score"],
             "query": hit["payload"]["query"],
             "tool_plan": hit["payload"]["tool_plan"],
-            "calls": hit["payload"]["calls"]
+            "calls": hit["payload"]["calls"],
+            "agent": hit["payload"]["agent"] if hit["payload"]["agent"] is not None else None,
         } for hit in hits["points"] if "payload" in hit.keys()
     ]
 

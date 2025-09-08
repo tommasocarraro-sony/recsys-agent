@@ -8,7 +8,7 @@ from src.utils import get_time
 
 class GetInteractedItemsInput(BaseModel):
     """Schema for retrieving items a user has interacted with."""
-    user: int = Field(..., description="User ID.")
+    user: int = Field(..., description="User ID for which the historical interactions are requested.")
 
 
 @tool(args_schema=GetInteractedItemsInput)

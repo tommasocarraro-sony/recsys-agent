@@ -9,51 +9,44 @@ from typing import List, Optional, Literal
 from pydantic import BaseModel, Field
 
 AllowedGroups = Literal['kid', 'teenager', 'young_adult', 'adult', 'senior', 'male', 'female']
-AllowedPopularity = Literal["standard", "by_user_group"]
 
 class GetPopularItemsInput(BaseModel):
-    popularity: AllowedPopularity = Field(
-        ...,
-        description="Whether to compute standard popularity or by user group. Allowed values: 'standard', 'by_user_group'.",
-    )
-    k: int = Field(
-        default=20,
-        description="Number of popular items to be returned. Default is 20 and it is usually used when the user asks for recommendations. k=3 should be used to compute statistics (e.g., best genre, actor, ideal content length, etc.)."
+    k: Literal[3, 20] = Field(
+        default=3,
+        description="Number of popular items to be returned. Default is 3. Use 20 when popularity is requested in the context of recommendation queries."
     )
     items: List[int] = Field(
         default_factory=list,
-        description="List of item ID(s) for which the popularity has to be computed."
+        description="Optional List of item ID(s) for which the popularity has to be computed. If provided, popularity computation is restricted to these items."
     )
     user_group: List[AllowedGroups] = Field(
         default_factory=list,
-        description="User groups for computing popularity: 'kid', 'teenager', 'young_adult', 'adult', 'senior', 'male', "
-                    "'female'."
+        description="Optional list of user groups for computing popularity. Available groups are: 'kid', 'teenager', 'young_adult', 'adult', 'senior', 'male', "
+                    "'female'. If provided, popularity is based only on the items liked by users in these groups."
     )
 
 
 @tool(args_schema=GetPopularItemsInput)
-def get_popular_items_tool(popularity: AllowedPopularity, k: int = 20, items: Optional[List[int]] = None,
+def get_popular_items_tool(k: Literal[3, 20] = 3, items: Optional[List[int]] = None,
                            user_group: Optional[List[AllowedGroups]] = None) -> dict:
     """
     Returns the IDs of the k most popular items based on the number of ratings they received. If a list of item IDs is
     given, the popularity computation will be restricted to those items only.
-    The popularity can optionally be computed based on a user group.
+    The popularity can optionally be computed based on a user group (if given).
     """
-    print(f"\n{get_time()} - get_popular_items_tool(popularity={popularity}, k={k}, items={items}, user_group={user_group})\n")
+    print(f"\n{get_time()} - get_popular_items_tool(k={k}, items={items}, user_group={user_group})\n")
 
-    if popularity is None or k is None:
+    if k is None:
         return JSON_GENERATION_ERROR
 
     # SQL query building
-    if popularity == "standard":
+    if not user_group:
         if items:
             items = [int(i) for i in items]
             sql_query, _, _ = define_sql_query("items", {"select": ["item_id", "n_ratings"], "items": items})
         else:
             sql_query, _, _ = define_sql_query("items", {"select": ["item_id", "n_ratings"]})
     else:
-        if not user_group:
-            return JSON_GENERATION_ERROR
         user_group_cols = [f"n_ratings_{group}" for group in user_group]
         if items:
             items = [int(i) for i in items]

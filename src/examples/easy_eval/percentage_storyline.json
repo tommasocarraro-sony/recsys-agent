@@ -23,5 +23,6 @@
         "items": "<Python list of item IDs returned by vector_store_search_tool>"
       }
     }
-  ]
+  ],
+  "agent": "Statistician"
 }

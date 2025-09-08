@@ -52,5 +52,6 @@
         "get": ["title", "release_date", "genres", "description"]
       }
     }
-  ]
+  ],
+  "agent": "Recommendation"
 }

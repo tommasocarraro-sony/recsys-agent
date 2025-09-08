@@ -9,7 +9,7 @@ from src.utils import get_time, read_ml100k_ratings
 class GetLikePercentageInput(BaseModel):
     items: List[int] = Field(
         ...,
-        description="A list of item IDs."
+        description="List of item IDs for percentage computation."
     )
 
 

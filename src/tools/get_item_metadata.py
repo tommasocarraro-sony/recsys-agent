@@ -21,7 +21,7 @@ class GetItemMetadataInput(BaseModel):
     )
     get: List[AllowedFeatures] = Field(
         default_factory=lambda: ['title', 'genres', 'description'],
-        description='List of item metadata features to retrieve. Available features: '
+        description='List of item metadata features to retrieve. Available features are: '
                     '"title", "description", "genres", "director", "producer", "duration", '
                     '"release_date", "release_month", "country", "actors", "imdb_rating", '
                     '"storyline". By default, title, genres, and description are retrieved.'
