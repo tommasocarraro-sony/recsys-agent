@@ -38,5 +38,5 @@
       }
     }
   ],
-  "agent": "Statistician"
+  "type": "statistic"
 }

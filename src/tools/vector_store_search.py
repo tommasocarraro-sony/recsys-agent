@@ -24,6 +24,7 @@ def vector_store_search_tool(query: str, items: Optional[List[int]] = None) -> d
     """
     Performs a vector store search and returns the 10 top matching item IDs. The search is performed over the entire
     vector store unless a list of items is provided.
+    Useful to find items by keywords, description, or entire storyline.
     """
     print(f"\n{get_time()} - vector_store_search_tool(query={query}, items={items})\n")
 

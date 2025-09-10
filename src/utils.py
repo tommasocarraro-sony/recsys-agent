@@ -389,27 +389,29 @@ def create_vector_store_examples():
     # Prepare data for insertion
     points = []
     for _, example in examples_dict.items():
-        text = build_embedding_text(example)
-        vec = model.encode(
-            text,
-            normalize_embeddings=True,
-            convert_to_numpy=True,
-        ).tolist()
+        # only not null examples are put in the store
+        if example["type"] is not None:
+            text = build_embedding_text(example)
+            vec = model.encode(
+                text,
+                normalize_embeddings=True,
+                convert_to_numpy=True,
+            ).tolist()
 
-        metadata = {
-            "query": example["query"],
-            "tool_plan": example["tool_plan"],
-            "calls": example["calls"],
-            "agent": example["agent"]
-        }
+            metadata = {
+                "query": example["query"],
+                "tool_plan": example["tool_plan"],
+                "calls": example["calls"],
+                "type": example["type"]
+            }
 
-        points.append(
-            PointStruct(
-                id=str(uuid.uuid4()),  # unique identifier
-                vector=vec,
-                payload=metadata
+            points.append(
+                PointStruct(
+                    id=str(uuid.uuid4()),  # unique identifier
+                    vector=vec,
+                    payload=metadata
+                )
             )
-        )
 
     # Upload data to Qdrant
     qdrant.upsert(
@@ -455,7 +457,7 @@ def in_context_vector_store_search(query):
             "query": hit["payload"]["query"],
             "tool_plan": hit["payload"]["tool_plan"],
             "calls": hit["payload"]["calls"],
-            "agent": hit["payload"]["agent"] if hit["payload"]["agent"] is not None else None,
+            "type": hit["payload"]["type"] if hit["payload"]["type"] is not None else None,
         } for hit in hits["points"] if "payload" in hit.keys()
     ]
 

@@ -50,5 +50,5 @@
       }
     }
   ],
-  "agent": "Recommendation"
+  "type": "recommendation"
 }

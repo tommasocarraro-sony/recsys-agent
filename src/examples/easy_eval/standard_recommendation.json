@@ -26,5 +26,5 @@
       }
     }
   ],
-  "agent": "Recommendation"
+  "type": "recommendation"
 }

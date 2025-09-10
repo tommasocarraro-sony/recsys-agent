@@ -30,9 +30,10 @@ class GetPopularItemsInput(BaseModel):
 def get_popular_items_tool(k: Literal[3, 20] = 3, items: Optional[List[int]] = None,
                            user_group: Optional[List[AllowedGroups]] = None) -> dict:
     """
-    Returns the IDs of the k most popular items based on the number of ratings they received. If a list of item IDs is
-    given, the popularity computation will be restricted to those items only.
-    The popularity can optionally be computed based on a user group (if given).
+    Returns the IDs of the k most popular items in the streaming platform based on the number of ratings.
+    If a list of item IDs is given, the popularity computation will be restricted to those items only.
+    The popularity can optionally be computed based on a user group: age category and/or gender.
+    Use this tool when recommendation or statistic queries require getting a list of popular items before or after calling other tools.
     """
     print(f"\n{get_time()} - get_popular_items_tool(k={k}, items={items}, user_group={user_group})\n")
 

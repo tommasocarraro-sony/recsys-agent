@@ -60,7 +60,8 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
                      release_date: Optional[ComparisonFilter] = None, release_month: Optional[int] = None,
                      country: Optional[str] = None) -> dict:
     """
-    Returns the list of IDs of the items that satisfy the given conditions.
+    Returns the list of IDs of the items that satisfy the given conditions. Use this tool to filter items by their
+    attributes when needed (e.g., before recommending, before vector store search).
     """
     print(f"\n{get_time()} - item_filter_tool(actors={actors}, genres={genres}, director={director}, producer={producer}, "
           f"imdb_rating={imdb_rating}, duration={duration}, release_date={release_date}, release_month={release_month}, "
@@ -105,8 +106,8 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
         if item_ids:
             mess = (
                 "The IDs of the items satisfying the given conditions are returned."
-                "If another tool call is needed, you can now proceed to the next tool call. It is enough you pass "
-                "this list to the \"items\" parameter of the next tool call."
+                "If another tool call is needed, you can now proceed to the next tool call. You MUST pass "
+                "this ENTIRE list to the \"items\" parameter of the next tool call."
             )
 
     # Construct the message for LLM

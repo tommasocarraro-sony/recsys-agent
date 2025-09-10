@@ -8,13 +8,14 @@ from src.tools.get_like_percentage import get_like_percentage_tool
 from src.tools.get_popular_items import get_popular_items_tool
 from src.tools.vector_store_search import vector_store_search_tool
 from src.tools.get_top_k_recommendations import get_top_k_recommendations_tool
+from src.tools.in_context_examples_retriever_tool import in_context_examples_retriever_tool
 from langchain_core.messages import AIMessageChunk
 from src.utils import in_context_vector_store_search, format_tool_example
 from src.agents.utils import State, route_tools, BasicToolNode
 
 available_tools = (item_filter_tool, get_user_metadata_tool, get_item_metadata_tool, get_interacted_items_tool,
                    get_top_k_recommendations_tool, get_like_percentage_tool, get_popular_items_tool,
-                   vector_store_search_tool)
+                   vector_store_search_tool, in_context_examples_retriever_tool)
 
 
 class Agent:

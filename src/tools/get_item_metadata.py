@@ -31,8 +31,10 @@ class GetItemMetadataInput(BaseModel):
 @tool(args_schema=GetItemMetadataInput)
 def get_item_metadata_tool(items: List[int], get: List[AllowedFeatures]) -> dict:
     """
-    Returns the requested item metadata given the item ID(s).
+    Returns the requested item metadata given the item ID(s). Use this tool to get information to display recommended
+    items or prepare context for other tool calls.
     """
+    # This tool is useful to get the metadata of items to display item information or prepare context for next tool calls.
     print(f"\n{get_time()} - get_item_metadata_tool(items={items}, get={get})\n")
 
     if items is None or get is None:

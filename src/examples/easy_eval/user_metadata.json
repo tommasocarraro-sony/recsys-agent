@@ -15,5 +15,5 @@
       }
     }
   ],
-  "agent": "Retrieval"
+  "type": "retrieval"
 }
