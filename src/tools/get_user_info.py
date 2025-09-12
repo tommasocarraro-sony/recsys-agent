@@ -8,28 +8,28 @@ from src.utils import get_time
 
 AllowedFeatures = Literal["age_category", "gender"]
 
-class GetUserMetadataInput(BaseModel):
+class GetUserInfoInput(BaseModel):
     """Schema for retrieving user metadata."""
-    user: int = Field(..., description="User ID of the user for which the metadata is requested.")
-    get: List[AllowedFeatures] = Field(
+    user_id: int = Field(..., description="User ID of the user for which information is requested.")
+    attributes: List[AllowedFeatures] = Field(
         ...,
-        description='List of user metadata features to be retrieved. Available features are: "age_category", "gender".'
+        description='List of attributes to be retrieved. Available attributes are: "age_category", "gender".'
     )
 
 
-@tool(args_schema=GetUserMetadataInput)
-def get_user_metadata_tool(user: int, get: List[AllowedFeatures]) -> dict:
+@tool(args_schema=GetUserInfoInput)
+def get_user_info(user_id: int, attributes: List[AllowedFeatures]) -> dict:
     """
-    Returns the requested user metadata given the user ID.
+    Returns the requested information of the given user.
     """
-    print(f"\n{get_time()} - get_user_metadata_tool(user={user}, get={get})\n")
+    print(f"\n{get_time()} - get_user_info(user_id={user_id}, attributes={attributes})\n")
 
-    if user is None or get is None:
+    if user_id is None or attributes is None:
         return JSON_GENERATION_ERROR
 
-    specification = get
+    specification = attributes
 
-    sql_query, _, _ = define_sql_query("users", {"user": user, "specification": specification})
+    sql_query, _, _ = define_sql_query("users", {"user": user_id, "specification": specification})
     result = execute_sql_query(sql_query)
 
     if result:
@@ -41,12 +41,12 @@ def get_user_metadata_tool(user: int, get: List[AllowedFeatures]) -> dict:
 
         return {
             "status": "success",
-            "message": f"The requested metadata for user {user} is returned.",
+            "message": f"The requested attributes for user {user_id} are returned.",
             "data": return_dict
         }
     else:
         return {
             "status": "failure",
-            "message": f"No information found for user {user}.",
+            "message": f"No information found for user {user_id}.",
             "data": None
         }

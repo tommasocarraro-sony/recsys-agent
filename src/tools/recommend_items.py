@@ -9,8 +9,8 @@ from typing import List, Optional
 import os
 
 
-class TopKRecommendationInput(BaseModel):
-    user: int = Field(..., description="User ID for whom recommendations are requested.")
+class RecommendItemsInput(BaseModel):
+    user_id: int = Field(..., description="User ID for whom recommendations are requested.")
     k: int = Field(default=5, description="Number of recommended items. Default is 5. Can be set explicitly by the user if they ask for more or fewer items.")
     items: List[int] = Field(
         default_factory=list,
@@ -30,21 +30,20 @@ def create_recbole_environment(model_path):
         model_file=model_path
     )
 
-@tool(args_schema=TopKRecommendationInput)
-def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[List[int]] = None) -> dict:
+@tool(args_schema=RecommendItemsInput)
+def recommend_items(user_id: int, k: int = 5, items: Optional[List[int]] = None) -> dict:
     """
-    Returns a list of the IDs of the top k recommended items for the given user.
-    It computes recommendations over the entire item catalog unless a list of items is given.
+    Invokes a recommender system and returns a ranking of recommended items.
     """
-    print(f"\n{get_time()} - get_top_k_recommendations_tool(user={user}, k={k}, items={items})\n")
+    print(f"\n{get_time()} - recommend_items(user_id={user_id}, k={k}, items={items})\n")
 
-    if user is None or k is None:
+    if user_id is None or k is None:
         return JSON_GENERATION_ERROR
 
     if 'config' not in globals():
         create_recbole_environment(os.getenv("RECSYS_MODEL_PATH"))
 
-    uid_series = dataset.token2id(dataset.uid_field, [str(user)])
+    uid_series = dataset.token2id(dataset.uid_field, [str(user_id)])
 
     if items:
         recommended_items = recommend_given_items(uid_series, items, k=k)
@@ -56,7 +55,7 @@ def get_top_k_recommendations_tool(user: int, k: int = 5, items: Optional[List[i
     return {
         "status": "success",
         "message": (
-            f"The top {k} recommendations for user {user} are returned."
+            f"The IDs of the top {k} recommended items for user {user_id} are returned."
         ),
         "data": list(recommended_items)
     }

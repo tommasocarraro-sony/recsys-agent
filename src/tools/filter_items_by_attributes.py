@@ -54,15 +54,15 @@ class ItemFilterInput(BaseModel):
 
 # LangChain-compatible tool
 @tool(args_schema=ItemFilterInput)
-def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[str]] = None,
+def filter_items_by_attributes(actors: Optional[List[str]] = None, genres: Optional[List[str]] = None,
                      director: Optional[List[str]] = None, producer: Optional[List[str]] = None,
                      imdb_rating: Optional[ComparisonFilter] = None, duration: Optional[ComparisonFilter] = None,
                      release_date: Optional[ComparisonFilter] = None, release_month: Optional[int] = None,
                      country: Optional[str] = None) -> dict:
     """
-    Returns the list of IDs of the items that satisfy the given conditions.
+    Filters items by attributes.
     """
-    print(f"\n{get_time()} - item_filter_tool(actors={actors}, genres={genres}, director={director}, producer={producer}, "
+    print(f"\n{get_time()} - filter_items_by_attributes(actors={actors}, genres={genres}, director={director}, producer={producer}, "
           f"imdb_rating={imdb_rating}, duration={duration}, release_date={release_date}, release_month={release_month}, "
           f"country={country})\n")
 
@@ -104,25 +104,25 @@ def item_filter_tool(actors: Optional[List[str]] = None, genres: Optional[List[s
 
         if item_ids:
             mess = (
-                "The IDs of the items satisfying the given conditions are returned."
+                "The IDs of the items satisfying the given attribute filters are returned."
                 "If another tool call is needed, you can now proceed to the next tool call. It is enough you pass "
-                "this list to the \"items\" parameter of the next tool call."
+                "this list to the \"item_ids\" parameter of the next tool call."
             )
 
     # Construct the message for LLM
     failed_corr_text = (
-        f"Note that corrections for these user conditions have been tried but failed: {failed_corrections}, "
-        f"so the final recommendation output will not take the failed conditions into consideration."
+        f"Note that corrections for these attribute filters have been tried but failed: {failed_corrections}, "
+        f"so the final recommendation output will not take the failed filters into consideration."
         if failed_corrections else ""
     )
 
     correction_text = (
-        f"Note that, in order to retrieve the items, the following corrections on the user conditions have been made: {corrections}. {failed_corr_text}"
+        f"Note that, in order to retrieve the items, the following corrections on the attribute filters have been made: {corrections}. {failed_corr_text}"
         if corrections else ""
     )
 
     no_match_text = (
-        "Unfortunately, the given conditions did not match any item in the database, so it is not possible to proceed "
+        "Unfortunately, the given attribute filters did not match any item in the database, so it is not possible to proceed "
         "with the next step. You do not have to perform other tool calls."
     )
 

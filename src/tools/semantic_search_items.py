@@ -11,21 +11,20 @@ from src.constants import JSON_GENERATION_ERROR, COLLECTION_NAME
 load_dotenv()
 
 
-class VectorStoreSearchParams(BaseModel):
-    query: str = Field(..., description="Natural language query describing the item(s) to search for. Can be an item description, storyline, or some keywords useful for item search.")
+class SemanticSearchItemsParams(BaseModel):
+    query: str = Field(..., description="Natural language query describing the item(s) to search for. Can be an item description, storyline, or some keywords (for mood-based search).")
     items: List[int] = Field(
         default_factory=list,
-        description="Optional list of item IDs. If provided, the search will only consider these items."
+        description="Optional list of items. If provided, the search will only consider these items."
     )
 
 
-@tool(args_schema=VectorStoreSearchParams)
-def vector_store_search_tool(query: str, items: Optional[List[int]] = None) -> dict:
+@tool(args_schema=SemanticSearchItemsParams)
+def semantic_search_items(query: str, item_ids: Optional[List[int]] = None) -> dict:
     """
-    Performs a vector store search and returns the 10 top matching item IDs. The search is performed over the entire
-    vector store unless a list of items is provided.
+    Search items in a vector store and returns the 10 top matching items.
     """
-    print(f"\n{get_time()} - vector_store_search_tool(query={query}, items={items})\n")
+    print(f"\n{get_time()} - semantic_search_items(query={query}, item_ids={item_ids})\n")
 
     if query is None:
         return JSON_GENERATION_ERROR
@@ -48,8 +47,8 @@ def vector_store_search_tool(query: str, items: Optional[List[int]] = None) -> d
         print(f"\n{get_time()} - Performing vector store search with query: {query}.\n")
         # Build optional filters
         qdrant_filter = None
-        if items:
-            items = [int(i) for i in items]
+        if item_ids:
+            items = [int(i) for i in item_ids]
             qdrant_filter = Filter(
                 must=[
                     FieldCondition(
@@ -91,7 +90,7 @@ def vector_store_search_tool(query: str, items: Optional[List[int]] = None) -> d
 
         return {
             "status": "success",
-            "message": f"The IDs of the {len(item_ids)} best matching items produced by the vector store search are returned.",
+            "message": f"The IDs of the {len(item_ids)} best matching items are returned.",
             "data": item_ids
         }
 

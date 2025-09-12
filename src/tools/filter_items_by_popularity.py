@@ -15,7 +15,7 @@ class GetPopularItemsInput(BaseModel):
         default=3,
         description="Number of popular items to be returned. Default is 3. Use 20 when popularity is requested in the context of recommendation queries."
     )
-    items: List[int] = Field(
+    item_ids: List[int] = Field(
         default_factory=list,
         description="Optional List of item ID(s) for which the popularity has to be computed. If provided, popularity computation is restricted to these items."
     )
@@ -27,29 +27,27 @@ class GetPopularItemsInput(BaseModel):
 
 
 @tool(args_schema=GetPopularItemsInput)
-def get_popular_items_tool(k: Literal[3, 20] = 3, items: Optional[List[int]] = None,
-                           user_group: Optional[List[AllowedGroups]] = None) -> dict:
+def filter_items_by_popularity(k: Literal[3, 20] = 3, item_ids: Optional[List[int]] = None,
+                                user_group: Optional[List[AllowedGroups]] = None) -> dict:
     """
-    Returns the IDs of the k most popular items based on the number of ratings they received. If a list of item IDs is
-    given, the popularity computation will be restricted to those items only.
-    The popularity can optionally be computed based on a user group (if given).
+    Filters items by their popularity (i.e., number of ratings).
     """
-    print(f"\n{get_time()} - get_popular_items_tool(k={k}, items={items}, user_group={user_group})\n")
+    print(f"\n{get_time()} - filter_items_by_popularity(k={k}, item_ids={item_ids}, user_group={user_group})\n")
 
     if k is None:
         return JSON_GENERATION_ERROR
 
     # SQL query building
     if not user_group:
-        if items:
-            items = [int(i) for i in items]
+        if item_ids:
+            items = [int(i) for i in item_ids]
             sql_query, _, _ = define_sql_query("items", {"select": ["item_id", "n_ratings"], "items": items})
         else:
             sql_query, _, _ = define_sql_query("items", {"select": ["item_id", "n_ratings"]})
     else:
         user_group_cols = [f"n_ratings_{group}" for group in user_group]
-        if items:
-            items = [int(i) for i in items]
+        if item_ids:
+            items = [int(i) for i in item_ids]
             sql_query, _, _ = define_sql_query("items", {"select": ["item_id"] + user_group_cols, "items": items})
         else:
             sql_query, _, _ = define_sql_query("items", {"select": ["item_id"] + user_group_cols})

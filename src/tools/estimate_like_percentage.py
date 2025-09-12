@@ -6,31 +6,31 @@ from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time, read_ml100k_ratings
 
 
-class GetLikePercentageInput(BaseModel):
-    items: List[int] = Field(
+class EstimateLikePercentageInput(BaseModel):
+    item_ids: List[int] = Field(
         ...,
-        description="List of item IDs for percentage computation."
+        description="List of items for percentage estimation."
     )
 
 
-@tool(args_schema=GetLikePercentageInput)
-def get_like_percentage_tool(items: List[int]) -> dict:
+@tool(args_schema=EstimateLikePercentageInput)
+def estimate_like_percentage(item_ids: List[int]) -> dict:
     """
-    Returns the percentage of users that like the given item IDs.
+    Estimates the percentage of users that like the given items.
     """
-    print(f"\n{get_time()} - get_like_percentage_tool(items={items})\n")
+    print(f"\n{get_time()} - estimate_like_percentage(item_ids={item_ids})\n")
 
-    if items is None:
+    if item_ids is None:
         return JSON_GENERATION_ERROR
 
-    if not items:
+    if not item_ids:
         return {
             "status": "failure",
-            "message": "The given list of item IDs is empty.",
+            "message": "The given list of items is empty.",
             "data": None
         }
 
-    items = [int(i) for i in items]
+    items = [int(i) for i in item_ids]
     # Load rating file
     user_interactions = read_ml100k_ratings()
     n_users = len(set(int(inter[0]) for inter in user_interactions))
