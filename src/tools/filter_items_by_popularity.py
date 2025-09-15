@@ -13,7 +13,7 @@ AllowedGroups = Literal['kid', 'teenager', 'young_adult', 'adult', 'senior', 'ma
 class GetPopularItemsInput(BaseModel):
     k: Literal[3, 20] = Field(
         default=3,
-        description="Number of popular items to be returned. Default is 3. Use 20 when popularity is requested in the context of recommendation queries."
+        description="Number of popular items to be returned. Use 3 when popularity is requested in the context of statistics queries (e.g., best genre, ideal duration). Use 20 when popularity is requested in the context of recommendation queries."
     )
     item_ids: List[int] = Field(
         default_factory=list,

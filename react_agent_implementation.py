@@ -27,7 +27,7 @@ api_key = os.getenv("OPENAI_API_KEY")
 
 llm = ChatOllama(
     # model="qwen2.5:72b-instruct-q6_K",
-    model="qwen2.5:72b-instruct-q6_K",
+    model="gpt-oss:120b",
     temperature=0,
     base_url="http://localhost:11434"
 )
@@ -42,7 +42,7 @@ agent = create_react_agent(
     Before recommending items, you can:
     1. Filter items by attribute values and/or popularity.
     2. Search items by description/storyline. Note: It might be necessary to fetch the description before searching.
-    3. Search items by keywords. useful for user mood-based queries.
+    3. Search items by keywords. Useful for user mood-based queries.
 
     After performing recommendation, you need to:
     1. Get useful information to list the recommended items.
@@ -50,7 +50,7 @@ agent = create_react_agent(
 
     To compute statistics (e.g., best genre, ideal duration), you can:
     1. Filter items based on the user specified attributes.
-    2. Get the three most popular items out of the filtered ones.
+    2. Get the **THREE** most popular items out of the filtered ones.
     3. Get useful information about these items and reason about it.
 
     To explain recommendations, you can:
