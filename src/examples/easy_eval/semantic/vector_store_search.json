@@ -1,0 +1,33 @@
+{
+    "query": "Find movies where the main character pilots airplanes during war.",
+    "tool_plan": [
+        {
+            "tool_name": "semantic_search_items",
+            "note": "To get the IDs of movies with a storyline where the main character pilots airplanes during war."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+        }
+    ],
+    "calls": [
+        {
+            "name": "semantic_search_items",
+            "arguments": {
+                "query": "main character pilots airplanes during war"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by semantic_search_items>",
+                "attributes": [
+                    "title",
+                    "genres",
+                    "description"
+                ]
+            }
+        }
+    ],
+    "agent": null
+}

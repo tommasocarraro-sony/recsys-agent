@@ -1,0 +1,35 @@
+{
+    "query": "Provide the titles of some action movies.",
+    "tool_plan": [
+        {
+            "tool_name": "filter_items_by_attributes",
+            "note": "To get the IDs of action movies."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get 'title', 'genre', and 'description' of the action movies. It is enough that some of these movies are listed as the user is asking for 'some' action movies, not 'all' action movies."
+        }
+    ],
+    "calls": [
+        {
+            "name": "filter_items_by_attributes",
+            "arguments": {
+                "genres": [
+                    "action"
+                ]
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by the filter_items_by_attributes>",
+                "attributes": [
+                    "title",
+                    "genres",
+                    "description"
+                ]
+            }
+        }
+    ],
+    "agent": null
+}

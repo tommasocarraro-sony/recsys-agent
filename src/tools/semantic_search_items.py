@@ -13,7 +13,7 @@ load_dotenv()
 
 class SemanticSearchItemsParams(BaseModel):
     query: str = Field(..., description="Natural language query describing the item(s) to search for. Can be an item description, storyline, or some keywords (for mood-based search).")
-    items: List[int] = Field(
+    item_ids: List[int] = Field(
         default_factory=list,
         description="Optional list of items. If provided, the search will only consider these items."
     )

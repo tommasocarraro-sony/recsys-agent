@@ -1,0 +1,28 @@
+{
+    "query": "What is the percentage of users interested in this storyline? 'A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster.'",
+    "tool_plan": [
+        {
+            "tool_name": "semantic_search_items",
+            "note": "To get the IDs of movies with a storyline similar to the given storyline."
+        },
+        {
+            "tool_name": "estimate_like_percentage",
+            "note": "To compute the percentage of users that like the items with a storyline similar to the given storyline."
+        }
+    ],
+    "calls": [
+        {
+            "name": "semantic_search_items",
+            "arguments": {
+                "query": "A thief who steals corporate secrets through the use of dream-sharing technology is given the inverse task of planting an idea into the mind of a C.E.O., but his tragic past may doom the project and his team to disaster."
+            }
+        },
+        {
+            "name": "estimate_like_percentage",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by semantic_search_items>"
+            }
+        }
+    ],
+    "agent": "Statistician"
+}

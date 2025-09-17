@@ -1,0 +1,47 @@
+{
+    "query": "Recommend to user 29 some movies popular among kids.",
+    "tool_plan": [
+        {
+            "tool_name": "filter_items_by_popularity",
+            "note": "To get the IDs of movies popular among kids."
+        },
+        {
+            "tool_name": "recommend_items",
+            "note": "To get a personalized ranking of movies popular among kids for the user."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+        }
+    ],
+    "calls": [
+        {
+            "name": "filter_items_by_popularity",
+            "arguments": {
+                "user_group": [
+                    "kid"
+                ],
+                "k": 20
+            }
+        },
+        {
+            "name": "recommend_items",
+            "arguments": {
+                "user_id": 29,
+                "k": 5,
+                "item_ids": "<Python list containing the IDs of movies returned by the filter_items_by_popularity>"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by recommend_items>",
+                "attributes": [
+                    "title",
+                    "genres",
+                    "description"
+                ]
+            }
+        }
+    ]
+}

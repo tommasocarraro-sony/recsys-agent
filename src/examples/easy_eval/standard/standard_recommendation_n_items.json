@@ -1,0 +1,34 @@
+{
+    "query": "Recommend 7 movies to user 130.",
+    "tool_plan": [
+        {
+            "tool_name": "recommend_items",
+            "note": "To get a personalized ranking of 8 movies for the user."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+        }
+    ],
+    "calls": [
+        {
+            "name": "recommend_items",
+            "arguments": {
+                "user_id": 130,
+                "k": 7
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by recommend_items>",
+                "attributes": [
+                    "title",
+                    "genres",
+                    "description"
+                ]
+            }
+        }
+    ],
+    "agent": "Recommendation"
+}

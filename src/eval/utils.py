@@ -59,19 +59,18 @@ def create_langsmith_dataset(langsmith_client, dataset_path, dataset_name):
         langsmith_client.create_examples(inputs=inputs, outputs=outputs, dataset_id=dataset.id)
 
 
-def evaluate_model(agent, dataset_name, in_context_examples):
+def evaluate_model(agent, dataset_name):
     """
     Performs evaluation on the given dataset of the given LLM agent. All results will be logged to LangSmith.
 
     :param agent: LLM agent that needs to be evaluated
     :param dataset_name: name of the dataset in langsmith
-    :param in_context_examples: whether the model can receive in-context examples or not. This is to facilitate the model
     and is beneficial for small language models
     """
 
     def predict_recommendation_agent_answer(example: dict):
         """Use this for answer evaluation"""
-        messages = agent.graph_invoke(example["input"], in_context_examples)
+        messages = agent.invoke({"messages": example["input"]}, config={"configurable": {"thread_id": "1"}})
         return {"response": messages['messages'][-1].content}
 
     evaluate(

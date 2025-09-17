@@ -1,0 +1,26 @@
+{
+    "query": "Provide IMDb rating and description of movies 45, 87, and 456.",
+    "tool_plan": [
+        {
+            "tool_name": "get_item_info",
+            "note": "To get IMDb rating and description of the items the user specified in the query."
+        }
+    ],
+    "calls": [
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": [
+                    45,
+                    87,
+                    456
+                ],
+                "attributes": [
+                    "imdb_rating",
+                    "description"
+                ]
+            }
+        }
+    ],
+    "agent": "Retrieval"
+}

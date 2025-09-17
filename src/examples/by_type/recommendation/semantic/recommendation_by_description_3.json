@@ -1,0 +1,44 @@
+{
+    "query": "Recommend some movies about war crimes to user 45.",
+    "tool_plan": [
+        {
+            "tool_name": "semantic_search_items",
+            "note": "To get the IDs of movies with a storyline regarding war crimes."
+        },
+        {
+            "tool_name": "recommend_items",
+            "note": "To get a personalized ranking of movies about war crimes for the user."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+        }
+    ],
+    "calls": [
+        {
+            "name": "semantic_search_items",
+            "arguments": {
+                "query": "war crimes"
+            }
+        },
+        {
+            "name": "recommend_items",
+            "arguments": {
+                "user_id": 45,
+                "k": 5,
+                "item_ids": "<Python list of item IDs returned by semantic_search_items>"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by recommend_items>",
+                "attributes": [
+                    "title",
+                    "genres",
+                    "description"
+                ]
+            }
+        }
+    ]
+}

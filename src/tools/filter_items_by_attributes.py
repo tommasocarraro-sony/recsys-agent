@@ -78,10 +78,10 @@ def filter_items_by_attributes(actors: Optional[List[str]] = None, genres: Optio
     filters = {
         key: value
         for key, value in {
-            "actors": actors,
-            "genres": genres,
-            "director": director,
-            "producer": producer,
+            "actors": actors if actors else None,
+            "genres": genres if genres else None,
+            "director": director if director else None,
+            "producer": producer if producer else None,
             "imdb_rating": {"request": imdb_rating.request, "threshold": imdb_rating.threshold} if imdb_rating is not None and imdb_rating.threshold != 0 else None,
             "duration": {"request": duration.request, "threshold": duration.threshold} if duration is not None and duration.threshold != 0 else None,
             "release_date": {"request": release_date.request, "threshold": release_date.threshold} if release_date is not None and release_date.threshold != 0 else None,

@@ -1,0 +1,20 @@
+{
+    "query": "Provide the gender of user 5.",
+    "tool_plan": [
+        {
+            "tool_name": "get_user_info",
+            "note": "To get the gender of the user."
+        }
+    ],
+    "calls": [
+        {
+            "name": "get_user_info",
+            "arguments": {
+                "user_id": 5,
+                "attributes": [
+                    "gender"
+                ]
+            }
+        }
+    ]
+}

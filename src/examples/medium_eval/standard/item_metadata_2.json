@@ -1,0 +1,25 @@
+{
+    "query": "Provide actors and storyline of movies 2, 123, and 555.",
+    "tool_plan": [
+        {
+            "tool_name": "get_item_info",
+            "note": "To get IMDb actors and storyline of the items the user specified in the query."
+        }
+    ],
+    "calls": [
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": [
+                    2,
+                    123,
+                    555
+                ],
+                "attributes": [
+                    "actors",
+                    "storyline"
+                ]
+            }
+        }
+    ]
+}

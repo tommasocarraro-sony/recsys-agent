@@ -1,0 +1,45 @@
+{
+    "query": "User 45 is sad today. What could we recommend?",
+    "tool_plan": [
+        {
+            "tool_name": "semantic_search_items",
+            "note": "To get the IDs of movies that might improve the user mood. In this case, keywords like 'uplifting' and 'heartwarming' might be included in the query for the vector store search."
+        },
+        {
+            "tool_name": "recommend_items",
+            "note": "To get a personalized ranking of movies that might improve the user mood."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+        }
+    ],
+    "calls": [
+        {
+            "name": "semantic_search_items",
+            "arguments": {
+                "query": "uplifting, heartwarming"
+            }
+        },
+        {
+            "name": "recommend_items",
+            "arguments": {
+                "user_id": 45,
+                "k": 5,
+                "item_ids": "<Python list of item IDs returned by semantic_search_items>"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by recommend_items>",
+                "attributes": [
+                    "title",
+                    "genres",
+                    "description"
+                ]
+            }
+        }
+    ],
+    "agent": "Recommendation"
+}

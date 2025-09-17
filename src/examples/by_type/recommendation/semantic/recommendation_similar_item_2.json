@@ -1,0 +1,59 @@
+{
+    "query": "Recommend to user 76 some movies similar to movie 90.",
+    "tool_plan": [
+        {
+            "tool_name": "get_item_info",
+            "note": "To get the storyline of the movie."
+        },
+        {
+            "tool_name": "semantic_search_items",
+            "note": "To get the IDs of movies with a description similar to the one of movie 90."
+        },
+        {
+            "tool_name": "recommend_items",
+            "note": "To get a personalized ranking of movies with a description similar to the one of movie 90 for the user."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+        }
+    ],
+    "calls": [
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": [
+                    90
+                ],
+                "attributes": [
+                    "storyline"
+                ]
+            }
+        },
+        {
+            "name": "semantic_search_items",
+            "arguments": {
+                "query": "<Storyline returned by the get_item_info>"
+            }
+        },
+        {
+            "name": "recommend_items",
+            "arguments": {
+                "user_id": 76,
+                "k": 5,
+                "item_ids": "<Python list of item IDs returned by semantic_search_items>"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by recommend_items>",
+                "attributes": [
+                    "title",
+                    "genres",
+                    "description"
+                ]
+            }
+        }
+    ]
+}

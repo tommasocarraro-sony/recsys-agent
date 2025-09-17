@@ -12,7 +12,7 @@ import os
 class RecommendItemsInput(BaseModel):
     user_id: int = Field(..., description="User ID for whom recommendations are requested.")
     k: int = Field(default=5, description="Number of recommended items. Default is 5. Can be set explicitly by the user if they ask for more or fewer items.")
-    items: List[int] = Field(
+    item_ids: List[int] = Field(
         default_factory=list,
         description="Optional list of candidate item IDs. If provided, recommendations will be restricted to these items. Leave empty for standard recommendations."
     )
@@ -31,11 +31,11 @@ def create_recbole_environment(model_path):
     )
 
 @tool(args_schema=RecommendItemsInput)
-def recommend_items(user_id: int, k: int = 5, items: Optional[List[int]] = None) -> dict:
+def recommend_items(user_id: int, k: int = 5, item_ids: Optional[List[int]] = None) -> dict:
     """
     Invokes a recommender system and returns a ranking of recommended items.
     """
-    print(f"\n{get_time()} - recommend_items(user_id={user_id}, k={k}, items={items})\n")
+    print(f"\n{get_time()} - recommend_items(user_id={user_id}, k={k}, item_ids={item_ids})\n")
 
     if user_id is None or k is None:
         return JSON_GENERATION_ERROR
@@ -45,8 +45,8 @@ def recommend_items(user_id: int, k: int = 5, items: Optional[List[int]] = None)
 
     uid_series = dataset.token2id(dataset.uid_field, [str(user_id)])
 
-    if items:
-        recommended_items = recommend_given_items(uid_series, items, k=k)
+    if item_ids:
+        recommended_items = recommend_given_items(uid_series, item_ids, k=k)
     else:
         recommended_items = recommend_full_catalog(uid_series, k=k)
 

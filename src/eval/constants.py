@@ -4,8 +4,9 @@ You will be given a QUESTION, the GROUND TRUTH (correct) ANSWER, and the STUDENT
 
 Here is the grade criteria to follow:
 (1) Grade the student answers based ONLY on their factual accuracy relative to the ground truth answer. 
-(2) Ensure that the student answer does not contain any conflicting statements.
-(3) It is OK if the student answer contains more information than the ground truth answer, as long as it is factually accurate relative to the  ground truth answer.
+(2) It is OK if the student answer contains more information than the ground truth answer, as long as it is factually accurate relative to the ground truth answer.
+(3) It is NOT OK if the student answer contains less information than the ground truth answer. For example, if the label "actors" is in the ground truth answer, it has to be in the student answer too.
+(4) The item IDs in the student answer must always match the IDs in the ground truth answer.
 
 Correctness:
 A correctness value of True means that the student's answer meets all of the criteria.

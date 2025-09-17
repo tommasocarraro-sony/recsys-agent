@@ -1,0 +1,58 @@
+{
+    "query": "Recommend to user 23 10 movies starring Tom Cruise released prior to 1996 and with an IMDb rating higher than 6.",
+    "tool_plan": [
+        {
+            "tool_name": "filter_items_by_attributes",
+            "note": "To get the IDs of movies starring Tom Cruise, released prior to 1996, and with an IMDb rating higher than 6."
+        },
+        {
+            "tool_name": "recommend_items",
+            "note": "To get a personalized ranking of 10 movies starring Tom Cruise, released prior to 1996, and with an IMDb rating higher than 6 for the user."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get useful information to list the recommended items. Since the user requested for movies starring Tom Cruise, released prior to 1996, and with an IMDb rating higher than 6, 'actors', 'release_date', and 'imdb_rating' are important features to be retrieved, together with 'title', 'genres', and 'description'."
+        }
+    ],
+    "calls": [
+        {
+            "name": "filter_items_by_attributes",
+            "arguments": {
+                "actors": [
+                    "Tom Cruise"
+                ],
+                "release_date": {
+                    "request": "lower",
+                    "threshold": 1996
+                },
+                "imdb_rating": {
+                    "request": "higher",
+                    "threshold": 6
+                }
+            }
+        },
+        {
+            "name": "recommend_items",
+            "arguments": {
+                "user_id": 23,
+                "k": 10,
+                "item_ids": "<Python list of item IDs returned by the filter_items_by_attributes>"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by recommend_items>",
+                "attributes": [
+                    "title",
+                    "genres",
+                    "actors",
+                    "release_date",
+                    "imdb_rating",
+                    "description"
+                ]
+            }
+        }
+    ],
+    "agent": "Recommendation"
+}

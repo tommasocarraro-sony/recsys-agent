@@ -4,7 +4,7 @@
         "output": "Here is the list: \n\n1. \nitem_id: 313\ntitle: Titanic (1997)\ngenres: Action, Drama, and Romance\nactors: Leonardo DiCaprio, Kate Winslet, Billy Zane, Kathy Bates, Frances Fisher, Gloria Stuart, Bill Paxton, Bernard Hill, David Warner, Victor Garber, Jonathan Hyde, Suzy Amis, Lewis Abernathy, Nicholas Cascone, Anatoly M. Sagalevitch, Danny Nucci, Jason Barry, and Ewan Stewart\nrelease_date: 1997\nimdb_rating: 7.8\ndescription: A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.2. \nitem_id: 697\ntitle: Basketball Diaries, The (1995)\ngenres: Drama\nactors: Leonardo DiCaprio, Lorraine Bracco, Marilyn Sokol, James Madio, Patrick McGaw, Mark Wahlberg, Roy Cooper, Vincent Pastore, Bruno Kirby, Jimmy Papiris, Nick Gaetani, Alexander Chaplin, Ben Jorgensen, Josh Mostel, Juliette Lewis, Michael Imperioli, Akiko Ashley, and Ernie Hudson\nrelease_date: 1995\nimdb_rating: 7.3\ndescription: A teenager finds his dreams of becoming a basketball star threatened after he free falls into the harrowing world of drug addiction.",
         "tool_calls": [
             {
-                "tool_name": "item_filter_tool",
+                "tool_name": "filter_items_by_attributes",
                 "arguments": {
                     "actors": [
                         "Leonardo DiCaprio"
@@ -20,7 +20,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The IDs of the items satisfying the given conditions are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"items\" parameter of the next tool call.",
+                    "message": "The IDs of the items satisfying the given attribute filters are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"item_ids\" parameter of the next tool call.",
                     "data": [
                         "313",
                         "697"
@@ -28,18 +28,18 @@
                 }
             },
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 88,
+                    "user_id": 88,
                     "k": 2,
-                    "items": [
+                    "item_ids": [
                         "313",
                         "697"
                     ]
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 2 recommendations for user 88 are returned.",
+                    "message": "The IDs of the top 2 recommended items for user 88 are returned.",
                     "data": [
                         "697",
                         "313"
@@ -47,13 +47,13 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "697",
                         "313"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "actors",
@@ -64,7 +64,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 313,
@@ -94,7 +94,7 @@
         "output": "Here is the list: \n\n1. \nitem_id: 307\ntitle: Devil's Advocate, The (1997)\ngenres: Crime, Horror, Mystery, and Thriller\ndescription: An exceptionally adept Florida lawyer is offered a job at a high-end New York City law firm with a high-end boss - the biggest opportunity of his career to date.2. \nitem_id: 406\ntitle: Thinner (1996)\ngenres: Horror and Thriller\ndescription: An obese attorney is cursed by a gypsy to rapidly and uncontrollably lose weight.3. \nitem_id: 413\ntitle: Tales from the Crypt Presents: Bordello of Blood (1996)\ngenres: Horror\ndescription: The Crypt Keeper returns to tell the story of a funeral parlor that moonlights as a vampire bordello.4. \nitem_id: 928\ntitle: Craft, The (1996)\ngenres: Drama and Horror\ndescription: A newcomer to a Catholic prep high school falls in with a trio of outcast teenage girls who practice witchcraft, and they all soon conjure up various spells and curses against those who anger them.5. \nitem_id: 1052\ntitle: Dracula: Dead and Loving It (1995)\ngenres: Comedy and Horror\ndescription: Mel Brooks ' parody of the classic vampire story and its famous film adaptations.",
         "tool_calls": [
             {
-                "tool_name": "item_filter_tool",
+                "tool_name": "filter_items_by_attributes",
                 "arguments": {
                     "genres": [
                         "horror"
@@ -102,7 +102,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "Note that, in order to retrieve the items, the following corrections on the user conditions have been made: ['horror -> Horror']. The IDs of the items satisfying the given conditions are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"items\" parameter of the next tool call.",
+                    "message": "Note that, in order to retrieve the items, the following corrections on the attribute filters have been made: ['horror -> Horror']. The IDs of the items satisfying the given attribute filters are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"item_ids\" parameter of the next tool call.",
                     "data": [
                         "17",
                         "84",
@@ -190,11 +190,11 @@
                 }
             },
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 45,
+                    "user_id": 45,
                     "k": 5,
-                    "items": [
+                    "item_ids": [
                         "17",
                         "84",
                         "101",
@@ -281,7 +281,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 5 recommendations for user 45 are returned.",
+                    "message": "The IDs of the top 5 recommended items for user 45 are returned.",
                     "data": [
                         "928",
                         "413",
@@ -292,16 +292,16 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "928",
                         "413",
                         "406",
                         "307",
                         "1052"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "description"
@@ -309,7 +309,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 307,
@@ -351,7 +351,7 @@
         "output": "Here is the list: \n\n1. \nitem_id: 682\ntitle: I Know What You Did Last Summer (1997)\ndirector: Jim Gillespie\ngenres: Horror, Mystery, and Thriller\ndescription: Four young friends bound by a tragic accident are reunited when they find themselves being stalked by a hook-wielding maniac in their small seaside town.",
         "tool_calls": [
             {
-                "tool_name": "item_filter_tool",
+                "tool_name": "filter_items_by_attributes",
                 "arguments": {
                     "genres": [
                         "horror"
@@ -362,36 +362,36 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "Note that, in order to retrieve the items, the following corrections on the user conditions have been made: ['horror -> Horror']. The IDs of the items satisfying the given conditions are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"items\" parameter of the next tool call.",
+                    "message": "Note that, in order to retrieve the items, the following corrections on the attribute filters have been made: ['horror -> Horror']. The IDs of the items satisfying the given attribute filters are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"item_ids\" parameter of the next tool call.",
                     "data": [
                         "682"
                     ]
                 }
             },
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 78,
+                    "user_id": 78,
                     "k": 5,
-                    "items": [
+                    "item_ids": [
                         "682"
                     ]
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 5 recommendations for user 78 are returned.",
+                    "message": "The IDs of the top 5 recommended items for user 78 are returned.",
                     "data": [
                         "682"
                     ]
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "682"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "director",
                         "genres",
@@ -400,7 +400,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 682,
@@ -419,7 +419,7 @@
         "output": "Here is the list: \n\n1. \nitem_id: 183\ntitle: Alien (1979)\nduration: 1172. \nitem_id: 234\ntitle: Jaws (1975)\nduration: 1243. \nitem_id: 288\ntitle: Scream (1996)\nduration: 111",
         "tool_calls": [
             {
-                "tool_name": "item_filter_tool",
+                "tool_name": "filter_items_by_attributes",
                 "arguments": {
                     "genres": [
                         "horror"
@@ -427,7 +427,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "Note that, in order to retrieve the items, the following corrections on the user conditions have been made: ['horror -> Horror']. The IDs of the items satisfying the given conditions are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"items\" parameter of the next tool call.",
+                    "message": "Note that, in order to retrieve the items, the following corrections on the attribute filters have been made: ['horror -> Horror']. The IDs of the items satisfying the given attribute filters are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"item_ids\" parameter of the next tool call.",
                     "data": [
                         "17",
                         "84",
@@ -515,11 +515,10 @@
                 }
             },
             {
-                "tool_name": "get_popular_items_tool",
+                "tool_name": "filter_items_by_popularity",
                 "arguments": {
-                    "popularity": "standard",
                     "k": 3,
-                    "items": [
+                    "item_ids": [
                         "17",
                         "84",
                         "101",
@@ -615,21 +614,21 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "288",
                         "183",
                         "234"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "duration"
                     ]
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 183,
@@ -656,21 +655,21 @@
         "output": "Here is the list: \n\n1. \nitem_id: 2\nactors: Pierce Brosnan, Sean Bean, Izabella Scorupco, Famke Janssen, Joe Don Baker, Judi Dench, Robbie Coltrane, Tchéky Karyo, Gottfried John, Alan Cumming, Desmond Llewelyn, Samantha Bond, Michael Kitchen, Serena Gordon, Simon Kunz, Pavel Douglas, Olivier Lajous, and Billy J. Mitchell\nstoryline: \"Years after a friend and fellow 00 agent is killed on a joint mission, a secret space based weapons program known as \"\"GoldenEye\"\" is stolen. James Bond sets out to stop a Russian crime syndicate from using the weapon. When a deadly satellite weapon system falls into the wrong hands, only Agent James Bond 007 can save the world from certain disaster. Armed with his license to kill, Bond races to Russia in search of the stolen access codes for \"\"GoldenEye\"\", an awesome space weapon that can fire a devastating electromagnetic pulse toward Earth. But 007 is up against an enemy who anticipates his every move: a mastermind motivated by years of simmering hatred. Bond also squares off against Xenia Onatopp, an assassin who uses pleasure as her ultimate weapon. —Official Synopsis\"2. \nitem_id: 555\nactors: John Travolta, Harry Belafonte, Kelly Lynch, Margaret Avery, Tom Bower, Andrew Lawrence, Bumper Robinson, Tom Wright, Sheryl Lee Ralph, Judith Drake, Robert Gossett, Wesley Thompson, Tom Nolan, Willie C. Carpenter, Michael Beach, Lee Duncan, Wanda-Lee Evans, and Lawrence A. Mandley\nstoryline: In an alternative America where African-Americans and White Americans have reversed cultural roles, a white factory worker kidnaps a black factory owner for dismissing him over perceived disdain. The story takes place in alternative America where the blacks are members of social elite, and whites are inhabitants of inner city ghettos. Louis Pinnock is a struggling white worker in a chocolate factory, loving husband and father of two children. While delivering a package for black CEO Thaddeus Thomas, he is mistaken for a voyeur and, as a result, loses his job, gets beaten by black cops and his family gets evicted from their home. Desperate, Pinnock takes a deadly weapon and kidnaps Thomas, demanding justice, but the fight he will have to finish will cost him more than his job was ever worth. —Dragan Antulov",
         "tool_calls": [
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         2,
                         123,
                         555
                     ],
-                    "get": [
+                    "attributes": [
                         "actors",
                         "storyline"
                     ]
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 2,
@@ -692,13 +691,13 @@
         "output": "Here is the list: \n\n1. \nitem_id: 471\ntitle: Courage Under Fire (1996)\ngenres: Drama and War\ndescription: A U.S. Army officer, despondent about a deadly mistake he made, investigates a female chopper commander's worthiness for the Medal of Honor.2. \nitem_id: 499\ntitle: Cat on a Hot Tin Roof (1958)\ngenres: Drama\ndescription: Brick is an alcoholic ex-football player who drinks his days away and resists the affections of his wife. A reunion with his terminal father jogs a host of memories and revelations for both father and son.3. \nitem_id: 651\ntitle: Glory (1989)\ngenres: Action, Drama, and War\ndescription: Robert Gould Shaw leads the U.S. Civil War's first all-black volunteer company, fighting prejudices from both his own Union Army, and the Confederates.4. \nitem_id: 849\ntitle: Days of Thunder (1990)\ngenres: Action and Romance\ndescription: A young hot-shot stock car driver gets his chance to compete at the top level.5. \nitem_id: 1045\ntitle: Fearless (1993)\ngenres: Drama\ndescription: A man's personality is dramatically changed after surviving a major airline crash.",
         "tool_calls": [
             {
-                "tool_name": "vector_store_search_tool",
+                "tool_name": "semantic_search_items",
                 "arguments": {
                     "query": "uplifting, heartwarming"
                 },
                 "result": {
                     "status": "success",
-                    "message": "The IDs of the 11 best matching items produced by the vector store search are returned.",
+                    "message": "The IDs of the 11 best matching items are returned.",
                     "data": [
                         "626",
                         "471",
@@ -715,11 +714,11 @@
                 }
             },
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 23,
+                    "user_id": 23,
                     "k": 5,
-                    "items": [
+                    "item_ids": [
                         "626",
                         "471",
                         "618",
@@ -735,7 +734,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 5 recommendations for user 23 are returned.",
+                    "message": "The IDs of the top 5 recommended items for user 23 are returned.",
                     "data": [
                         "651",
                         "471",
@@ -746,16 +745,16 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "651",
                         "471",
                         "499",
                         "1045",
                         "849"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "description"
@@ -763,7 +762,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 471,
@@ -805,13 +804,13 @@
         "output": "Here is the list: \n\n1. \nitem_id: 7\ntitle: Twelve Monkeys (1995)\ndirector: Terry Gilliam2. \nitem_id: 25\ntitle: Birdcage, The (1996)\ndirector: Mike Nichols3. \nitem_id: 748\ntitle: Saint, The (1997)\ndirector: Phillip Noyce",
         "tool_calls": [
             {
-                "tool_name": "item_filter_tool",
+                "tool_name": "filter_items_by_attributes",
                 "arguments": {
                     "release_month": 4
                 },
                 "result": {
                     "status": "success",
-                    "message": "The IDs of the items satisfying the given conditions are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"items\" parameter of the next tool call.",
+                    "message": "The IDs of the items satisfying the given attribute filters are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"item_ids\" parameter of the next tool call.",
                     "data": [
                         "5",
                         "7",
@@ -946,11 +945,10 @@
                 }
             },
             {
-                "tool_name": "get_popular_items_tool",
+                "tool_name": "filter_items_by_popularity",
                 "arguments": {
-                    "popularity": "standard",
                     "k": 3,
-                    "items": [
+                    "item_ids": [
                         "5",
                         "7",
                         "10",
@@ -1093,21 +1091,21 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "7",
                         "748",
                         "25"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "director"
                     ]
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 7,
@@ -1134,13 +1132,13 @@
         "output": "54.08%",
         "tool_calls": [
             {
-                "tool_name": "vector_store_search_tool",
+                "tool_name": "semantic_search_items",
                 "arguments": {
                     "query": "When his brother is killed in a robbery, paraplegic Marine Jake Sully decides to take his place in a mission on the distant world of Pandora. There he learns of greedy corporate figurehead Parker Selfridge's intentions of driving off the native humanoid \"Na'vi\" in order to mine for the precious material scattered throughout their rich woodland. In exchange for the spinal surgery that will fix his legs, Jake gathers knowledge, of the Indigenous Race and their Culture, for the cooperating military unit spearheaded by gung-ho Colonel Quaritch, while simultaneously attempting to infiltrate the Na'vi people with the use of an \"avatar\" identity. While Jake begins to bond with the native tribe and quickly falls in love with the beautiful alien Neytiri, the restless Colonel moves forward with his ruthless extermination tactics, forcing the soldier to take a stand - and fight back in an epic battle for the fate of Pandora."
                 },
                 "result": {
                     "status": "success",
-                    "message": "The IDs of the 11 best matching items produced by the vector store search are returned.",
+                    "message": "The IDs of the 11 best matching items are returned.",
                     "data": [
                         "1182",
                         "405",
@@ -1157,9 +1155,9 @@
                 }
             },
             {
-                "tool_name": "get_like_percentage_tool",
+                "tool_name": "estimate_like_percentage",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "1182",
                         "405",
                         "689",
@@ -1186,25 +1184,24 @@
         "output": "Here is the list: \n\n1. \nitem_id: 100\ntitle: Fargo (1996)\nactors: William H. Macy, Frances McDormand, Steve Buscemi, Peter Stormare, Kristin Rudrüd, Harve Presnell, Tony Denman, Gary Houston, Sally Wingert, Kurt Schweickhardt, Larissa Kokernot, Melissa Peterman, Steve Reevis, Warren Keith, Steve Edelman, Sharon Anderson, Larry Brandenburg, and James Gaulke2. \nitem_id: 258\ntitle: Contact (1997)\nactors: Jodie Foster, Matthew McConaughey, Tom Skerritt, John Hurt, Jena Malone, David Morse, Geoffrey Blake, William Fichtner, Sami Chester, Timothy McNeil, Laura Elena Surillo, Henry Strozier, Max Martini, Larry King, Thomas Garner, Conroy Chino, Dan Gifford, and James Woods3. \nitem_id: 286\ntitle: English Patient, The (1996)\nactors: Ralph Fiennes, Juliette Binoche, Willem Dafoe, Kristin Scott Thomas, Naveen Andrews, Colin Firth, Julian Wadham, Jürgen Prochnow, Kevin Whately, Clive Merrison, Nino Castelnuovo, Hichem Rostom, Peter Rühring, Geordie Johnson, Torri Higginson, Liisa Repo-Martell, Raymond Coulthard, and Philip Whitchurch",
         "tool_calls": [
             {
-                "tool_name": "get_user_metadata_tool",
+                "tool_name": "get_user_info",
                 "arguments": {
-                    "user": 34,
-                    "get": [
+                    "user_id": 34,
+                    "attributes": [
                         "age_category"
                     ]
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for user 34 is returned.",
+                    "message": "The requested attributes for user 34 are returned.",
                     "data": {
                         "age_category": "adult"
                     }
                 }
             },
             {
-                "tool_name": "get_popular_items_tool",
+                "tool_name": "filter_items_by_popularity",
                 "arguments": {
-                    "popularity": "by_user_group",
                     "user_group": [
                         "adult"
                     ],
@@ -1221,21 +1218,21 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "286",
                         "100",
                         "258"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "actors"
                     ]
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 100,
@@ -1262,7 +1259,7 @@
         "output": "Here is the list: \n\n1. \nitem_id: 96\ntitle: Terminator 2: Judgment Day (1991)\ngenres: Action, Sci-Fi, and Thriller\ndescription: An on-rails light-gun shooter based on Terminator 2: Judgment Day (1991).2. \nitem_id: 174\ntitle: Raiders of the Lost Ark (1981)\ngenres: Action and Adventure\ndescription: In 1936, archaeologist and adventurer Indiana Jones is hired by the U.S. government to find the Ark of the Covenant before Adolf Hitler's Nazis can obtain its awesome powers.3. \nitem_id: 181\ntitle: Return of the Jedi (1983)\ngenres: Action, Adventure, Romance, Sci-Fi, and War\ndescription: With the rise of the empire, the rebels are driven deep into hiding. The rebels risk all with one last strike. Is it redemption for the freedom of the galaxy or manipulation by the emperor himself which may lead to their destruction.4. \nitem_id: 210\ntitle: Indiana Jones and the Last Crusade (1989)\ngenres: Action and Adventure\ndescription: \"In 1938, after his father Professor Henry Jones, Sr. goes missing while pursuing the Holy Grail, Professor Henry \"\"Indiana\"\" Jones, Jr. finds himself up against Adolf Hitler's Nazis again to stop them from obtaining its powers.\"5. \nitem_id: 313\ntitle: Titanic (1997)\ngenres: Action, Drama, and Romance\ndescription: A seventeen-year-old aristocrat falls in love with a kind but poor artist aboard the luxurious, ill-fated R.M.S. Titanic.",
         "tool_calls": [
             {
-                "tool_name": "item_filter_tool",
+                "tool_name": "filter_items_by_attributes",
                 "arguments": {
                     "genres": [
                         "action"
@@ -1270,7 +1267,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "Note that, in order to retrieve the items, the following corrections on the user conditions have been made: ['action -> Action']. The IDs of the items satisfying the given conditions are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"items\" parameter of the next tool call.",
+                    "message": "Note that, in order to retrieve the items, the following corrections on the attribute filters have been made: ['action -> Action']. The IDs of the items satisfying the given attribute filters are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"item_ids\" parameter of the next tool call.",
                     "data": [
                         "2",
                         "4",
@@ -1511,11 +1508,10 @@
                 }
             },
             {
-                "tool_name": "get_popular_items_tool",
+                "tool_name": "filter_items_by_popularity",
                 "arguments": {
-                    "popularity": "standard",
                     "k": 20,
-                    "items": [
+                    "item_ids": [
                         "2",
                         "4",
                         "17",
@@ -1781,11 +1777,11 @@
                 }
             },
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 11,
+                    "user_id": 11,
                     "k": 5,
-                    "items": [
+                    "item_ids": [
                         "181",
                         "300",
                         "121",
@@ -1810,7 +1806,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 5 recommendations for user 11 are returned.",
+                    "message": "The IDs of the top 5 recommended items for user 11 are returned.",
                     "data": [
                         "210",
                         "174",
@@ -1821,16 +1817,16 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "210",
                         "174",
                         "181",
                         "313",
                         "96"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "description"
@@ -1838,7 +1834,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 96,
@@ -1880,7 +1876,7 @@
         "output": "Here is the list: \n\n1. \nitem_id: 28\ntitle: Apollo 13 (1995)\nrelease_date: 1995\ngenres: Action, Drama, and Thriller\ndescription: NASA must devise a strategy to return Apollo 13 to Earth safely after the spacecraft undergoes massive internal damage putting the lives of the three astronauts on board in jeopardy.2. \nitem_id: 56\ntitle: Pulp Fiction (1994)\nrelease_date: 1994\ngenres: Crime and Drama\ndescription: The lives of two mob hitmen, a boxer, a gangster and his wife, and a pair of diner bandits intertwine in four tales of violence and redemption.3. \nitem_id: 173\ntitle: Princess Bride, The (1987)\nrelease_date: 1987\ngenres: Action, Adventure, Comedy, and Romance\ndescription: While home sick in bed, a young boy's grandfather reads him the story of a farmboy-turned-pirate who encounters numerous obstacles, enemies and allies in his quest to be reunited with his true love.4. \nitem_id: 174\ntitle: Raiders of the Lost Ark (1981)\nrelease_date: 1981\ngenres: Action and Adventure\ndescription: In 1936, archaeologist and adventurer Indiana Jones is hired by the U.S. government to find the Ark of the Covenant before Adolf Hitler's Nazis can obtain its awesome powers.5. \nitem_id: 318\ntitle: Schindler's List (1993)\nrelease_date: 1993\ngenres: Drama and War\ndescription: In German-occupied Poland during World War II, industrialist Oskar Schindler gradually becomes concerned for his Jewish workforce after witnessing their persecution by the Nazis.",
         "tool_calls": [
             {
-                "tool_name": "item_filter_tool",
+                "tool_name": "filter_items_by_attributes",
                 "arguments": {
                     "release_date": {
                         "request": "lower",
@@ -1889,7 +1885,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The IDs of the items satisfying the given conditions are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"items\" parameter of the next tool call.",
+                    "message": "The IDs of the items satisfying the given attribute filters are returned.If another tool call is needed, you can now proceed to the next tool call. It is enough you pass this list to the \"item_ids\" parameter of the next tool call.",
                     "data": [
                         "1",
                         "2",
@@ -2847,14 +2843,13 @@
                 }
             },
             {
-                "tool_name": "get_popular_items_tool",
+                "tool_name": "filter_items_by_popularity",
                 "arguments": {
-                    "popularity": "by_user_group",
                     "user_group": [
                         "teenager"
                     ],
                     "k": 20,
-                    "items": [
+                    "item_ids": [
                         "1",
                         "2",
                         "3",
@@ -3837,11 +3832,11 @@
                 }
             },
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 123,
+                    "user_id": 123,
                     "k": 5,
-                    "items": [
+                    "item_ids": [
                         "1",
                         "7",
                         "56",
@@ -3866,7 +3861,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 5 recommendations for user 123 are returned.",
+                    "message": "The IDs of the top 5 recommended items for user 123 are returned.",
                     "data": [
                         "174",
                         "318",
@@ -3877,16 +3872,16 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "174",
                         "318",
                         "56",
                         "173",
                         "28"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "release_date",
                         "genres",
@@ -3895,7 +3890,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 28,
@@ -3942,9 +3937,8 @@
         "output": "Here is the list: \n\n1. \nitem_id: 1\ntitle: Toy Story (1995)\ngenres: Animation, Children's, and Comedy\ndescription: A cowboy doll is profoundly threatened and jealous when a new spaceman figure supplants him as top toy in a boy's room.2. \nitem_id: 7\ntitle: Twelve Monkeys (1995)\ngenres: Drama and Sci-Fi\ndescription: In a future world devastated by disease, a convict is sent back in time to gather information about the man-made virus that wiped out most of the human population on the planet.3. \nitem_id: 8\ntitle: Babe (1995)\ngenres: Children's, Comedy, and Drama\ndescription: Babe, a pig raised by sheepdogs, learns to herd sheep with a little help from Farmer Hoggett.4. \nitem_id: 28\ntitle: Apollo 13 (1995)\ngenres: Action, Drama, and Thriller\ndescription: NASA must devise a strategy to return Apollo 13 to Earth safely after the spacecraft undergoes massive internal damage putting the lives of the three astronauts on board in jeopardy.5. \nitem_id: 117\ntitle: Rock, The (1996)\ngenres: Action, Adventure, and Thriller\ndescription: A mild-mannered chemist and an ex-con must lead the counterstrike when a rogue group of military men, led by a renegade general, threaten a nerve gas attack from Alcatraz against San Francisco.",
         "tool_calls": [
             {
-                "tool_name": "get_popular_items_tool",
+                "tool_name": "filter_items_by_popularity",
                 "arguments": {
-                    "popularity": "by_user_group",
                     "user_group": [
                         "kid"
                     ],
@@ -3978,11 +3972,11 @@
                 }
             },
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 29,
+                    "user_id": 29,
                     "k": 5,
-                    "items": [
+                    "item_ids": [
                         "1",
                         "7",
                         "82",
@@ -4007,7 +4001,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 5 recommendations for user 29 are returned.",
+                    "message": "The IDs of the top 5 recommended items for user 29 are returned.",
                     "data": [
                         "7",
                         "1",
@@ -4018,16 +4012,16 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "7",
                         "1",
                         "117",
                         "28",
                         "8"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "description"
@@ -4035,7 +4029,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 1,
@@ -4077,25 +4071,24 @@
         "output": "Here is the list: \n\n1. \nitem_id: 7\ntitle: Twelve Monkeys (1995)\ngenres: Drama and Sci-Fi\ndescription: In a future world devastated by disease, a convict is sent back in time to gather information about the man-made virus that wiped out most of the human population on the planet.2. \nitem_id: 117\ntitle: Rock, The (1996)\ngenres: Action, Adventure, and Thriller\ndescription: A mild-mannered chemist and an ex-con must lead the counterstrike when a rogue group of military men, led by a renegade general, threaten a nerve gas attack from Alcatraz against San Francisco.3. \nitem_id: 127\ntitle: Godfather, The (1972)\ngenres: Action, Crime, and Drama\ndescription: An organized crime dynasty's aging patriarch transfers control of his clandestine empire to his reluctant son.4. \nitem_id: 151\ntitle: Willy Wonka and the Chocolate Factory (1971)\ngenres: Adventure, Children's, and Comedy\ndescription: A poor but hopeful boy seeks one of the five coveted golden tickets that will send him on a tour of Willy Wonka's mysterious chocolate factory.5. \nitem_id: 173\ntitle: Princess Bride, The (1987)\ngenres: Action, Adventure, Comedy, and Romance\ndescription: While home sick in bed, a young boy's grandfather reads him the story of a farmboy-turned-pirate who encounters numerous obstacles, enemies and allies in his quest to be reunited with his true love.",
         "tool_calls": [
             {
-                "tool_name": "get_user_metadata_tool",
+                "tool_name": "get_user_info",
                 "arguments": {
-                    "user": 77,
-                    "get": [
+                    "user_id": 77,
+                    "attributes": [
                         "age_category"
                     ]
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for user 77 is returned.",
+                    "message": "The requested attributes for user 77 are returned.",
                     "data": {
                         "age_category": "young_adult"
                     }
                 }
             },
             {
-                "tool_name": "get_popular_items_tool",
+                "tool_name": "filter_items_by_popularity",
                 "arguments": {
-                    "popularity": "by_user_group",
                     "user_group": [
                         "young_adult"
                     ],
@@ -4129,11 +4122,11 @@
                 }
             },
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 77,
+                    "user_id": 77,
                     "k": 5,
-                    "items": [
+                    "item_ids": [
                         "288",
                         "181",
                         "258",
@@ -4158,7 +4151,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 5 recommendations for user 77 are returned.",
+                    "message": "The IDs of the top 5 recommended items for user 77 are returned.",
                     "data": [
                         "127",
                         "173",
@@ -4169,16 +4162,16 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "127",
                         "173",
                         "7",
                         "151",
                         "117"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "description"
@@ -4186,7 +4179,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 7,
@@ -4228,13 +4221,13 @@
         "output": "Here is the list: \n\n1. \nitem_id: 553\ntitle: Walk in the Clouds, A (1995)\ngenres: Drama and Romance\ndescription: A married soldier returning from World War II poses as a pregnant woman's husband to save her from her father's anger and honor.2. \nitem_id: 756\ntitle: Father of the Bride Part II (1995)\ngenres: Comedy\ndescription: George Banks must deal not only with the pregnancy of his daughter, but also with the unexpected pregnancy of his wife.3. \nitem_id: 821\ntitle: Mrs. Winterbourne (1996)\ngenres: Comedy and Romance\ndescription: Connie, unwed and pregnant, is heading to Boston by train when she meets wealthy newlyweds Hugh and Patricia. The train crashes, and when Connie comes to in the hospital, she is mistaken for Patricia, who died in the crash with Hugh.4. \nitem_id: 938\ntitle: Smile Like Yours, A (1997)\ngenres: Comedy and Romance\ndescription: Greg Kinnear plays a carriage-shy husband in a romantic comedy about a couple trying to conceive a child.5. \nitem_id: 1281\ntitle: Manny & Lo (1996)\ngenres: Drama\ndescription: A pregnant teen and her younger sister run away from foster homes and kidnap a woman whom they believe can help with the pregnancy.",
         "tool_calls": [
             {
-                "tool_name": "vector_store_search_tool",
+                "tool_name": "semantic_search_items",
                 "arguments": {
                     "query": "main character is pregnant"
                 },
                 "result": {
                     "status": "success",
-                    "message": "The IDs of the 11 best matching items produced by the vector store search are returned.",
+                    "message": "The IDs of the 11 best matching items are returned.",
                     "data": [
                         "728",
                         "1158",
@@ -4251,11 +4244,11 @@
                 }
             },
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 33,
+                    "user_id": 33,
                     "k": 5,
-                    "items": [
+                    "item_ids": [
                         "728",
                         "1158",
                         "722",
@@ -4271,7 +4264,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 5 recommendations for user 33 are returned.",
+                    "message": "The IDs of the top 5 recommended items for user 33 are returned.",
                     "data": [
                         "938",
                         "756",
@@ -4282,16 +4275,16 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "938",
                         "756",
                         "553",
                         "1281",
                         "821"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "description"
@@ -4299,7 +4292,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 553,
@@ -4341,18 +4334,18 @@
         "output": "Here is the list: \n\n1. \nitem_id: 66\ntitle: While You Were Sleeping (1995)\ngenres: Comedy and Romance\ndescription: A hopelessly romantic Chicago Transit Authority token collector is mistaken for the fiancée of a coma patient.2. \nitem_id: 428\ntitle: Harold and Maude (1971)\ngenres: Comedy\ndescription: Young, rich, and obsessed with death, Harold finds himself changed forever when he meets lively septuagenarian Maude at a funeral.3. \nitem_id: 607\ntitle: Rebecca (1940)\ngenres: Romance and Thriller\ndescription: A self-conscious woman juggles adjusting to her new role as an aristocrat's wife and avoiding being intimidated by his first wife's spectral presence.4. \nitem_id: 794\ntitle: It Could Happen to You (1994)\ngenres: Drama and Romance\ndescription: A police officer promises to share his lottery ticket with a waitress in lieu of a tip.5. \nitem_id: 945\ntitle: Charade (1963)\ngenres: Comedy, Mystery, Romance, and Thriller\ndescription: Romance and suspense ensue in Paris as a woman is pursued by several men who want a fortune her murdered husband had stolen. Whom can she trust?",
         "tool_calls": [
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         90
                     ],
-                    "get": [
+                    "attributes": [
                         "storyline"
                     ]
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 90,
@@ -4362,13 +4355,13 @@
                 }
             },
             {
-                "tool_name": "vector_store_search_tool",
+                "tool_name": "semantic_search_items",
                 "arguments": {
                     "query": "A San Francisco poet who fears commitment suspects his girlfriend may have a knack for killing off her significant others. Avant-garde poet Charlie hasn't had much luck with women, but then he meets Harriet, the girl of his dreams.. or is it his nightmares? Harriet is wonderful, but Charlie begins to suspect that she is Mrs. X., a woman who marries men, then kills them. —Rob Hartill"
                 },
                 "result": {
                     "status": "success",
-                    "message": "The IDs of the 11 best matching items produced by the vector store search are returned.",
+                    "message": "The IDs of the 11 best matching items are returned.",
                     "data": [
                         "90",
                         "66",
@@ -4385,11 +4378,11 @@
                 }
             },
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 76,
+                    "user_id": 76,
                     "k": 5,
-                    "items": [
+                    "item_ids": [
                         "90",
                         "66",
                         "781",
@@ -4405,7 +4398,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 5 recommendations for user 76 are returned.",
+                    "message": "The IDs of the top 5 recommended items for user 76 are returned.",
                     "data": [
                         "607",
                         "428",
@@ -4416,16 +4409,16 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "607",
                         "428",
                         "794",
                         "66",
                         "945"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "description"
@@ -4433,7 +4426,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 66,
@@ -4475,14 +4468,14 @@
         "output": "Here is the list: \n\n1. \nitem_id: 258\ntitle: Contact (1997)\ngenres: Drama and Sci-Fi\ndescription: Dr. Ellie Arroway, after years of searching, finds conclusive radio proof of extraterrestrial intelligence, sending plans for a mysterious machine.2. \nitem_id: 269\ntitle: Full Monty, The (1997)\ngenres: Comedy\ndescription: \"Six unemployed steel workers form a male striptease act. The women cheer them on to go for \"\"the full monty\"\" - total nudity.\"3. \nitem_id: 289\ntitle: Evita (1996)\ngenres: Drama and Musical\ndescription: The hit musical based on the life of Eva Perón (Evita Duarte), a B-picture Argentinian actress who eventually became the wife of Argentinian president Juan Domingo Perón, and the most beloved and hated woman in Argentina.4. \nitem_id: 301\ntitle: In & Out (1997)\ngenres: Comedy\ndescription: A midwestern teacher questions his sexuality after a former student makes a comment about him at the Academy Awards.5. \nitem_id: 302\ntitle: L.A. Confidential (1997)\ngenres: Crime, Film-Noir, Mystery, and Thriller\ndescription: As corruption grows in 1950s Los Angeles, three policemen - one strait-laced, one brutal, and one sleazy - investigate a series of murders with their own brand of justice.",
         "tool_calls": [
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 46,
+                    "user_id": 46,
                     "k": 5
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 5 recommendations for user 46 are returned.",
+                    "message": "The IDs of the top 5 recommended items for user 46 are returned.",
                     "data": [
                         "269",
                         "258",
@@ -4493,16 +4486,16 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "269",
                         "258",
                         "302",
                         "289",
                         "301"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "description"
@@ -4510,7 +4503,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 258,
@@ -4552,14 +4545,14 @@
         "output": "Here is the list: \n\n1. \nitem_id: 451\ntitle: Grease (1978)\ngenres: Comedy, Musical, and Romance\ndescription: Good girl Sandy Olsson and greaser Danny Zuko fell in love over the summer. When they unexpectedly discover they're now in the same high school, will they be able to rekindle their romance?2. \nitem_id: 739\ntitle: Pretty Woman (1990)\ngenres: Comedy and Romance\ndescription: A man in a legal but hurtful business needs an escort for some social events, and hires a beautiful prostitute he meets... only to fall in love.3. \nitem_id: 742\ntitle: Ransom (1996)\ngenres: Drama and Thriller\ndescription: Multi-millionaire Tom Mullen's son is kidnapped, but after initially agreeing to pay the ransom Mullen then decides to use the ransom money as a bounty.",
         "tool_calls": [
             {
-                "tool_name": "get_top_k_recommendations_tool",
+                "tool_name": "recommend_items",
                 "arguments": {
-                    "user": 56,
+                    "user_id": 56,
                     "k": 3
                 },
                 "result": {
                     "status": "success",
-                    "message": "The top 3 recommendations for user 56 are returned.",
+                    "message": "The IDs of the top 3 recommended items for user 56 are returned.",
                     "data": [
                         "742",
                         "739",
@@ -4568,14 +4561,14 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "742",
                         "739",
                         "451"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "description"
@@ -4583,7 +4576,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 451,
@@ -4613,13 +4606,13 @@
         "output": "Here is the list: \n\n1. \nitem_id: 82\ntitle: Jurassic Park (1993)\ngenres: Action, Adventure, and Sci-Fi\ndescription: A pragmatic paleontologist touring an almost complete theme park on an island in Central America is tasked with protecting a couple of kids after a power failure causes the park's cloned dinosaurs to run loose.2. \nitem_id: 99\ntitle: Snow White and the Seven Dwarfs (1937)\ngenres: Animation, Children's, and Musical\ndescription: Exiled into the dangerous forest by her wicked stepmother, a princess is rescued by seven dwarf miners who make her part of their household.3. \nitem_id: 131\ntitle: Breakfast at Tiffany's (1961)\ngenres: Drama and Romance\ndescription: A young New York socialite becomes interested in a young man who has moved into her apartment building, but her past threatens to get in the way.4. \nitem_id: 134\ntitle: Citizen Kane (1941)\ngenres: Drama\ndescription: Following the death of publishing tycoon Charles Foster Kane, reporters scramble to uncover the meaning of his final utterance; 'Rosebud'.5. \nitem_id: 143\ntitle: Sound of Music, The (1965)\ngenres: Musical\ndescription: A woman leaves an Austrian convent to become a governess to a Naval officer widower's children.6. \nitem_id: 161\ntitle: Top Gun (1986)\ngenres: Action and Romance\ndescription: As students at the United States Navy's elite fighter weapons school compete to be best in the class, one daring young pilot learns a few things from a civilian instructor that are not taught in the classroom.7. \nitem_id: 182\ntitle: GoodFellas (1990)\ngenres: Crime and Drama\ndescription: The story of Henry Hill and his life in the mob, covering his relationship with his wife Karen Hill and his mob partners Jimmy Conway and Tommy DeVito in the Italian-American crime syndicate.8. \nitem_id: 230\ntitle: Star Trek IV: The Voyage Home (1986)\ngenres: Action, Adventure, and Sci-Fi\ndescription: To save Earth from an alien probe, Admiral James T. Kirk and his fugitive crew go back in time to San Francisco in 1986 to retrieve the only beings who can communicate with it: humpback whales.9. \nitem_id: 234\ntitle: Jaws (1975)\ngenres: Action and Horror\ndescription: When a killer shark unleashes chaos on beach community off Long Island, it's up to a local sheriff, a marine biologist, and an old seafarer to hunt the beast down.10. \nitem_id: 418\ntitle: Cinderella (1950)\ngenres: Animation, Children's, and Musical\ndescription: When Cinderella's cruel stepmother prevents her from attending the Royal Ball, she gets some unexpected help from the lovable mice Gus and Jaq, and from her Fairy Godmother.11. \nitem_id: 504\ntitle: Bonnie and Clyde (1967)\ngenres: Crime and Drama\ndescription: Bored waitress Bonnie Parker falls in love with an ex-con named Clyde Barrow and together they start a violent crime spree through the country, stealing cars and robbing banks.12. \nitem_id: 526\ntitle: Ben-Hur (1959)\ngenres: Action, Adventure, and Drama\ndescription: After a Jewish prince is betrayed and sent into slavery by a Roman friend in 1st-century Jerusalem, he regains his freedom and comes back for revenge.13. \nitem_id: 612\ntitle: Lost Horizon (1937)\ngenres: Drama\ndescription: When a revered diplomat's plane is diverted and crashes in the peaks of Tibet, he and the other survivors are guided to an isolated monastery at Shangri-La, where they wrestle with the invitation to stay.14. \nitem_id: 616\ntitle: Night of the Living Dead (1968)\ngenres: Horror and Sci-Fi\ndescription: A ragtag group of Pennsylvanians barricade themselves in an old farmhouse to remain safe from a horde of flesh-eating ghouls that are ravaging the East Coast of the United States.15. \nitem_id: 662\ntitle: Somewhere in Time (1980)\ngenres: Drama and Romance\ndescription: A Chicago playwright uses self-hypnosis to travel back in time and meet the actress whose vintage portrait hangs in a grand hotel.16. \nitem_id: 735\ntitle: Philadelphia (1993)\ngenres: Drama\ndescription: When a man with HIV is fired by his law firm because of his condition, he hires a homophobic small time lawyer as the only willing advocate for a wrongful dismissal suit.17. \nitem_id: 1050\ntitle: Ghost and Mrs. Muir, The (1947)\ngenres: Drama and Romance\ndescription: In 1900, a young widow finds her seaside cottage is haunted and forms a unique relationship with the ghost.",
         "tool_calls": [
             {
-                "tool_name": "get_interacted_items_tool",
+                "tool_name": "get_user_history",
                 "arguments": {
-                    "user": 91
+                    "user_id": 91
                 },
                 "result": {
                     "status": "success",
-                    "message": "User 91 has interacted with more than 20 items. The most recent 20 are returned.",
+                    "message": "The IDs of the 20 most recent items user 91 interacted with are returned.",
                     "data": [
                         "161",
                         "134",
@@ -4645,9 +4638,9 @@
                 }
             },
             {
-                "tool_name": "get_item_metadata_tool",
+                "tool_name": "get_item_info",
                 "arguments": {
-                    "items": [
+                    "item_ids": [
                         "161",
                         "134",
                         "99",
@@ -4669,7 +4662,7 @@
                         "418",
                         "230"
                     ],
-                    "get": [
+                    "attributes": [
                         "title",
                         "genres",
                         "description"
@@ -4677,7 +4670,7 @@
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for the given item IDs is returned.",
+                    "message": "The requested attributes for the given items are returned.",
                     "data": [
                         {
                             "item_id": 82,
@@ -4791,16 +4784,16 @@
         "output": "gender: Female",
         "tool_calls": [
             {
-                "tool_name": "get_user_metadata_tool",
+                "tool_name": "get_user_info",
                 "arguments": {
-                    "user": 5,
-                    "get": [
+                    "user_id": 5,
+                    "attributes": [
                         "gender"
                     ]
                 },
                 "result": {
                     "status": "success",
-                    "message": "The requested metadata for user 5 is returned.",
+                    "message": "The requested attributes for user 5 are returned.",
                     "data": {
                         "gender": "Female"
                     }

@@ -1,14 +1,14 @@
 import json
 import os
 from typing import Dict, Any, List, Callable
-from src.tools.get_like_percentage import get_like_percentage_tool
-from src.tools.item_filter import item_filter_tool
-from src.tools.get_popular_items import get_popular_items_tool
-from src.tools.get_item_metadata import get_item_metadata_tool
-from src.tools.get_top_k_recommendations import get_top_k_recommendations_tool, create_recbole_environment
-from src.tools.get_user_metadata import get_user_metadata_tool
-from src.tools.vector_store_search import vector_store_search_tool
-from src.tools.get_interacted_items import get_interacted_items_tool
+from src.tools.estimate_like_percentage import estimate_like_percentage
+from src.tools.filter_items_by_attributes import filter_items_by_attributes
+from src.tools.filter_items_by_popularity import filter_items_by_popularity
+from src.tools.get_item_info import get_item_info
+from src.tools.recommend_items import recommend_items, create_recbole_environment
+from src.tools.get_user_info import get_user_info
+from src.tools.semantic_search_items import semantic_search_items
+from src.tools.get_user_history import get_user_history
 from src.tools.utils import create_lists_for_fuzzy_matching
 import argparse
 
@@ -21,14 +21,14 @@ create_lists_for_fuzzy_matching()
 create_recbole_environment(os.getenv("RECSYS_MODEL_PATH"))
 
 tool_functions = {
-    "item_filter_tool": item_filter_tool,
-    "get_top_k_recommendations_tool": get_top_k_recommendations_tool,
-    "get_item_metadata_tool": get_item_metadata_tool,
-    "get_user_metadata_tool": get_user_metadata_tool,
-    "get_like_percentage_tool": get_like_percentage_tool,
-    "get_popular_items_tool": get_popular_items_tool,
-    "vector_store_search_tool": vector_store_search_tool,
-    "get_interacted_items_tool": get_interacted_items_tool
+    "filter_items_by_attributes": filter_items_by_attributes,
+    "recommend_items": recommend_items,
+    "get_item_info": get_item_info,
+    "get_user_info": get_user_info,
+    "estimate_like_percentage": estimate_like_percentage,
+    "filter_items_by_popularity": filter_items_by_popularity,
+    "semantic_search_items": semantic_search_items,
+    "get_user_history": get_user_history,
 }
 
 
@@ -85,7 +85,7 @@ def process_example(example_path: str, tool_functions: Dict[str, Callable]) -> D
         if tool_name not in tool_functions:
             raise ValueError(f"Tool '{tool_name}' is not implemented.")
 
-        result = json.loads(tool_functions[tool_name].func(**resolved_args))
+        result = tool_functions[tool_name].func(**resolved_args)
         previous_results.append(result["data"])
 
         actual_tool_trace.append({

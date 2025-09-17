@@ -1,0 +1,58 @@
+{
+    "query": "Recommend popular italian movies to user 431.",
+    "tool_plan": [
+        {
+            "tool_name": "filter_items_by_attributes",
+            "note": "To get the IDs of italian movies."
+        },
+        {
+            "tool_name": "filter_items_by_popularity",
+            "note": "To get the IDs of popular italian movies."
+        },
+        {
+            "tool_name": "recommend_items",
+            "note": "To get a personalized ranking of popular italian movies."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get useful information to list the recommended items. Since the user requested italian movies, 'country' is an important item feature to retrieve, together with 'title', 'genres', and 'description'."
+        }
+    ],
+    "calls": [
+        {
+            "name": "filter_items_by_attributes",
+            "arguments": {
+                "country": [
+                    "Italy"
+                ]
+            }
+        },
+        {
+            "name": "filter_items_by_popularity",
+            "arguments": {
+                "k": 20,
+                "item_ids": "<Python list of item IDs returned by the filter_items_by_attributes>"
+            }
+        },
+        {
+            "name": "recommend_items",
+            "arguments": {
+                "user_id": 431,
+                "k": 5,
+                "item_ids": "<Python list containing the IDs of movies returned by the filter_items_by_popularity>"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by recommend_items>",
+                "attributes": [
+                    "title",
+                    "country",
+                    "genres",
+                    "description"
+                ]
+            }
+        }
+    ]
+}

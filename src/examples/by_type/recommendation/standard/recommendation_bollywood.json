@@ -1,0 +1,45 @@
+{
+    "query": "Recommend some bollywood movies to user 46.",
+    "tool_plan": [
+        {
+            "tool_name": "filter_items_by_attributes",
+            "note": "To get the IDs of movies released in India."
+        },
+        {
+            "tool_name": "recommend_items",
+            "note": "To get a personalized ranking of movies released in India for the user."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get useful information to list the recommended items. Since the user requested for movies released in India, 'country' in an important item feature to retrieve together with 'title', 'genres', and 'description'."
+        }
+    ],
+    "calls": [
+        {
+            "name": "filter_items_by_attributes",
+            "arguments": {
+                "country": "India"
+            }
+        },
+        {
+            "name": "recommend_items",
+            "arguments": {
+                "user_id": 46,
+                "k": 5,
+                "item_ids": "<Python list of item IDs returned by the filter_items_by_attributes>"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by recommend_items>",
+                "attributes": [
+                    "title",
+                    "country",
+                    "genres",
+                    "description"
+                ]
+            }
+        }
+    ]
+}

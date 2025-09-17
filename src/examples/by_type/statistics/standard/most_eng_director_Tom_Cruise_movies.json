@@ -1,0 +1,44 @@
+{
+    "query": "What is the most engaging director in movies with Tom Cruise?",
+    "tool_plan": [
+        {
+            "tool_name": "filter_items_by_attributes",
+            "note": "To get the IDs of movies starring Tom Cruise."
+        },
+        {
+            "tool_name": "filter_items_by_popularity",
+            "note": "To get the top 3 popular Tom Cruise movies."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get the directors of the most popular Tom Cruise movies and reason about what could be the most popular/engaging director."
+        }
+    ],
+    "calls": [
+        {
+            "name": "filter_items_by_attributes",
+            "arguments": {
+                "actors": [
+                    "Tom Cruise"
+                ]
+            }
+        },
+        {
+            "name": "filter_items_by_popularity",
+            "arguments": {
+                "k": 3,
+                "item_ids": "<Python list of item IDs returned by the filter_items_by_attributes>"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by filter_items_by_popularity>",
+                "attributes": [
+                    "title",
+                    "director"
+                ]
+            }
+        }
+    ]
+}

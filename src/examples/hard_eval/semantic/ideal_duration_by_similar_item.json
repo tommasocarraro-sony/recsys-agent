@@ -1,0 +1,57 @@
+{
+    "query": "What is the ideal duration of movies similar to movie 8?",
+    "tool_plan": [
+        {
+            "tool_name": "get_item_info",
+            "note": "To get the storyline of the movie."
+        },
+        {
+            "tool_name": "semantic_search_items",
+            "note": "To get the IDs of movies with a description similar to the one of movie 8."
+        },
+        {
+            "tool_name": "filter_items_by_popularity",
+            "note": "To get the top 3 popular movies similar to movie 8."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get the duration of the most popular movies similar to movie 8 and reason about what could be the ideal duration."
+        }
+    ],
+    "calls": [
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": [
+                    8
+                ],
+                "attributes": [
+                    "storyline"
+                ]
+            }
+        },
+        {
+            "name": "semantic_search_items",
+            "arguments": {
+                "query": "<Storyline returned by the get_item_info>"
+            }
+        },
+        {
+            "name": "filter_items_by_popularity",
+            "arguments": {
+                "k": 3,
+                "item_ids": "<Python list of item IDs returned by the semantic_search_items>"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by filter_items_by_popularity>",
+                "attributes": [
+                    "title",
+                    "duration"
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,47 @@
+{
+    "query": "Recommend some horror movies to user 3.",
+    "tool_plan": [
+        {
+            "tool_name": "filter_items_by_attributes",
+            "note": "To get the IDs of horror movies."
+        },
+        {
+            "tool_name": "recommend_items",
+            "note": "To get a personalized ranking of horror movies for the user."
+        },
+        {
+            "tool_name": "get_item_info",
+            "note": "To get useful information to list the recommended items. 'title', 'genres', and 'description' should be retrieved."
+        }
+    ],
+    "calls": [
+        {
+            "name": "filter_items_by_attributes",
+            "arguments": {
+                "genres": [
+                    "horror"
+                ]
+            }
+        },
+        {
+            "name": "recommend_items",
+            "arguments": {
+                "user_id": 3,
+                "k": 5,
+                "item_ids": "<Python list of item IDs returned by the filter_items_by_attributes>"
+            }
+        },
+        {
+            "name": "get_item_info",
+            "arguments": {
+                "item_ids": "<Python list of item IDs returned by recommend_items>",
+                "attributes": [
+                    "title",
+                    "genres",
+                    "description"
+                ]
+            }
+        }
+    ],
+    "agent": "Recommendation"
+}
