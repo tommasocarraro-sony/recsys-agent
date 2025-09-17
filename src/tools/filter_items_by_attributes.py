@@ -2,6 +2,7 @@ from typing import List, Optional, Literal
 from langchain_core.tools import tool, StructuredTool
 from pydantic import BaseModel, Field
 
+from src.tools.config import TOOL_PRINTS
 from src.tools.estimate_like_percentage import EstimateLikePercentageInput
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
@@ -62,9 +63,10 @@ def filter_items_by_attributes(actors: Optional[List[str]] = None, genres: Optio
     """
     Filters items by attributes.
     """
-    print(f"\n{get_time()} - filter_items_by_attributes(actors={actors}, genres={genres}, director={director}, producer={producer}, "
-          f"imdb_rating={imdb_rating}, duration={duration}, release_date={release_date}, release_month={release_month}, "
-          f"country={country})\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - filter_items_by_attributes(actors={actors}, genres={genres}, director={director}, producer={producer}, "
+              f"imdb_rating={imdb_rating}, duration={duration}, release_date={release_date}, release_month={release_month}, "
+              f"country={country})\n")
 
     # convert dict to Pydantic objects if they are not already -> this is especially useful for the test
     if isinstance(imdb_rating, dict):
@@ -126,7 +128,8 @@ def filter_items_by_attributes(actors: Optional[List[str]] = None, genres: Optio
         "with the next step. You do not have to perform other tool calls."
     )
 
-    print(f"\n{get_time()} - Returned item IDs: {item_ids}")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - Returned item IDs: {item_ids}")
 
     if item_ids:
         return {

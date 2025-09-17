@@ -5,6 +5,8 @@ from rapidfuzz import process
 from src.constants import DATABASE_NAME
 import os
 import json
+
+from src.tools.config import TOOL_PRINTS
 from src.utils import get_time
 
 
@@ -32,7 +34,8 @@ def execute_sql_query(sql_query):
     cursor.execute(sql_query)
     result = cursor.fetchall()
     conn.close()
-    print(f"\n{get_time()} - The result of the query {sql_query} is: \n{str(result)}\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - The result of the query {sql_query} is: \n{str(result)}\n")
     return result
 
 
@@ -91,11 +94,13 @@ def define_sql_query(table, conditions):
         return None, corrections, failed_corrections
     if requested_field is not None and query_parts:
         sql_query = f"SELECT {requested_field} FROM {table} WHERE {' AND '.join(query_parts)}"
-        print(f"\n{get_time()} - Generated query: {sql_query}\n")
+        if TOOL_PRINTS:
+            print(f"\n{get_time()} - Generated query: {sql_query}\n")
         return sql_query, corrections, failed_corrections
     elif requested_field is not None and not query_parts and "select" in conditions:
         sql_query = f"SELECT {requested_field} FROM {table}"
-        print(f"\n{get_time()} - Generated query: {sql_query}\n")
+        if TOOL_PRINTS:
+            print(f"\n{get_time()} - Generated query: {sql_query}\n")
         return sql_query, corrections, failed_corrections
     else:
         return None, corrections, failed_corrections

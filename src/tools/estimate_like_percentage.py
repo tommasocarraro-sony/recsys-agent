@@ -1,8 +1,8 @@
 from typing import List
+from src.tools.config import TOOL_PRINTS
 
 from langchain_core.tools import StructuredTool
 from pydantic import BaseModel, Field
-from langchain.tools import tool
 
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time, read_ml100k_ratings
@@ -19,7 +19,8 @@ def estimate_like_percentage(item_ids: List[int]) -> dict:
     """
     Estimates the percentage of users that like the given items.
     """
-    print(f"\n{get_time()} - estimate_like_percentage(item_ids={item_ids})\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - estimate_like_percentage(item_ids={item_ids})\n")
 
     if item_ids is None:
         return JSON_GENERATION_ERROR
@@ -38,7 +39,8 @@ def estimate_like_percentage(item_ids: List[int]) -> dict:
     n_users_by_items = len(set(int(inter[0]) for inter in user_interactions if inter[1] in items))
     perc = n_users_by_items / n_users * 100
 
-    print(f"\n{get_time()} - Returned percentage: {perc:.2f}%\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - Returned percentage: {perc:.2f}%\n")
 
     return {
         "status": "success",

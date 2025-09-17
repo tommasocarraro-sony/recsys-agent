@@ -1,5 +1,7 @@
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool, StructuredTool
+
+from src.tools.config import TOOL_PRINTS
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -14,7 +16,8 @@ def get_user_history(user_id: int) -> dict:
     """
     Returns the history of a user.
     """
-    print(f"\n{get_time()} - get_user_history(user_id={user_id})\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - get_user_history(user_id={user_id})\n")
 
     if user_id is None:
         return JSON_GENERATION_ERROR
@@ -37,7 +40,8 @@ def get_user_history(user_id: int) -> dict:
     if len(interacted_items) > 20:
         interacted_items = interacted_items[-20:]
 
-    print(f"\n{get_time()} - Returned list: {interacted_items}\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - Returned list: {interacted_items}\n")
 
     return {
         "status": "success",

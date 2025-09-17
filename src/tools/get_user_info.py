@@ -1,6 +1,8 @@
 from typing import List, Literal
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool, StructuredTool
+
+from src.tools.config import TOOL_PRINTS
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -21,7 +23,8 @@ def get_user_info(user_id: int, attributes: List[AllowedFeatures]) -> dict:
     """
     Returns the requested information of the given user.
     """
-    print(f"\n{get_time()} - get_user_info(user_id={user_id}, attributes={attributes})\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - get_user_info(user_id={user_id}, attributes={attributes})\n")
 
     if user_id is None or attributes is None:
         return JSON_GENERATION_ERROR
@@ -36,7 +39,8 @@ def get_user_info(user_id: int, attributes: List[AllowedFeatures]) -> dict:
         for i, spec in enumerate(specification):
             return_dict[spec] = result[0][i] if result[0][i] is not None else 'unknown'
 
-        print(f"\n{get_time()} - Returned dictionary: {return_dict}\n")
+        if TOOL_PRINTS:
+            print(f"\n{get_time()} - Returned dictionary: {return_dict}\n")
 
         return {
             "status": "success",

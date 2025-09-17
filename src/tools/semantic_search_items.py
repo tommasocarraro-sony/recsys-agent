@@ -6,6 +6,8 @@ from langchain.tools import tool
 from qdrant_client import QdrantClient
 from qdrant_client.models import Filter, FieldCondition, MatchAny, SearchParams
 from sentence_transformers import SentenceTransformer
+
+from src.tools.config import TOOL_PRINTS
 from src.utils import get_time
 from src.constants import JSON_GENERATION_ERROR, COLLECTION_NAME
 
@@ -24,7 +26,8 @@ def semantic_search_items(query: str, item_ids: Optional[List[int]] = None) -> d
     """
     Search items in a vector store and returns the 10 top matching items.
     """
-    print(f"\n{get_time()} - semantic_search_items(query={query}, item_ids={item_ids})\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - semantic_search_items(query={query}, item_ids={item_ids})\n")
 
     if query is None:
         return JSON_GENERATION_ERROR
@@ -86,7 +89,8 @@ def semantic_search_items(query: str, item_ids: Optional[List[int]] = None) -> d
 
         item_ids = list(item_metadata.keys())
 
-        print(f"\n{get_time()} - Returned list: {item_ids}\n")
+        if TOOL_PRINTS:
+            print(f"\n{get_time()} - Returned list: {item_ids}\n")
 
         return {
             "status": "success",

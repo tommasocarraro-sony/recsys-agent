@@ -1,6 +1,8 @@
 from typing import List, Union, Dict, Literal
 from pydantic import BaseModel, Field
 from langchain_core.tools import tool, StructuredTool
+
+from src.tools.config import TOOL_PRINTS
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -32,7 +34,8 @@ def get_item_info(item_ids: List[int], attributes: List[AllowedFeatures]) -> dic
     """
     Returns the requested information of the given items.
     """
-    print(f"\n{get_time()} - get_item_info(item_ids={item_ids}, attributes={attributes})\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - get_item_info(item_ids={item_ids}, attributes={attributes})\n")
 
     if item_ids is None or attributes is None:
         return JSON_GENERATION_ERROR
@@ -57,7 +60,8 @@ def get_item_info(item_ids: List[int], attributes: List[AllowedFeatures]) -> dic
                 current_dict[spec] = result[j][i] if result[j][i] is not None else 'unknown'
             return_list.append(current_dict)
 
-        print(f"\n{get_time()} - Returned list: {return_list}\n")
+        if TOOL_PRINTS:
+            print(f"\n{get_time()} - Returned list: {return_list}\n")
 
         return {
             "status": "success",

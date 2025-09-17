@@ -1,4 +1,6 @@
 import torch
+
+from src.tools.config import TOOL_PRINTS
 from src.tools.utils import get_time
 from recbole.quick_start import load_data_and_model
 from recbole.utils.case_study import full_sort_scores, full_sort_topk
@@ -35,7 +37,8 @@ def recommend_items(user_id: int, k: int = 5, item_ids: Optional[List[int]] = No
     """
     Invokes a recommender system and returns a ranking of recommended items.
     """
-    print(f"\n{get_time()} - recommend_items(user_id={user_id}, k={k}, item_ids={item_ids})\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - recommend_items(user_id={user_id}, k={k}, item_ids={item_ids})\n")
 
     if user_id is None or k is None:
         return JSON_GENERATION_ERROR
@@ -50,7 +53,8 @@ def recommend_items(user_id: int, k: int = 5, item_ids: Optional[List[int]] = No
     else:
         recommended_items = recommend_full_catalog(uid_series, k=k)
 
-    print(f"\n{get_time()} - Returned recommended items: {recommended_items}\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - Returned recommended items: {recommended_items}\n")
 
     return {
         "status": "success",

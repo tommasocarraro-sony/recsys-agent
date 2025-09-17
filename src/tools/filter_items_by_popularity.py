@@ -2,6 +2,7 @@ from langchain.tools import tool
 import numpy as np
 from langchain_core.tools import StructuredTool
 
+from src.tools.config import TOOL_PRINTS
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -33,7 +34,8 @@ def filter_items_by_popularity(k: Literal[3, 20] = 3, item_ids: Optional[List[in
     """
     Filters items by their popularity (i.e., number of ratings).
     """
-    print(f"\n{get_time()} - filter_items_by_popularity(k={k}, item_ids={item_ids}, user_group={user_group})\n")
+    if TOOL_PRINTS:
+        print(f"\n{get_time()} - filter_items_by_popularity(k={k}, item_ids={item_ids}, user_group={user_group})\n")
 
     if k is None:
         return JSON_GENERATION_ERROR
@@ -65,7 +67,8 @@ def filter_items_by_popularity(k: Literal[3, 20] = 3, item_ids: Optional[List[in
         if len(item_ids) > k:
             item_ids = item_ids[:k]
 
-        print(f"\n{get_time()} - Returned list: {item_ids}\n")
+        if TOOL_PRINTS:
+            print(f"\n{get_time()} - Returned list: {item_ids}\n")
 
         return {
             "status": "success",
