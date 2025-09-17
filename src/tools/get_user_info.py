@@ -1,6 +1,6 @@
 from typing import List, Literal
 from pydantic import BaseModel, Field
-from langchain_core.tools import tool
+from langchain_core.tools import tool, StructuredTool
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -17,7 +17,6 @@ class GetUserInfoInput(BaseModel):
     )
 
 
-@tool(args_schema=GetUserInfoInput)
 def get_user_info(user_id: int, attributes: List[AllowedFeatures]) -> dict:
     """
     Returns the requested information of the given user.
@@ -50,3 +49,10 @@ def get_user_info(user_id: int, attributes: List[AllowedFeatures]) -> dict:
             "message": f"No information found for user {user_id}.",
             "data": None
         }
+
+get_user_info_tool = StructuredTool.from_function(
+    func=get_user_info,
+    args_schema=GetUserInfoInput,
+    handle_tool_errors=True
+)
+

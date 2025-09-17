@@ -1,4 +1,6 @@
 from typing import List
+
+from langchain_core.tools import StructuredTool
 from pydantic import BaseModel, Field
 from langchain.tools import tool
 
@@ -13,7 +15,6 @@ class EstimateLikePercentageInput(BaseModel):
     )
 
 
-@tool(args_schema=EstimateLikePercentageInput)
 def estimate_like_percentage(item_ids: List[int]) -> dict:
     """
     Estimates the percentage of users that like the given items.
@@ -44,3 +45,9 @@ def estimate_like_percentage(item_ids: List[int]) -> dict:
         "message": "The percentage of users that might like the given items is returned.",
         "data": f"{perc:.2f}%"
     }
+
+estimate_like_percentage_tool = StructuredTool.from_function(
+    func=estimate_like_percentage,
+    args_schema=EstimateLikePercentageInput,
+    handle_tool_errors=True
+)

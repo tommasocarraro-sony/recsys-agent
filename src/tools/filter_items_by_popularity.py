@@ -1,5 +1,7 @@
 from langchain.tools import tool
 import numpy as np
+from langchain_core.tools import StructuredTool
+
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -26,7 +28,6 @@ class GetPopularItemsInput(BaseModel):
     )
 
 
-@tool(args_schema=GetPopularItemsInput)
 def filter_items_by_popularity(k: Literal[3, 20] = 3, item_ids: Optional[List[int]] = None,
                                 user_group: Optional[List[AllowedGroups]] = None) -> dict:
     """
@@ -77,3 +78,10 @@ def filter_items_by_popularity(k: Literal[3, 20] = 3, item_ids: Optional[List[in
             "message": "The SQL query did not produce any result",
             "data": None
         }
+
+filter_items_by_popularity_tool = StructuredTool.from_function(
+    func=filter_items_by_popularity,
+    args_schema=GetPopularItemsInput,
+    handle_tool_errors=True
+)
+

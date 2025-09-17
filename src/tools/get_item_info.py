@@ -1,6 +1,6 @@
 from typing import List, Union, Dict, Literal
 from pydantic import BaseModel, Field
-from langchain_core.tools import tool
+from langchain_core.tools import tool, StructuredTool
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -28,7 +28,6 @@ class GetItemInfoInput(BaseModel):
     )
 
 
-@tool(args_schema=GetItemInfoInput)
 def get_item_info(item_ids: List[int], attributes: List[AllowedFeatures]) -> dict:
     """
     Returns the requested information of the given items.
@@ -71,3 +70,10 @@ def get_item_info(item_ids: List[int], attributes: List[AllowedFeatures]) -> dic
             "message": f"No information found for the given items: {item_ids}.",
             "data": None
         }
+
+get_item_info_tool = StructuredTool.from_function(
+    func=get_item_info,
+    args_schema=GetItemInfoInput,
+    handle_tool_errors=True
+)
+

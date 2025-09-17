@@ -1,6 +1,8 @@
 from typing import List, Optional, Literal
-from langchain_core.tools import tool
+from langchain_core.tools import tool, StructuredTool
 from pydantic import BaseModel, Field
+
+from src.tools.estimate_like_percentage import EstimateLikePercentageInput
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -52,8 +54,6 @@ class ItemFilterInput(BaseModel):
     country: str = Field(default="unk", description="Country of origin to filter by.")
 
 
-# LangChain-compatible tool
-@tool(args_schema=ItemFilterInput)
 def filter_items_by_attributes(actors: Optional[List[str]] = None, genres: Optional[List[str]] = None,
                      director: Optional[List[str]] = None, producer: Optional[List[str]] = None,
                      imdb_rating: Optional[ComparisonFilter] = None, duration: Optional[ComparisonFilter] = None,
@@ -140,3 +140,10 @@ def filter_items_by_attributes(actors: Optional[List[str]] = None, genres: Optio
             "message": no_match_text,
             "data": None
         }
+
+
+filter_items_by_attributes_tool = StructuredTool.from_function(
+    func=filter_items_by_attributes,
+    args_schema=ItemFilterInput,
+    handle_tool_errors=True
+)

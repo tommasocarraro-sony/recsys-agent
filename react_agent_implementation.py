@@ -5,14 +5,14 @@ from langchain_ollama import ChatOllama
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
 from src.agents.utils import create_agent_envinroment
-from src.tools.get_user_info import get_user_info
-from src.tools.get_user_history import get_user_history
-from src.tools.filter_items_by_attributes import filter_items_by_attributes
-from src.tools.get_item_info import get_item_info
-from src.tools.estimate_like_percentage import estimate_like_percentage
-from src.tools.recommend_items import recommend_items
-from src.tools.filter_items_by_popularity import filter_items_by_popularity
-from src.tools.semantic_search_items import semantic_search_items
+from src.tools.get_user_info import get_user_info_tool
+from src.tools.get_user_history import get_user_history_tool
+from src.tools.filter_items_by_attributes import filter_items_by_attributes_tool
+from src.tools.get_item_info import get_item_info_tool
+from src.tools.estimate_like_percentage import estimate_like_percentage_tool
+from src.tools.recommend_items import recommend_items_tool
+from src.tools.filter_items_by_popularity import filter_items_by_popularity_tool
+from src.tools.semantic_search_items import semantic_search_items_tool
 
 load_dotenv()
 
@@ -33,8 +33,8 @@ llm = init_chat_model("openai:gpt-4.1", api_key=api_key)
 
 agent = create_react_agent(
     model=llm,
-    tools=[get_item_info, get_user_history, estimate_like_percentage, recommend_items,
-           filter_items_by_popularity, get_user_info, filter_items_by_attributes, semantic_search_items],
+    tools=[get_item_info_tool, get_user_history_tool, estimate_like_percentage_tool, recommend_items_tool,
+           filter_items_by_popularity_tool, get_user_info_tool, filter_items_by_attributes_tool, semantic_search_items_tool],
     prompt="""
     You are a helpful streaming platform assistant.
     

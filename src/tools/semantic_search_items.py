@@ -1,5 +1,6 @@
 from typing import List, Optional
 from dotenv import load_dotenv
+from langchain_core.tools import StructuredTool
 from pydantic import BaseModel, Field
 from langchain.tools import tool
 from qdrant_client import QdrantClient
@@ -19,7 +20,6 @@ class SemanticSearchItemsParams(BaseModel):
     )
 
 
-@tool(args_schema=SemanticSearchItemsParams)
 def semantic_search_items(query: str, item_ids: Optional[List[int]] = None) -> dict:
     """
     Search items in a vector store and returns the 10 top matching items.
@@ -100,3 +100,9 @@ def semantic_search_items(query: str, item_ids: Optional[List[int]] = None) -> d
             "message": f"Vector store search failed due to: {str(e)}",
             "data": None
         }
+
+semantic_search_items_tool = StructuredTool.from_function(
+    func=semantic_search_items,
+    args_schema=SemanticSearchItemsParams,
+    handle_tool_errors=True
+)

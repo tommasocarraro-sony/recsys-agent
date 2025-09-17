@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field
-from langchain_core.tools import tool
+from langchain_core.tools import tool, StructuredTool
 from src.tools.utils import execute_sql_query, define_sql_query
 from src.constants import JSON_GENERATION_ERROR
 from src.utils import get_time
@@ -10,7 +10,6 @@ class GetUserHistoryInput(BaseModel):
     user_id: int = Field(..., description="User ID for which the history is requested.")
 
 
-@tool(args_schema=GetUserHistoryInput)
 def get_user_history(user_id: int) -> dict:
     """
     Returns the history of a user.
@@ -45,3 +44,10 @@ def get_user_history(user_id: int) -> dict:
         "message": f"The IDs of the {len(interacted_items)} most recent items user {user_id} interacted with are returned.",
         "data": interacted_items
     }
+
+get_user_history_tool = StructuredTool.from_function(
+    func=get_user_history,
+    args_schema=GetUserHistoryInput,
+    handle_tool_errors=True
+)
+

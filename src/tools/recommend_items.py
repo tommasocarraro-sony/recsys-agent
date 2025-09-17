@@ -2,7 +2,7 @@ import torch
 from src.tools.utils import get_time
 from recbole.quick_start import load_data_and_model
 from recbole.utils.case_study import full_sort_scores, full_sort_topk
-from langchain_core.tools import tool
+from langchain_core.tools import tool, StructuredTool
 from src.constants import JSON_GENERATION_ERROR
 from pydantic import BaseModel, Field
 from typing import List, Optional
@@ -30,7 +30,7 @@ def create_recbole_environment(model_path):
         model_file=model_path
     )
 
-@tool(args_schema=RecommendItemsInput)
+
 def recommend_items(user_id: int, k: int = 5, item_ids: Optional[List[int]] = None) -> dict:
     """
     Invokes a recommender system and returns a ranking of recommended items.
@@ -90,3 +90,10 @@ def recommend_given_items(user, item_ids, k=5):
         0, dataset.token2id(dataset.iid_field, item_ids)]
     _, sorted_indices = torch.sort(satisfying_item_scores, descending=True)
     return [item_ids[i] for i in sorted_indices[:k].cpu().numpy()]
+
+
+recommend_items_tool = StructuredTool.from_function(
+    func=recommend_items,
+    args_schema=RecommendItemsInput,
+    handle_tool_errors=True
+)
