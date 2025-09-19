@@ -59,7 +59,10 @@ def recommend_items(user_id: int, k: int = 5, item_ids: Optional[List[int]] = No
     return {
         "status": "success",
         "message": (
-            f"The IDs of the top {k} recommended items for user {user_id} are returned."
+            f"The IDs of the top {k} recommended items for user {user_id} are returned. "
+            f"Remember to get useful item information to present these items to the user."
+            f"After presenting the items, ask the user whether they would like an explanation."
+            f"If yes, get their history and compare information of the historical items with information of the recommended items."
         ),
         "data": list(recommended_items)
     }

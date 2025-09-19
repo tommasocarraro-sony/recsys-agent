@@ -15,7 +15,8 @@ load_dotenv()
 
 
 class SemanticSearchItemsParams(BaseModel):
-    query: str = Field(..., description="Natural language query describing the item(s) to search for. Can be an item description, storyline, or some keywords (for mood-based search).")
+    query: str = Field(..., description="Natural language query describing the item(s) to search for."
+                                        "Can be an item description or storyline.")
     item_ids: List[int] = Field(
         default_factory=list,
         description="Optional list of items. If provided, the search will only consider these items."
@@ -24,7 +25,8 @@ class SemanticSearchItemsParams(BaseModel):
 
 def semantic_search_items(query: str, item_ids: Optional[List[int]] = None) -> dict:
     """
-    Search items in a vector store and returns the 10 top matching items.
+    Performs a search a vector store and returns the 10 top matching items.
+    The vector store only contains the genres, description, and storyline of the items.
     """
     if TOOL_PRINTS:
         print(f"\n{get_time()} - semantic_search_items(query={query}, item_ids={item_ids})\n")

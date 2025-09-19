@@ -16,7 +16,9 @@ AllowedGroups = Literal['kid', 'teenager', 'young_adult', 'adult', 'senior', 'ma
 class GetPopularItemsInput(BaseModel):
     k: Literal[3, 20] = Field(
         default=3,
-        description="Number of popular items to be returned. Use 3 when popularity is requested in the context of statistics queries (e.g., best genre, ideal duration). Use 20 when popularity is requested in the context of recommendation queries."
+        description="Number of popular items to be returned. "
+                    "Use 3 for statistics (e.g., best genre, ideal duration). "
+                    "Use 20 for **ALL** recommendation queries."
     )
     item_ids: List[int] = Field(
         default_factory=list,
@@ -72,7 +74,9 @@ def filter_items_by_popularity(k: Literal[3, 20] = 3, item_ids: Optional[List[in
 
         return {
             "status": "success",
-            "message": f"The IDs of the {len(item_ids)} most popular items are returned.",
+            "message": f"The IDs of the {len(item_ids)} most popular items are returned."
+                       f"If another tool call is needed, you can now proceed to the next tool call. It is enough you pass "
+                "this list to the \"item_ids\" parameter of the next tool call.",
             "data": item_ids
         }
     else:

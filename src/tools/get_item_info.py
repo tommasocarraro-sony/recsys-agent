@@ -1,5 +1,5 @@
 from typing import List, Union, Dict, Literal
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 from langchain_core.tools import tool, StructuredTool
 
 from src.tools.config import TOOL_PRINTS
@@ -28,6 +28,18 @@ class GetItemInfoInput(BaseModel):
                     '"release_date", "release_month", "country", "actors", "imdb_rating", '
                     '"storyline". By default, title, genres, and description are retrieved.'
     )
+
+    @model_validator(mode='before')
+    def validate_attributes(cls, values):
+        attrs = values.get("attributes", [])
+        normalized = []
+        for a in attrs:
+            if a == "release_year":
+                normalized.append("release_date")  # map fallback
+            else:
+                normalized.append(a)
+        values["attributes"] = normalized
+        return values
 
 
 def get_item_info(item_ids: List[int], attributes: List[AllowedFeatures]) -> dict:
@@ -65,7 +77,7 @@ def get_item_info(item_ids: List[int], attributes: List[AllowedFeatures]) -> dic
 
         return {
             "status": "success",
-            "message": "The requested attributes for the given items are returned.",
+            "message": "The requested attributes for the given items are returned. You **MUST** include the item IDs when listing items.",
             "data": return_list
         }
     else:
